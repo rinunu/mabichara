@@ -7,6 +7,7 @@ from mabi.weapon_class import WeaponClass
 from mabi.weapon_upgrade import WeaponUpgrade
 from mabi.weapon import Weapon
 
+from source import Source
 import parse_helper
 
 property_name_map = {
@@ -64,10 +65,11 @@ def set_details(upgrade, td):
             raise Exception, u'不明な効果:' + name
 
 def set_weapon_info(weapon, table):
-    weapon.critical = parse_helper.to_int(table(text=u'クリティカル')[0].next.string)
-    weapon.balance = parse_helper.to_int(table(text=u'バランス')[0].next.string)
-    weapon.attack_min, weapon.attack_max = parse_helper.to_min_max(table(text=u'攻撃')[0].next.string)
-    weapon.durability = parse_helper.to_int(table(text=u'耐久')[0].next.string)
+    weapon.attack_min, weapon.attack_max = parse_helper.to_min_max(parse_helper.get_td(table, u'攻撃'))
+    weapon.critical = parse_helper.to_int(parse_helper.get_td(table, u'クリティカル'))
+    weapon.balance = parse_helper.to_int(parse_helper.get_td(table, u'バランス'))
+    weapon.durability = parse_helper.to_int(parse_helper.get_td(table, u'耐久'))
+    weapon.ug = parse_helper.to_int(parse_helper.get_td(table, u'UG'))
 
 def parse_upgrade(weapon, table, ug_base=0):
     result = []
@@ -89,13 +91,76 @@ def parse_upgrade(weapon, table, ug_base=0):
         result.append(upgrade)
     return result
 
-def parse(url, html):
-    """HTML を解析し、 WeaponClass として返す
+def find_upgrade(upgrades, name):
+    '''指定された名前の WeaponUpgrade を返す
+
+    (1回余り)等、無効な名前の場合は None を返す
+
+    不明な名前の場合は例外を投げる
+
+    '''
+
+    # 名前の正規化
+    name = re.sub(ur'剣研(\d)', ur'剣研ぎ\1', name)
+    name = re.sub(ur'刃磨き', ur'刀磨き', name)
+
+    if re.match(ur'\([^)]*余り\)', name):
+        return None
+    
+    for upgrade in upgrades:
+        if upgrade.name == name:
+            return upgrade
+
+    raise Exception, u'改造が見つかりません: ' + name
+
+def _make_sequences(name, sequence, weapon_class, upgrades):
+    '''
+    改造の組み合わせを作成し、保存する
+
+    Arguments:
+        name -- 改造の名称。
+        sequence -- これまでの改造過程(upgrade のシーケンス)
+    '''
+
+    times = len(sequence) # 今回の改造回数
+    
+    for u in upgrades:
+        if u.ug_min <= times <= u.ug_max:
+            seq2 = sequence + [u]
+            Weapon.create_or_update(weapon_class, seq2, name)
+            
+            _make_sequences(name, seq2, weapon_class, upgrades)
+
+def parse_upgrade_sequences(soup, weapon_class, upgrades):
+    '''おすすめ改造を解析し、 Weapon として登録する
+
+    TODO Wiki のおすすめには宝石改造が入っていないため、宝石改造をしたバリエーションも追加する
+
+    '''
+
+    seq_name_re = re.compile(ur'(.*式.*)')
+
+    seqs = soup.findAll(lambda tag: tag.name == u'h4' and tag.find(text = seq_name_re))
+
+    for seq in seqs:
+        name = parse_helper.get_string(seq)
+        text = parse_helper.get_string(seq.findNext('p', 'quotation')) # ex: 軽量化＞軽量化＞軽量化＞軽量化＞(1回余り)
+        list = text.split(u'＞')
+        list = [find_upgrade(upgrades, i) for i in list]
+        list = [i for i in list if i]
+
+        Weapon.create_or_update(weapon_class, list, name)
+        if weapon_class.ug == len(list):
+            _make_sequences(name + u'(宝石)', list, weapon_class, upgrades)
+
+def import_data(url, html):
+    """HTML を解析し、保存する
 
     呼び出し元は WeaponClass 保存前に weapon_class.upgrades = upgrades とする必要がある
 
     Return:
         (WeaponClass, [WeaponUpgrade, ...])
+
         
     """
     
@@ -108,55 +173,34 @@ def parse(url, html):
     upgrade_table = soup.find(id = 'body').findAll('table')[1]
     jewell_upgrade_table = soup.find(id = 'body').findAll('table')[2]
 
-    weapon = WeaponClass.get_by_name(weapon_name)
-    if not weapon: weapon = WeaponClass.create(weapon_name)
+    weapon_class = WeaponClass.get_by_name(weapon_name) or WeaponClass.create(weapon_name)
 
-    set_weapon_info(weapon, main_table)
-    upgrades = parse_upgrade(weapon, upgrade_table)
-    upgrades += parse_upgrade(weapon, jewell_upgrade_table, 5)
+    set_weapon_info(weapon_class, main_table)
+    upgrades = parse_upgrade(weapon_class, upgrade_table)
+    upgrades += parse_upgrade(weapon_class, jewell_upgrade_table, 5)
 
-    return (weapon, upgrades)
-
-def _make_sequences(weapon_class, upgrades, times, upgrade_max, process):
-    '''
-
-    Arguments:
-        times -- 今回の改造が何回目なのか(0-)
-        process -- これまでの改造過程(upgrade のシーケンス)
-    '''
-
-    if upgrade_max != -1 and upgrade_max < times:
-        return None
-    
-    if len(process) >= 1:
-        weapon = Weapon.get_or_insert(weapon_class, process)
-                
-    for u in upgrades:
-        if u.ug_min <= times <= u.ug_max:
-            sub = _make_sequences(weapon_class, upgrades, times + 1, upgrade_max, process + [u])    
-
-def update_sequences(weapon_class, process, upgrade_max):
-    '''指定された武器のすべての改造の組み合わせを作成する
-
-    Arguments:
-        weapon -- 保存済みでなければならない
-        process -- 今回組み合わせを作成する改造過程(WeaponUpgrade のシーケンス)
-        upgrade_max -- 最大改造回数. -1 で無制限
-        一度に大量の組み合わせを作成できず、複数回に分けるために使用する
-    '''
-
-    upgrades = weapon_class.upgrades
-
-    _make_sequences(weapon_class, upgrades, len(process), upgrade_max, process)
-
-    return 
-
-def import_data(url, html):
-    weapon_class, upgrades = parse(url, html)
+    # 登録
     for a in upgrades:
         a.put()
     weapon_class.upgrades = upgrades
     weapon_class.put()
-    
-    return weapon_class, upgrades
 
+    parse_upgrade_sequences(soup, weapon_class, upgrades)
+
+    return (weapon_class, upgrades)
+
+######################################################################
+
+def import_equipments(url, html):
+    """装備一覧ページを解析し、武器情報を保存する
+
+    TODO 武器だけじゃなく装備も
+        
+    """
+    
+    soup = BeautifulSoup(html)
+
+    for th in soup(lambda tag: tag.name == u'th' and tag.find(text = re.compile(ur'詳細ページ'))):
+        a = th.findNext('td').find('a')
+        if a: # 詳細ページがないものも存在する
+            Source.create_or_update(type='weapon', name=parse_helper.get_string(a), url=a['href'])

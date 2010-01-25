@@ -29,7 +29,6 @@ def setup(request):
     """初期設定を行う"""
 
     db.delete(Source.all())
-#     db.delete(Enchant.all())
     
     source = Source(name=u'suffix(英字)',
                     type=u'enchant',
@@ -56,16 +55,10 @@ def setup(request):
                     url=r'http://mabinogi.wikiwiki.jp/index.php?%A5%A8%A5%F3%A5%C1%A5%E3%A5%F3%A5%C8%2F%CC%A4%BC%C2%C1%F5ES')
     source.put()
 
-    source = Source(name=u'クレイモア',
-                    type=u'weapon',
-                    url=r'http://mabinogi.wikiwiki.jp/pukiwiki.php?%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0%2F%A5%AF%A5%EC%A5%A4%A5%E2%A5%A2')
-    source.put()
-
-    source = Source(name=u'ダスティンシルバーナイトソード',
-                    type=u'weapon',
-                    url=r'http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0%2F%A5%C0%A5%B9%A5%C6%A5%A3%A5%F3%A5%B7%A5%EB%A5%D0%A1%BC%A5%CA%A5%A4%A5%C8%A5%BD%A1%BC%A5%C9')
-    source.put()
-    
+    source = Source(name=u'刀剣類',
+                    type=u'equipments',
+                    url=r'http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0')
+    source.put()    
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
@@ -82,10 +75,10 @@ def index(request):
     return direct_to_template(request, 'index.html', context)
 
 @staff_only
-def source_content(request, id):
+def source_content(request, key):
     """取り込み元の内容を返す"""
 
-    source = Source.get_by_id(int(id))
+    source = Source.get(db.Key(key))
 
     context = {
         'content': source.content
@@ -93,13 +86,22 @@ def source_content(request, id):
 
     return direct_to_template(request, 'content.html', context)
 
+def _import_equipments(source):
+    weapon_importer.import_equipments(source.url, source.content)
+    
+    return HttpResponseRedirect(reverse('admin.views.index'))
+
 @staff_only
-def import_data(request, id):
+def import_data(request, key):
     """取り込み元の内容を取り込む"""
 
-    source = Source.get_by_id(int(id))
+    source = Source.get(db.Key(key))
     source.load()
     source.put()
+
+    map = {
+        'equipments' : _import_equipments
+        }
 
     if source.type == u'enchant':
         result = enchant_importer.parse(source.url, source.content)
@@ -120,10 +122,11 @@ def import_data(request, id):
         context = {
             'weapon_class': weapon_class,
             'upgrades': upgrades,
+            'weapons': Weapon.all().filter('weapon_class = ', weapon_class), # todo 条件足りない
             }
         return direct_to_template(request, 'import_result_weapons.html', context)
     else:
-        pass
+        return map[source.type](source)
 
 @staff_only
 def _update_weapon(weapon_class, upgrades, process):

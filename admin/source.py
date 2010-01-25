@@ -11,16 +11,15 @@ class Source(db.Model):
     """データの取り込み元を表す
     """
 
+    url = db.StringProperty(required=True)
+
     name = db.StringProperty()
     type = db.StringProperty()
     
-    url = db.StringProperty(required=True)
     content = db.TextProperty()
 
     date = db.DateTimeProperty()
     size = db.IntegerProperty()
-
-    
 
     def load(self):
         '''ページデータを取得する
@@ -41,3 +40,19 @@ class Source(db.Model):
                 self.date = datetime.now()
             except urllib2.URLError, e:
                 raise
+            
+    @classmethod
+    def create_or_update(cls, url, type, name):
+        key_name = url
+
+        def tx():
+            a = cls.get_by_key_name(key_name)
+            if not a:
+                a = cls(key_name=key_name, url=url)
+            a.name = name
+            a.type = type
+            a.put()
+            return a
+
+        a = db.run_in_transaction(tx)
+        return a

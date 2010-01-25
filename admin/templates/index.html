@@ -15,7 +15,7 @@
     <td>{{ source.size }}</td>
     <td><a href="{% url admin.views.source_content source.key.id %}">ソース</a></td>
     <td>
-      <form action="{% url admin.views.import_data source.key.id %}" method="post">
+      <form action="{% url admin.views.import_data source.key %}" method="post">
 	<input type="submit" value="取り込み"/>
       </form>
     </td>
@@ -26,11 +26,11 @@
 
 
 <form action="{% url admin.views.setup %}" method="post">
-  <input type="submit" value="セットアップ"/>
+  <input type="submit" value="初期ソースセットアップ"/>
 </form>
 
 <form action="{% url admin.views.update %}" method="post">
-  <input type="submit" value="更新"/>
+  <input type="submit" value="いろいろ"/>
 </form>
 
 <h2>武器</h2>

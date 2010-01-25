@@ -5,9 +5,24 @@ import re
 rank_re = re.compile(u'([a-fA-F0-9])ランク')
 
 def get_string(tag, separator=''):
-    '''タグの文字列を取得する'''
-    return separator.join(tag.findAll(text=True))
+    '''タグの文字列を取得する
 
+    tag が文字列の場合はそのまま返す
+
+    先頭と末尾の空白は削除する
+
+    '''
+
+    if isinstance(tag, basestring):
+        return tag
+    else:
+        return separator.join(tag.findAll(text=True)).strip()
+
+def get_td(table, name):
+    '''指定された TH の次にでてくる TD を返す'''
+    
+    return table(text=name)[0].findNext('td')
+    
 def to_equipment(text):
     """Enchant.equipment_text を元に Enchant.equipment を設定する"""
     
@@ -269,13 +284,14 @@ def to_rank(s):
 
 def to_float(s):
     """〜%という文字を float に変換する"""
-    return float(re.sub(r'[\s%]', '', s)) / 100
+    return float(re.sub(r'[\s%]', '', get_string(s))) / 100
 
 def to_int(s):
-    return int(re.sub(ur'[^\d-]', u'', s))
+    return int(re.sub(ur'[^\d-]', u'', get_string(s)))
+        
 
 def to_min_max(s):
-    s = re.split(u'[~〜]', s)
+    s = re.split(u'[~〜]', get_string(s))
     return (int(s[0]), int(s[1]))
 
 def to_cost(s):

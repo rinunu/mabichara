@@ -2,23 +2,25 @@
 
 {% block extra-head %}
 <script type="text/javascript">
-  var my = {};
   $(document).ready(function(){
-    my.tl = $('#result').dataTable({"iDisplayLength": 1000});
+    $('#sequences').dataTable({"iDisplayLength": 1000});
+  
   });
 </script>
 {% endblock %}
 
 {% block content %}
-<table id="result">
+<table>
   <thead>
     <tr>
       <th></th>
-      <th>クリ</th>
       <th>最小</th>
       <th>最大</th>
       <th>耐久</th>
-      <th></th>
+      <th>負傷率</th>
+      <th>クリ</th>
+      <th>バランス</th>
+      <th>UG</th>
     </tr>
   </thead>
 
@@ -26,43 +28,87 @@
     <tr>
       <td>{{ weapon_class.name }}
       </td>
-      <td>{{ weapon_class.critical }}</td>
+      
       <td>{{ weapon_class.attack_min }}</td>
       <td>{{ weapon_class.attack_max }}</td>
       <td>{{ weapon_class.durability }}</td>
-
-      <td>
-	<table>
-	  <tr>
-	    <th>名前</th>
-	    <th>熟練</th>
-	    
-	    <th>最低</th>
-	    <th>最大</th>
-	    <th>バランス</th>
-	    <th>クリ</th>
-	    <th>耐久</th>
-	    <th>UG</th>
-	    <th>金額</th>
-	  </tr>
-	  {% for u in upgrades %}
-	  <tr>
-	    <td>{{ u.name }}</td>
-	    <td>{{ u.proficiency }}</td>
-	    <td>{{ u.attack_min }}</td>
-	    <td>{{ u.attack_max }}</td>
-	    <td>{{ u.balance }}</td>
-	    <td>{{ u.critical }}</td>
-	    <td>{{ u.durability }}</td>
-	    <td>{{ u.ug_min }}〜{{ u.ug_max }}</td>
-	    <td>{{ u.cost }}</td>
-	    
-	  </tr>
-	  {% endfor %}
-	</table>
-      </td>
+      <td>TODO</td>
+      <td>{{ weapon_class.critical }}</td>
+      <td>{{ weapon_class.balance }}</td>
+      <td>{{ weapon_class.ug }}</td>
     </tr>
   </tbody>
 </table>
+
+
+<h2>改造</h2>
+<table>
+  <tr>
+    <th>名前</th>
+    <th>熟練</th>
+    
+    <th>最低</th>
+    <th>最大</th>
+    <th>バランス</th>
+    <th>クリ</th>
+    <th>耐久</th>
+    <th>UG</th>
+    <th>金額</th>
+  </tr>
+  {% for u in upgrades %}
+  <tr>
+    <td>{{ u.name }}</td>
+    <td>{{ u.proficiency }}</td>
+    <td>{{ u.attack_min }}</td>
+    <td>{{ u.attack_max }}</td>
+    <td>{{ u.balance }}</td>
+    <td>{{ u.critical }}</td>
+    <td>{{ u.durability }}</td>
+    <td>{{ u.ug_min }}〜{{ u.ug_max }}</td>
+    <td>{{ u.cost }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>おすすめ改造組み合わせ</h2>
+<table id="sequences">
+  <thead>
+    <tr>
+      <th>改造式</th>
+      
+      <th>最小</th>
+      <th>最大</th>
+      <th>クリ</th>
+      <th>バランス</th>
+      <th>耐久</th>
+      
+      <th>金額</th>
+      <th>組み合わせ</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for w in weapons %}
+    <tr>
+      <td>{{ w.name }}</td>
+      
+      <td>{{ w.attack_min }}</td>
+      <td>{{ w.attack_max }}</td>
+      <td>{{ w.critical }}</td>
+      <td>{{ w.balance }}</td>
+      <td>{{ w.durability }}</td>
+      
+      <td>{{ w.cost }}</td>
+      <td>
+	{% for u in w.upgrades %}
+	{{ u.name }} &gt;
+	{% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
 {% endblock %}
 
