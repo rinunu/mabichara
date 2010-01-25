@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+  <tr>
+    <th>URL</th>
+    <th>最終処理日時</th>
+    <th>ページサイズ</th>
+  </tr>
+  
+  {% for source in sources %}
+  <tr>
+    <td><a href="{{ source.url }}">{{ source.name }}</a></td>
+    <td>{{ source.date }}</td>
+    <td>{{ source.size }}</td>
+    <td><a href="{% url admin.views.source_content source.key.id %}">ソース</a></td>
+    <td>
+      <form action="{% url admin.views.import_data source.key.id %}" method="post">
+	<input type="submit" value="取り込み"/>
+      </form>
+    </td>
+    
+  </tr>
+  {% endfor %}
+</table>
+
+
+<form action="{% url admin.views.setup %}" method="post">
+  <input type="submit" value="セットアップ"/>
+</form>
+
+<form action="{% url admin.views.update %}" method="post">
+  <input type="submit" value="更新"/>
+</form>
+
+<h2>武器</h2>
+
+<form action="{% url admin.views.update_weapon %}" method="post">
+  <table>
+    <thead>
+      <th></th>
+    </thead>
+    
+    
+    <tbody>
+      {% for w in weapon_classes %}
+      <tr>
+	<td><input name="key" type="checkbox" value="{{ w.key }}"> {{ w.name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>  
+  </table>
+  
+  <input type="submit" value="武器情報更新"/>
+</form>
+
+{% endblock %}
+

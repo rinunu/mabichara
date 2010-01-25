@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+<script type="text/javascript">
+  var my = {};
+  $(document).ready(function(){
+    my.tl = $('#result').dataTable({"iDisplayLength": 1000});
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<table id="result">
+  <thead>
+    <tr>
+      <th></th>
+      <th>クリ</th>
+      <th>最小</th>
+      <th>最大</th>
+      <th>耐久</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>{{ weapon_class.name }}
+      </td>
+      <td>{{ weapon_class.critical }}</td>
+      <td>{{ weapon_class.attack_min }}</td>
+      <td>{{ weapon_class.attack_max }}</td>
+      <td>{{ weapon_class.durability }}</td>
+
+      <td>
+	<table>
+	  <tr>
+	    <th>名前</th>
+	    <th>熟練</th>
+	    
+	    <th>最低</th>
+	    <th>最大</th>
+	    <th>バランス</th>
+	    <th>クリ</th>
+	    <th>耐久</th>
+	    <th>UG</th>
+	    <th>金額</th>
+	  </tr>
+	  {% for u in upgrades %}
+	  <tr>
+	    <td>{{ u.name }}</td>
+	    <td>{{ u.proficiency }}</td>
+	    <td>{{ u.attack_min }}</td>
+	    <td>{{ u.attack_max }}</td>
+	    <td>{{ u.balance }}</td>
+	    <td>{{ u.critical }}</td>
+	    <td>{{ u.durability }}</td>
+	    <td>{{ u.ug_min }}〜{{ u.ug_max }}</td>
+	    <td>{{ u.cost }}</td>
+	    
+	  </tr>
+	  {% endfor %}
+	</table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
+

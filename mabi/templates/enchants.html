@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}マビノギ エンチャント検索{% endblock %}
+
+{% block content %}
+
+<div class="">
+  <form class="">
+    <div>
+      <label>スクロール名: <input class="name" type="text" /></label>
+      <label>貼り付け場所:
+	<select class="root">
+	  <option value=""></option>
+	  <option value="prefix">接頭</option>
+	  <option value="suffix">接尾</option>
+	</select>
+      </label>
+      
+      <label>装備:
+	<select class="equipment">
+	  <option value=""></option>
+	  <option value="^$|/武器/$|/両手武器/$|/右手/$|/右手/武器/刀剣/|/右手/武器/斧/|/右手/武器/鈍器/|/両手武器/武器/刀剣/|/両手武器/武器/ナックル/|/両手武器/武器/斧/|/両手武器/武器/鈍器/">
+	    近接武器</option>
+	  <option value="^$|/武器/$|/右手/$|/右手/武器/クロスボウ/|/右手/武器/弓/">遠距離武器</option>
+	  <option value="^$|/武器/$|/シリンダー/">シリンダー</option>
+	  <option value="^$|/武器/$|/ワンド/">ワンド</option>
+	  <option value="^$|/楽器/|/巨大料理道具/|/料理用道具/">楽器・料理用道具</option>
+	  <option value="^$|/左手/$|/左手/盾/">盾</option>
+	  <option value="^$|/頭/">頭</option>
+	  <option value="^$|/体/">体</option>
+	  <option value="^$|/手/">手</option>
+	  <option value="^$|/足/">足</option>
+	  <option value="^$|/アクセサリ/">アクセサリ</option>
+	</select>
+      </label>
+    </div>
+    
+    <div class="effects">
+      効果:
+      <label><input class="damage_max" type="checkbox" value="最大ダメージ \+|Str \+|Dex \+" />最大ダメージ系+</label>
+      <label><input class="damage_min" type="checkbox" value="最小ダメージ \+|Str \+|Dex \+" />最小ダメージ系+</label>
+      <label><input class="critical" type="checkbox" value="クリティカル \+|Will \+|Luck \+" />クリティカル系+</label>
+      <label><input class="life_max" type="checkbox" value="最大生命力 \+" />生命力+</label>
+      <label><input class="mana_max" type="checkbox" value="最大マナ \+" />マナ+</label>
+      <label><input class="stamina_max" type="checkbox" value="最大スタミナ \+" />スタミナ+</label>
+      <label><input class="defence" type="checkbox" value="防御 \+" />防御+</label>
+      <label><input class="protection" type="checkbox" value="保護 \+" />保護+</label>
+      
+      <a class="option_button" href="#">詳細</a>
+    </div>
+    
+    <div class="option" style="display:none;">
+      <div class="effects">
+	<div>
+	  <label><input type="checkbox" value="最大ダメージ \+" />最大ダメージ+</label>
+	  <label><input type="checkbox" value="最小ダメージ \+" />最小ダメージ+</label>
+	  <label><input type="checkbox" value="クリティカル \+" />クリティカル+</label>
+	  
+	  <label><input type="checkbox" value="Str \+" />Str+</label>
+	  <label><input type="checkbox" value="Dex \+" />Dex+</label>
+	  <label><input type="checkbox" value="Will \+" />Will+</label>
+	  <label><input type="checkbox" value="Luck \+" />Luck+</label>
+	  <label><input type="checkbox" value="Int \+" />Int+</label>
+	  
+	  <label><input type="checkbox" value="ダメージバランス \+" />ダメージバランス+</label>
+	  
+	  <label><input type="checkbox" value="最大負傷率 \+" />最大負傷率+</label>
+	  <label><input type="checkbox" value="最小負傷率 \+" />最小負傷率+</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="最大ダメージ \-" />最大ダメージ-</label>
+	  <label><input type="checkbox" value="最小ダメージ \-" />最小ダメージ-</label>
+	  <label><input type="checkbox" value="クリティカル \-" />クリティカル-</label>
+	  
+	  <label><input type="checkbox" value="Str \-" />Str-</label>
+	  <label><input type="checkbox" value="Dex \-" />Dex-</label>
+	  <label><input type="checkbox" value="Will \-" />Will-</label>
+	  <label><input type="checkbox" value="Luck \-" />Luck-</label>
+	  <label><input type="checkbox" value="Int \-" />Int-</label>
+	  
+	  <label><input type="checkbox" value="ダメージバランス \-" />ダメージバランス-</label>
+	  
+	  <label><input type="checkbox" value="最大負傷率 \-" />最大負傷率-</label>
+	  <label><input type="checkbox" value="最小負傷率 \-" />最小負傷率-</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="最大生命力 \-" />生命力-</label>
+	  <label><input type="checkbox" value="最大マナ \-" />マナ-</label>
+	  <label><input type="checkbox" value="最大スタミナ \-" />スタミナ-</label>
+	  <label><input type="checkbox" value="防御 \-" />防御-</label>
+	  <label><input type="checkbox" value="保護 \-" />保護-</label>
+	</div>
+	
+	
+	<div>
+	  <label><input type="checkbox" value="戦闘力" />戦闘力</label>
+	  
+	  <label><input type="checkbox" value="消費マナ減少" />消費マナ減少</label>
+	  <label><input type="checkbox" value="毒免疫" />毒免疫</label>
+	  <label><input type="checkbox" value="爆発抵抗" />爆発抵抗</label>
+	  
+	  <label><input type="checkbox" value="結晶製作成功率" />結晶製作成功率</label>
+	  <label><input type="checkbox" value="分解成功率" />分解成功率</label>
+	  <label><input type="checkbox" value="合成成功率" />合成成功率</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="風属性の錬金術ダメージ" />風属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="水属性の錬金術ダメージ" />水属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="火属性の錬金術ダメージ" />火属性の錬金術ダメージ</label>
+	</div>
+      </div>
+      
+    </div>
+  </form>
+  
+  <table class="enchants ui-widget ui-widget-content">
+    <thead>
+      <tr class="">
+	<th class="id">id</th>
+	<th class="equipment"></th>
+	<th class="effects"></th>
+	
+	<th class="root">場所</th>
+	<th class="rank">ランク</th>
+	<th class="name" >スクロール名</th>
+	<th class="equipment_text">部位</th>
+	<th class="effects_text">性能・Lv制限・条件</th>
+	
+	<th class="damage_max">最大</th>
+	<th class="melee_damage_max">近接</th>
+	<th class="ranged_damage_max">遠距離</th>
+	<th class="critical">クリティカル</th>
+	<th class="life_max">生命力</th>
+	<th class="mana_max">マナ</th>
+	<th class="stamina_max">スタミナ</th>
+	<th class="defence">防御</th>
+	<th class="protection">保護</th>
+      </tr>
+    </thead>
+    
+    <tbody class="">
+      {% for e in enchants %}
+      <tr>
+	<td>{{ e.key.id }}</td>
+	<td>{{ e.equipment|default_if_none:"" }}</td>
+	<td>{{ e.effects|linebreaksbr }}</td>
+	
+	<td>{{ e.root }}</td>
+	<td>{{ e.rank_text }}</td>
+	<td>
+	  <div>
+	    {% for name in e.names %}
+	    {{ name }}<br />
+	    {% endfor %}
+	    ({{ e.english_name }})
+	    {% if not e.implemented %}
+	    <br />
+	    <span class="unimplemented">未実装({{e.season}})</span>
+	    {% endif %}
+	    <a href="{{ e.source }}" target="_blank">wiki</a>
+	  </div>
+	</td>
+	<td>{{ e.equipment_text|default_if_none:"" }}</td>
+	<td>{{ e.effects_text|linebreaksbr }}</td>
+	
+	<td>{{ e.damage_max }}</td>
+	<td>{{ e.melee_damage_max }}</td>
+	<td>{{ e.ranged_damage_max }}</td>
+	<td>{{ e.critical_text }}</td>
+	<td>{{ e.life_max }}</td>
+	<td>{{ e.mana_max }}</td>
+	<td>{{ e.stamina_max }}</td>
+	<td>{{ e.defence }}</td>
+	<td>{{ e.protection }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    
+  </table>
+</div>
+
+  
+{% endblock %}
+  

@@ -1,0 +1,92 @@
+/* -*- coding: utf-8 -*- */
+/* Add your global CSS (i.e., code that is project-specific and not part of any app) here. */
+
+
+/* ---------------------------------------------------------------------- */
+/* 全体構成 */
+
+#header {
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #a6c9e2;
+}
+
+
+#footer {
+    margin-top: 20px;
+    padding-top: 5px;
+    border-top: 1px solid #a6c9e2;
+    clear: both;
+}
+
+/* ---------------------------------------------------------------------- */
+/* 共通 */
+
+a{
+    color: rgb(0,0,204);
+}
+
+.css_right { float: right; }
+
+/* ---------------------------------------------------------------------- */
+/*  */
+
+/* label { */
+/*     font-weight: normal; */
+/*     margin-right: 3px; */
+/* } */
+
+/* ---------------------------------------------------------------------- */
+/* table */
+
+thead th {
+    cursor: pointer;
+    * cursor: hand;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+td{
+    border: 1px solid #a6c9e2;
+}
+
+.odd{
+    background-color: white;
+}
+
+/* td{ */
+/*     border: 1px solid black; */
+/* } */
+
+/* ページング */
+
+/* .paging_full_numbers { */
+/* 	width: 400px; */
+/* 	height: 22px; */
+/* 	line-height: 22px; */
+/* } */
+
+/* .paging_full_numbers span.paginate_button, */
+/*  	.paging_full_numbers span.paginate_active { */
+/* 	border: 1px solid #aaa; */
+/* 	-webkit-border-radius: 5px; */
+/* 	-moz-border-radius: 5px; */
+/* 	padding: 2px 5px; */
+/* 	margin: 0 3px; */
+/* 	cursor: pointer; */
+/* 	*cursor: hand; */
+/* } */
+
+/* .paging_full_numbers span.paginate_button { */
+/* 	background-color: #ddd; */
+/* } */
+
+/* .paging_full_numbers span.paginate_button:hover { */
+/* 	background-color: #ccc; */
+/* } */
+
+/* .paging_full_numbers span.paginate_active { */
+/* 	background-color: #99B3FF; */
+/* } */

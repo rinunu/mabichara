@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+<script type="text/javascript">
+  var my = {};
+  $(document).ready(function(){
+    my.tl = $('#result').dataTable({"iDisplayLength": 1000});
+  });
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+<table id="result">
+  <thead>
+    <tr>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+      <th>a</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for e in result %}
+    <tr>
+      <td>{{ e.english_name }}<br />
+	{% for name in e.names %}
+	{{ name }}<br />
+	{% endfor %}
+      </td>
+      <td>{{ e.root }}</td>
+      <td>{{ e.rank }}</td>
+      <td>{{ e.equipment_text|default_if_none:"" }}</td>
+      <td>{{ e.equipment|default_if_none:"" }}</td>
+      <td>{{ e.effects_text|linebreaksbr }}</td>
+      <td>{{ e.effects|linebreaksbr }}</td>
+      <td>{{ e.updated_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  
+</table>
+{% endblock %}
+

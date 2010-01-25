@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}マビノギ お気に入り装備{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+  $(function() {
+  $("#tabs").tabs();
+  });
+</script>
+
+<div class="ui-widget">
+  <div class="ui-widget-header">
+    選択している装備の合計ステータス
+  </div>
+  <div id="tab1" class="status">
+    <table class="status main ui-widget ui-widget-content">
+      <tbody>
+	<tr>
+	  <th class="life_max">生命力</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="mana_max">マナ</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="stamina_max">スタミナ</th>
+	  <td>80</td>
+	</tr>
+      </tbody>
+    </table>
+    
+    <table class="status ui-widget ui-widget-content">
+      <tbody>
+	<tr>
+	  <th class="">Str</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="">Int</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="">Dex</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="">Will</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="">Luck</th>
+	  <td>80</td>
+	</tr>
+      </tbody>
+    </table>
+    
+    <table class="status attack ui-widget ui-widget-content">
+      <tbody class="">
+	<tr>
+	  <th class="damage_max">ダメージ</th>
+	  <td>80〜100</td>
+	</tr>
+	<tr>
+	  <th class="critical">クリティカル</th>
+	  <td>80</td>
+	</tr>
+      </tbody>
+    </table>
+    
+    <table class="status defence ui-widget ui-widget-content">
+      <tbody class="">
+	<tr>
+	  <th class="defence">防御</th>
+	  <td>80</td>
+	</tr>
+	<tr>
+	  <th class="protection">保護</th>
+	  <td>80</td>
+	</tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">お気に入り1</a></li>
+    <li><a href="#tabs-2">お気に入り2</a></li>
+  </ul>
+
+  <div id="tabs-1">
+    <div>
+      <button>装備追加</button>
+    </div>
+    <table class="ui-widget ui-widget-content">
+      <thead>
+	<tr class="ui-widget-header">
+	  <th class="">名称</th>
+	  <th class="">最小ダメージ</th>
+	  <th class="">最大ダメージ</th>
+	  <th class="">防御</th>
+	  <th class="">保護</th>
+	  <th class="">クリ-ダメージ変換率</th>
+	</tr>
+      </thead>
+      
+      <tbody>
+	<tr>
+	  <td>
+	    <input type="checkbox" />
+	    荒い 激しい 尻尾帽子<button>エンチャント</button>
+	  </td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	</tr>
+	
+	<tr>
+	  <td>
+	    <input type="checkbox" />
+	    クリティカルヒットマスター<br />
+	    原理 暗黒 軽鎧<button>エンチャント</button>
+	  </td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	  <td>10</td>
+	</tr>
+      </tbody>
+      
+    </table>
+  </div>
+  
+  <div id="tabs-2">
+    a
+  </div>
+</div>
+  
+<div>
+  <button>装備削除</button>
+</div>
+
+{% endblock %}

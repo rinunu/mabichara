@@ -1,0 +1,64 @@
+
+
+/* ---------------------------------------------------------------------- */
+
+.unimplemented{
+    color: red;
+}
+
+/* ---------------------------------------------------------------------- */
+
+/* ul.weapons li{ */
+/*     display: block; */
+/*     float: left; */
+/*     margin: 5px; */
+/*     padding: 1px; */
+/*     background-color: #C6E2FF; */
+/* } */
+
+/* ---------------------------------------------------------------------- */
+
+th{
+    font-size: 0.8em;
+}
+
+th.root{
+    width: 50px;
+}
+
+th.rank{
+    width: 50px;
+}
+
+th.name{
+    width: 120px;
+}
+
+th.equipment_text{
+    width: 100px;
+}
+
+/* th.effects_text{ */
+/*     width: 300px; */
+/* } */
+
+table.enchants{
+    width: 800px;
+}
+
+th.damage_max, th.melee_damage_max, th.ranged_damage_max, th.critical, th.life_max,
+th.mana_max, th.stamina_max, th.defence, th.protection{
+    width: 60px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* ステータス */
+
+table.status{
+}
+
+table.status th{
+}
+
+table.status td{
+}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}マビノギ 武器検索{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+$(function() {
+$('#dialog').dialog();
+});
+</script>
+
+
+<div id="dialog">
+  <form>
+    <ul class="weapons">
+      <li>1級 クレイモア<a href="">(X)</a></li>
+      <li>B+級ダスティンシルバーナイトソード<a href="">(X)</a></li>
+    </ul>
+    
+    <div class="clear"></div>
+    
+    <a href="">追加</a>
+  </form>
+  
+  <table class="weapons">
+    <thead>
+      <tr>
+	<th class="name">武器名</th>
+	<th class="proficiency">熟練</th>
+	<th class="attack_min">最小</th>
+	<th class="attack_max">最大</th>
+	<th class="critical">クリティカル</th>
+	<th class="durability">耐久</th>
+	<th class="upgrades_text">改造</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+    </tbody>
+    
+  </table>
+</div>
+
+{% endblock %}

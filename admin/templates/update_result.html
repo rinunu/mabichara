@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+<script type="text/javascript">
+  var my = {};
+  $(document).ready(function(){
+    my.tl = $('#result').dataTable({"iDisplayLength": 1000});
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<table id="result">
+  <thead>
+    <tr>
+      <th>a</th>
+      <th>a</th>
+      <th>最大</th>
+      <th>近距離最大</th>
+      <th>遠距離最大</th>
+      <th>クリティカル</th>
+      <th>生命力</th>
+      <th>マナ</th>
+      <th>スタミナ</th>
+      <th>防御</th>
+      <th>保護</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for e in result %}
+    <tr>
+      <td>{{ e.name }}</td>
+      <td>{{ e.effects|linebreaksbr }}</td>
+      <td>{{ e.damage_max }}</td>
+      <td>{{ e.melee_damage_max }}</td>
+      <td>{{ e.ranged_damage_max }}</td>
+      <td>{{ e.critical }}</td>
+      <td>{{ e.life_max }}</td>
+      <td>{{ e.mana_max }}</td>
+      <td>{{ e.stamina_max }}</td>
+      <td>{{ e.defence }}</td>
+      <td>{{ e.protection }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  
+</table>
+{% endblock %}
+
