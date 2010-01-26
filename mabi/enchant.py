@@ -16,12 +16,6 @@ class Enchant(db.Model):
     
     names = db.StringListProperty()
 
-    # 別名 todo list
-    name2 = db.StringProperty()
-    
-    # 別名
-    name3 = db.StringProperty()
-
     rank = db.IntegerProperty(required = True)
     
     # prefix or suffix
@@ -32,8 +26,6 @@ class Enchant(db.Model):
 
     # 貼り付け可能部位の説明
     equipment_text = db.StringProperty()
-
-    generation = db.StringProperty()
 
     # 効果
     effects = db.StringProperty(multiline = True)
