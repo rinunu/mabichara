@@ -10,6 +10,7 @@ $(document).ready(function(){
 
 function myCallback(json){
   var tbody = $('tbody');
+  // ホントはここで文字列をエスケープしないとダメ。。
   for(var i = 0; i < json.length; ++i){
     var e = json[i];
     tbody.append(
@@ -28,7 +29,7 @@ function myCallback(json){
 
 function load(){
   var s = document.createElement('script');
-  s.src = '/mabi/enchants.json?max-results=1000&amp;callback=myCallback';
+  s.src = 'http://mabichara.appspot.com/mabi/enchants.json?max-results=1000&amp;callback=myCallback';
   $('head').append(s);
 }
 </script>
@@ -41,7 +42,7 @@ function load(){
       <th>names</th>
       <th>rank</th>
       <th>root</th>
-      <th>equipments</th>
+      <th>equipment</th>
       <th>effects</th>
       <th>season</th>
       <th>wiki</th>

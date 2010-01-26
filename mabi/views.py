@@ -22,6 +22,8 @@ and もどれかにマッチしていれば OK
 
 """
 
+import re
+
 from django.views.generic.simple import direct_to_template
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
@@ -32,6 +34,11 @@ import json
 
 from mabi.enchant import Enchant
 from mabi.weapon import Weapon
+
+######################################################################
+
+def jsonp(obj, callback):
+    return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback),  json.write(obj))
 
 def enchants(request):
     """エンチャント一覧を表示する
@@ -91,7 +98,7 @@ def enchants_json(request):
         result.append(obj)
 
     if callback:
-        result = '%s(%s);' % (callback,  json.write(result))
+        result = jsonp(result, callback)
     else:
         result = json.write(result)
     return HttpResponse(result) # , 'application/json')
