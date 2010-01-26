@@ -21,16 +21,19 @@ class WeaponClass(db.Model):
     speed = db.StringProperty()
     attack_min = db.IntegerProperty()
     attack_max = db.IntegerProperty()
-    balance = db.IntegerProperty();
+    balance = db.IntegerProperty()
     hit = db.IntegerProperty()
     critical = db.IntegerProperty()
     
     # 負傷
-    injury_min = db.IntegerProperty();
-    injury_max = db.IntegerProperty();
+    injury_min = db.IntegerProperty()
+    injury_max = db.IntegerProperty()
 
     # 耐久
     durability = db.IntegerProperty()
+
+    # 改造可能回数
+    ug = db.IntegerProperty()
 
     def _set_upgrades(self, v):
         self.upgrade_keys = [i.key() for i in v]

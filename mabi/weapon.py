@@ -14,6 +14,7 @@ class Weapon(db.Model):
     WeaponClass のオブジェクト的な存在
     """
 
+    # 人間にわかりやすい名前
     name = db.StringProperty()
     
     weapon_class = db.ReferenceProperty(WeaponClass)
@@ -71,6 +72,12 @@ class Weapon(db.Model):
 
             self.proficiency += u.proficiency
             self.cost += u.cost
+
+        if self.attack_min < 0: self.attack_min = 0
+        if self.attack_max < 0: self.attack_max = 0
+        if self.balance < 0: self.balance = 0
+        if self.critical < 0: self.critical = 0
+        if self.durability < 0: self.durability = 0
     
     def update_computed(self):
         '''
@@ -79,7 +86,7 @@ class Weapon(db.Model):
         _update_computed(self.upgrades)
 
     @classmethod
-    def get_or_insert(cls, weapon_class, upgrades):
+    def create_or_update(cls, weapon_class, upgrades, name):
         '''同じ性能の武器がすでにあるならそれを返し、なければ追加する
 
         同じ性能の武器と判断されるのは、このメソッドを使用して作成した武器のみである
@@ -87,21 +94,21 @@ class Weapon(db.Model):
         '''
 
         key_name = '/' + '/'.join([weapon_class.name] + sorted([u.name for u in upgrades]))
-        # key = db.Key.from_path(cls.kind(), key_name)
 
         def tx():
             a = cls.get_by_key_name(key_name)
             if not a:
                 a = cls(key_name=key_name)
                 a.weapon_class = weapon_class
-                a.initial_attack_min = weapon_class.attack_min
-                a.initial_attack_max = weapon_class.attack_max
-                a.initial_balance = weapon_class.balance
-                a.initial_critical = weapon_class.critical
-                a.initial_durability = weapon_class.durability
                 a.upgrades = upgrades
-                a._update_computed(upgrades)
-                a.put()
+            a.name = name
+            a.initial_attack_min = weapon_class.attack_min
+            a.initial_attack_max = weapon_class.attack_max
+            a.initial_balance = weapon_class.balance
+            a.initial_critical = weapon_class.critical
+            a.initial_durability = weapon_class.durability
+            a._update_computed(upgrades)
+            a.put()
             return a
 
         a = db.run_in_transaction(tx)
