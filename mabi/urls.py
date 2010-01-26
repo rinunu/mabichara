@@ -5,8 +5,13 @@ urlpatterns = patterns(
     (url(r'^about$', 'django.views.generic.simple.direct_to_template', {'template': 'about.html'}, name='about')),
     
     (r'^enchants$', 'mabi.views.enchants'),
+    (r'^enchants.json$', 'mabi.views.enchants_json'),
+    
     (r'^weapons$', 'mabi.views.weapons'),
     (r'^weapons.json$', 'mabi.views.weapons_json'),
 
     (url(r'^equipment$', 'django.views.generic.simple.direct_to_template', {'template': 'equipment.html'}, name='equipment')),
+
+    
+    (url(r'^enchants2$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants2.html'}, name='enchants2')),
 )

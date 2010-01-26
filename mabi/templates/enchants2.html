@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}エンチャントJSONP サンプル{% endblock %}
+
+{% block content %}
+
+<script>
+$(document).ready(function(){
+  $('button').click(load)
+});
+
+function myCallback(json){
+  var tbody = $('tbody');
+  for(var i = 0; i < json.length; ++i){
+    var e = json[i];
+    tbody.append(
+      '<tr>'
+      + '<td>' + e.names.join('<br />') + '</td>'
+      + '<td>' + e.rank_text + '</td>'
+      + '<td>' + e.root + '</td>'
+      + '<td>' + e.equipment + '</td>'
+      + '<td>' + e.effects.join('<br />') + '</td>'
+      + '<td>' + e.season + '</td>'
+      + '<td><a href="' + e.wiki + '">wiki</a></td>'
+      + '</tr>'
+    );
+  }
+}
+
+function load(){
+  var s = document.createElement('script');
+  s.src = '/mabi/enchants.json?max-results=1000&amp;callback=myCallback';
+  $('head').append(s);
+}
+</script>
+
+<button>押してね</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>names</th>
+      <th>rank</th>
+      <th>root</th>
+      <th>equipments</th>
+      <th>effects</th>
+      <th>season</th>
+      <th>wiki</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  </tbody>
+    
+</table>
+
+
+{% endblock %}
