@@ -48,7 +48,8 @@ table{
     border-collapse: collapse;
 }
 
-td{
+td, th{
+    font-size: 12px;
     border: 1px solid #a6c9e2;
 }
 
