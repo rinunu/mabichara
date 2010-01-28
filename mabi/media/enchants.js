@@ -144,15 +144,15 @@ $(document).ready(
 		    { "bVisible": false },
 		    { "bVisible": false },
 		    null, null, null, null, null,
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false },
-		    { "bVisible": false }
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' },
+		    { "bVisible": false, sType: 'numeric' }
 		   ]
     });
 
