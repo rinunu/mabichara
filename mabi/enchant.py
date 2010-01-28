@@ -3,6 +3,8 @@
 """
 """
 
+import re
+import logging
 from google.appengine.ext import db
 
 class Enchant(db.Model):
@@ -21,10 +23,10 @@ class Enchant(db.Model):
     # prefix or suffix
     root = db.StringProperty(required = True)
 
-    # 貼り付け可能部位
+    # 貼り付け可能装備
     equipment = db.StringProperty()
 
-    # 貼り付け可能部位の説明
+    # 貼り付け可能装備の説明
     equipment_text = db.StringProperty()
 
     # 効果
@@ -45,15 +47,53 @@ class Enchant(db.Model):
     source = db.LinkProperty()
 
     # ステータス上昇(or 低下)
-    damage_max = db.FloatProperty()
-    melee_damage_max = db.FloatProperty()
-    ranged_damage_max = db.FloatProperty()
+    attack_max = db.FloatProperty()
     critical = db.FloatProperty()
     life_max = db.FloatProperty()
     mana_max = db.FloatProperty()
     stamina_max = db.FloatProperty()
     defence = db.FloatProperty()
     protection = db.FloatProperty()
+
+    melee_attack_max = db.FloatProperty()
+    ranged_attack_max = db.FloatProperty()
+
+    # 以下は検索用
+    # ある属性が上昇するなら 1, 減少するなら 2, 変化無しなら 0
+
+    # 単一効果
+    effect_attack_max = db.IntegerProperty(default = 0)
+    effect_attack_min = db.IntegerProperty(default = 0)
+    effect_critical = db.IntegerProperty(default = 0)
+    effect_str = db.IntegerProperty(default = 0)
+    effect_dex = db.IntegerProperty(default = 0)
+    effect_will = db.IntegerProperty(default = 0)
+    effect_luck = db.IntegerProperty(default = 0)
+    effect_int = db.IntegerProperty(default = 0)
+    effect_balance  = db.IntegerProperty(default = 0)
+    effect_life_max = db.IntegerProperty(default = 0)
+    effect_mana_max = db.IntegerProperty(default = 0)
+    effect_stamina_max = db.IntegerProperty(default = 0)
+    effect_defence = db.IntegerProperty(default = 0)
+    effect_protection = db.IntegerProperty(default = 0)
+    effect_injury_max = db.IntegerProperty(default = 0)
+    effect_injury_min = db.IntegerProperty(default = 0)
+    effect_cp = db.IntegerProperty(default = 0)
+
+    effect_mana_consumption = db.IntegerProperty(default = 0) # マナ消費
+    effect_poison_resistance = db.IntegerProperty(default = 0) # 毒免疫
+    effect_explosion_resistance = db.IntegerProperty(default = 0) # 爆発抵抗
+    effect_crystal_making = db.IntegerProperty(default = 0) # 結晶製作成功率
+    effect_dissolution = db.IntegerProperty(default = 0) # 分解成功率
+    effect_synthesis = db.IntegerProperty(default = 0) # 合成成功率
+    effect_alchemy_wind = db.IntegerProperty(default = 0)
+    effect_alchemy_water = db.IntegerProperty(default = 0)
+    effect_alchemy_fire = db.IntegerProperty(default = 0)
+
+    # 複合
+    effect_attack_max_dex_str = db.IntegerProperty(default = 0)
+    effect_attack_min_dex_str = db.IntegerProperty(default = 0)
+    effect_critical_luck_will = db.IntegerProperty(default = 0)
 
     @property
     def critical_text(self):
@@ -78,9 +118,9 @@ class Enchant(db.Model):
     
     def update_computed(self):
         '''計算によって求まるプロパティを設定する'''
-        self.damage_max = 0.0
-        self.melee_damage_max = 0.0
-        self.ranged_damage_max = 0.0
+        self.attack_max = 0.0
+        self.melee_attack_max = 0.0
+        self.ranged_attack_max = 0.0
         self.critical = 0.0
         self.life_max = 0.0
         self.mana_max = 0.0
@@ -94,30 +134,51 @@ class Enchant(db.Model):
 
             type = a[0]
             max = float(a[1] + a[3])
-            if type == u'最大ダメージ':
-                self.damage_max += max
-                self.melee_damage_max += max
-                self.ranged_damage_max += max
-            elif type == u'クリティカル':
+            up_or_down = 1 if max > 0 else 2
+            # todo attack_min etc.
+            if type == u'attack_max':
+                self.attack_max += max
+                self.melee_attack_max += max
+                self.ranged_attack_max += max
+                self.effect_attack_max = up_or_down
+                self.effect_attack_max_dex_str = up_or_down
+            elif type == u'critical':
                 self.critical += max / 100
-            elif type == u'Str':
-                self.melee_damage_max += max / 2.5
-            elif type == u'Dex':
-                self.ranged_damage_max += max / 2.5
-            elif type == u'Will':
+                self.effect_critical = up_or_down
+                self.effect_critical_luck_will = up_or_down
+            elif type == u'str':
+                self.melee_attack_max += max / 2.5
+                self.effect_str = up_or_down
+                self.effect_attack_max_dex_str = up_or_down
+                self.effect_attack_min_dex_str = up_or_down
+            elif type == u'dex':
+                self.ranged_attack_max += max / 2.5
+                self.effect_dex = up_or_down
+                self.effect_attack_max_dex_str = up_or_down
+                self.effect_attack_min_dex_str = up_or_down
+            elif type == u'will':
                 self.critical += max / 1000
-            elif type == u'Luck':
+                self.effect_will = up_or_down
+                self.effect_critical_luck_will = up_or_down
+            elif type == u'luck':
                 self.critical += max / 500
-            elif type == u'最大生命力':
+                self.effect_luck = up_or_down
+                self.effect_critical_luck_will = up_or_down
+            elif type == u'life_max':
                 self.life_max += max
-            elif type == u'最大マナ':
+                self.effect_life_max = up_or_down
+            elif type == u'mana_max':
                 self.mana_max += max
-            elif type == u'最大スタミナ':
+                self.effect_mana_max = up_or_down
+            elif type == u'stamina_max':
                 self.stamina_max += max
-            elif type == u'防御':
+                self.effect_stamina_max = up_or_down
+            elif type == u'defence':
                 self.defence += max
-            elif type == u'保護':
+                self.effect_defence = up_or_down
+            elif type == u'protection':
                 self.protection += max
+                self.effect_protection = up_or_down
 
     @classmethod
     def get(cls, english_name, root, rank):
@@ -126,4 +187,68 @@ class Enchant(db.Model):
         q.filter('rank = ', rank)
         q.filter('root = ', root)
         return q.get()
+
+    @classmethod
+    def find(cls, name=None, root=None, rank=None, equipment=None, effects=None,
+            order=None, limit=None
+            ):
+        '''指定された検索条件で検索する
+
+        指定された条件はすべて AND で検索する
+
+        Arguments:
+            name -- names, english_name と部分一致比較する
+            effect -- 効果。「+attack_max -critical」のような形式で指定する。 アンド検索を行う
+            
+            equipment -- 貼付け可能装備。 正規表現で指定する。
+
+            order -- 並び順を指定する。 Enchant のプロパティのどれかを指定する。
+            降順にする場合はプロパティ名の先頭に - をつける。
+            
+
+        '''
+        
+        if limit:
+            limit = int(limit)
+
+        if isinstance(equipment, basestring):
+            equipment = re.compile(equipment)
+
+        q = cls.all()
+        if order:
+            q.order(order)
+        if root:
+            q.filter('root = ', root)
+        if rank:
+            q.filter('rank = ', int(rank))
+
+        if effects:
+            effects = effects.split(u' ')
+            effect_re = re.compile(ur'([-+])([a-zA-Z0-9_]+)')
+            for e in effects:
+                m = effect_re.match(e)
+                v = 1 if m.group(1) == '+' else 2
+                op = 'effect_%s = ' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
+                logging.info(op + str(v))
+                q.filter(op, v)
+            
+        result = []
+        for e in q:
+            if name:
+                if e.english_name.find(name) == -1:
+                    for a in e.names:
+                        if a.find(name) != -1:
+                            break
+                    else:
+                        continue
+
+            es_equipment = e.equipment or ''
+            if equipment and not equipment.match(es_equipment):
+                continue
+
+            result.append(e)
+            if limit and limit <= len(result):
+                break
+
+        return result
     

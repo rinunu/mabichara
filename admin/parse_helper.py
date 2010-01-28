@@ -129,6 +129,58 @@ def to_equipment(text):
     else:
         raise Exception, u'不明な装備: ' + text
 
+def to_effect_id(name):
+    '''効果の日本語名から内部 ID へ変換する'''
+    map = {
+        u'最大生命力' : u'life_max',
+        u'生命力' : u'life_max',
+        u'最大スタミナ' : u'stamina_max',
+        u'スタミナ' : u'stamina_max',
+        u'最大マナ' : u'mana_max',
+        u'マナ' : u'mana_max',
+
+        u'Str' : u'str',
+        u'Dex' : u'dex',
+        u'Will' : u'will',
+        u'Luck' : u'luck',
+        u'Int' : u'int',
+        
+        u'最大ダメージ' : u'attack_max',
+        u'最小ダメージ' : u'attack_min',
+        u'クリティカル' : u'critical',
+        
+        u'保護' : u'protection',
+        u'防御' : u'defence',
+        
+        u'ダメージバランス' : u'balance',
+        u'バランス' : u'balance',
+
+        u'最大負傷率' : u'injury_max',
+        u'最小負傷率' : u'injury_min',
+
+        u'戦闘力' : u'cp',
+        u'修理費' : u'repair_cost',
+        u'修理費用' : u'repair_cost',
+
+        u'消費マナ減少' : u'mana_consumption',
+        u'毒免疫' : u'poison_resistance',
+        u'爆発抵抗' : u'explosion_resistance',
+
+        u'結晶製作成功率' : u'crystal_making',
+        u'分解成功率' : u'dissolution',
+        u'合成成功率' : u'synthesis',
+
+        u'風属性の錬金術ダメージ' : u'alchemy_wind',
+        u'風属性錬金術ダメージ' : u'alchemy_wind',
+        u'水属性の錬金術ダメージ' : u'alchemy_water',
+        u'水属性錬金術ダメージ' : u'alchemy_water',
+        u'火属性の錬金術ダメージ' : u'alchemy_fire',
+        u'火属性錬金術ダメージ' : u'alchemy_fire',
+        }
+    id = map.get(name)
+    if id: return id
+    else: raise Exception, u'不明な効果です: ' + name
+
 def to_effect(text):
     igrone_rank_re = re.compile(ur'ランクに関係なくエンチャント可能')
     personal_rank_re = re.compile(ur'エンチャントアイテムが装備者専用になる')
@@ -194,59 +246,7 @@ def to_effect(text):
                 else:
                     raise Exception, u'パースエラー:' + effect
 
-    map = {
-        u'スタミナ' : u'最大スタミナ',
-        u'生命力' : u'最大スタミナ',
-        u'マナ' : u'最大マナ',
-        u'修理費用' : u'修理費',
-        u'バランス' : u'ダメージバランス',
-
-        u'水属性錬金術ダメージ' : u'水属性の錬金術ダメージ',
-        u'風属性錬金術ダメージ' : u'風属性の錬金術ダメージ',
-        u'火属性錬金術ダメージ' : u'火属性の錬金術ダメージ',
-        }
-    if target in map: target = map[target]
-
-    if target in (
-        u'最大生命力',
-        u'最大スタミナ',
-        u'最大マナ',
-
-        u'Str',
-        u'Dex',
-        u'Will',
-        u'Luck',
-        u'Int',
-        
-        u'最大ダメージ',
-        u'最小ダメージ',
-        u'クリティカル',
-        
-        u'保護',
-        u'防御',
-        
-        u'ダメージバランス',
-
-        u'最大負傷率',
-        u'最小負傷率',
-
-        u'戦闘力',
-        u'修理費',
-
-        u'消費マナ減少',
-        u'毒免疫',
-        u'爆発抵抗',
-
-        u'結晶製作成功率',
-        u'分解成功率',
-        u'合成成功率',
-        u'風属性の錬金術ダメージ',
-        u'水属性の錬金術ダメージ',
-        u'火属性の錬金術ダメージ',
-        ):
-        return u'%s %s %s %s' % (target, op, min, max)
-    else:
-        raise Exception, u'効果不明: ' + target
+    return u'%s %s %s %s' % (to_effect_id(target), op, min, max)
     
 def to_effects(text):
     """Enchant.effects_text を元に Enchant.effects を返す"""

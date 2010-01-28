@@ -36,14 +36,14 @@
     
     <div class="effects">
       効果:
-      <label><input class="damage_max" type="checkbox" value="最大ダメージ \+|Str \+|Dex \+" />最大ダメージ系+</label>
-      <label><input class="damage_min" type="checkbox" value="最小ダメージ \+|Str \+|Dex \+" />最小ダメージ系+</label>
-      <label><input class="critical" type="checkbox" value="クリティカル \+|Will \+|Luck \+" />クリティカル系+</label>
-      <label><input class="life_max" type="checkbox" value="最大生命力 \+" />生命力+</label>
-      <label><input class="mana_max" type="checkbox" value="最大マナ \+" />マナ+</label>
-      <label><input class="stamina_max" type="checkbox" value="最大スタミナ \+" />スタミナ+</label>
-      <label><input class="defence" type="checkbox" value="防御 \+" />防御+</label>
-      <label><input class="protection" type="checkbox" value="保護 \+" />保護+</label>
+      <label><input class="attack_max" type="checkbox" value="attack_max \+|str \+|dex \+" />最大ダメージ系+</label>
+      <label><input class="attack_min" type="checkbox" value="attack_min \+|str \+|dex \+" />最小ダメージ系+</label>
+      <label><input class="critical" type="checkbox" value="critical \+|will \+|luck \+" />クリティカル系+</label>
+      <label><input class="life_max" type="checkbox" value="life_max \+" />生命力+</label>
+      <label><input class="mana_max" type="checkbox" value="mana_max \+" />マナ+</label>
+      <label><input class="stamina_max" type="checkbox" value="stamina_max \+" />スタミナ+</label>
+      <label><input class="defence" type="checkbox" value="defence \+" />防御+</label>
+      <label><input class="protection" type="checkbox" value="protection \+" />保護+</label>
       
       <a class="option_button" href="#">詳細</a>
     </div>
@@ -51,61 +51,61 @@
     <div class="option" style="display:none;">
       <div class="effects">
 	<div>
-	  <label><input type="checkbox" value="最大ダメージ \+" />最大ダメージ+</label>
-	  <label><input type="checkbox" value="最小ダメージ \+" />最小ダメージ+</label>
-	  <label><input type="checkbox" value="クリティカル \+" />クリティカル+</label>
+	  <label><input type="checkbox" value="attack_max \+" />最大ダメージ+</label>
+	  <label><input type="checkbox" value="attack_min \+" />最小ダメージ+</label>
+	  <label><input type="checkbox" value="critical \+" />クリティカル+</label>
 	  
-	  <label><input type="checkbox" value="Str \+" />Str+</label>
-	  <label><input type="checkbox" value="Dex \+" />Dex+</label>
-	  <label><input type="checkbox" value="Will \+" />Will+</label>
-	  <label><input type="checkbox" value="Luck \+" />Luck+</label>
-	  <label><input type="checkbox" value="Int \+" />Int+</label>
+	  <label><input type="checkbox" value="str \+" />Str+</label>
+	  <label><input type="checkbox" value="dex \+" />Dex+</label>
+	  <label><input type="checkbox" value="will \+" />Will+</label>
+	  <label><input type="checkbox" value="luck \+" />Luck+</label>
+	  <label><input type="checkbox" value="int \+" />Int+</label>
 	  
-	  <label><input type="checkbox" value="ダメージバランス \+" />ダメージバランス+</label>
+	  <label><input type="checkbox" value="balance \+" />ダメージバランス+</label>
 	  
-	  <label><input type="checkbox" value="最大負傷率 \+" />最大負傷率+</label>
-	  <label><input type="checkbox" value="最小負傷率 \+" />最小負傷率+</label>
+	  <label><input type="checkbox" value="injury_max \+" />最大負傷率+</label>
+	  <label><input type="checkbox" value="injury_min \+" />最小負傷率+</label>
 	</div>
 	<div>
-	  <label><input type="checkbox" value="最大ダメージ \-" />最大ダメージ-</label>
-	  <label><input type="checkbox" value="最小ダメージ \-" />最小ダメージ-</label>
-	  <label><input type="checkbox" value="クリティカル \-" />クリティカル-</label>
+	  <label><input type="checkbox" value="attack_max \-" />最大ダメージ-</label>
+	  <label><input type="checkbox" value="attack_min \-" />最小ダメージ-</label>
+	  <label><input type="checkbox" value="critical \-" />クリティカル-</label>
 	  
-	  <label><input type="checkbox" value="Str \-" />Str-</label>
-	  <label><input type="checkbox" value="Dex \-" />Dex-</label>
-	  <label><input type="checkbox" value="Will \-" />Will-</label>
-	  <label><input type="checkbox" value="Luck \-" />Luck-</label>
-	  <label><input type="checkbox" value="Int \-" />Int-</label>
+	  <label><input type="checkbox" value="str \-" />Str-</label>
+	  <label><input type="checkbox" value="dex \-" />Dex-</label>
+	  <label><input type="checkbox" value="will \-" />Will-</label>
+	  <label><input type="checkbox" value="luck \-" />Luck-</label>
+	  <label><input type="checkbox" value="int \-" />Int-</label>
 	  
-	  <label><input type="checkbox" value="ダメージバランス \-" />ダメージバランス-</label>
+	  <label><input type="checkbox" value="balance \-" />ダメージバランス-</label>
 	  
-	  <label><input type="checkbox" value="最大負傷率 \-" />最大負傷率-</label>
-	  <label><input type="checkbox" value="最小負傷率 \-" />最小負傷率-</label>
+	  <label><input type="checkbox" value="injury_max \-" />最大負傷率-</label>
+	  <label><input type="checkbox" value="injury_min \-" />最小負傷率-</label>
 	</div>
 	<div>
-	  <label><input type="checkbox" value="最大生命力 \-" />生命力-</label>
-	  <label><input type="checkbox" value="最大マナ \-" />マナ-</label>
-	  <label><input type="checkbox" value="最大スタミナ \-" />スタミナ-</label>
-	  <label><input type="checkbox" value="防御 \-" />防御-</label>
-	  <label><input type="checkbox" value="保護 \-" />保護-</label>
+	  <label><input type="checkbox" value="life_max \-" />生命力-</label>
+	  <label><input type="checkbox" value="mana_max \-" />マナ-</label>
+	  <label><input type="checkbox" value="stamina_max \-" />スタミナ-</label>
+	  <label><input type="checkbox" value="defence \-" />防御-</label>
+	  <label><input type="checkbox" value="protection \-" />保護-</label>
 	</div>
 	
 	
 	<div>
-	  <label><input type="checkbox" value="戦闘力" />戦闘力</label>
+	  <label><input type="checkbox" value="cp" />戦闘力</label>
 	  
-	  <label><input type="checkbox" value="消費マナ減少" />消費マナ減少</label>
-	  <label><input type="checkbox" value="毒免疫" />毒免疫</label>
-	  <label><input type="checkbox" value="爆発抵抗" />爆発抵抗</label>
+	  <label><input type="checkbox" value="mana_consumption" />消費マナ減少</label>
+	  <label><input type="checkbox" value="poison_resistance" />毒免疫</label>
+	  <label><input type="checkbox" value="explosion_resistance" />爆発抵抗</label>
 	  
-	  <label><input type="checkbox" value="結晶製作成功率" />結晶製作成功率</label>
-	  <label><input type="checkbox" value="分解成功率" />分解成功率</label>
-	  <label><input type="checkbox" value="合成成功率" />合成成功率</label>
+	  <label><input type="checkbox" value="crystal_making" />結晶製作成功率</label>
+	  <label><input type="checkbox" value="dissolution" />分解成功率</label>
+	  <label><input type="checkbox" value="synthesis" />合成成功率</label>
 	</div>
 	<div>
-	  <label><input type="checkbox" value="風属性の錬金術ダメージ" />風属性の錬金術ダメージ</label>
-	  <label><input type="checkbox" value="水属性の錬金術ダメージ" />水属性の錬金術ダメージ</label>
-	  <label><input type="checkbox" value="火属性の錬金術ダメージ" />火属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="alchemy_wind" />風属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="alchemy_water" />水属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="alchemy_fire" />火属性の錬金術ダメージ</label>
 	</div>
       </div>
       
@@ -125,9 +125,9 @@
 	<th class="equipment_text">部位</th>
 	<th class="effects_text">性能・Lv制限・条件</th>
 	
-	<th class="damage_max">最大</th>
-	<th class="melee_damage_max">近接</th>
-	<th class="ranged_damage_max">遠距離</th>
+	<th class="attack_max">最大</th>
+	<th class="melee_attack_max">近接</th>
+	<th class="ranged_attack_max">遠距離</th>
 	<th class="critical">クリティカル</th>
 	<th class="life_max">生命力</th>
 	<th class="mana_max">マナ</th>
@@ -162,9 +162,9 @@
 	<td>{{ e.equipment_text|default_if_none:"" }}</td>
 	<td>{{ e.effects_text|linebreaksbr }}</td>
 	
-	<td>{{ e.damage_max }}</td>
-	<td>{{ e.melee_damage_max }}</td>
-	<td>{{ e.ranged_damage_max }}</td>
+	<td>{{ e.attack_max }}</td>
+	<td>{{ e.melee_attack_max }}</td>
+	<td>{{ e.ranged_attack_max }}</td>
 	<td>{{ e.critical_text }}</td>
 	<td>{{ e.life_max }}</td>
 	<td>{{ e.mana_max }}</td>

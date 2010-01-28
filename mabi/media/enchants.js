@@ -106,10 +106,10 @@ $(document).ready(
 
     $('div.effects input').click(
       function(){
-	if(this.className == 'damage_max'){
-	  my.tl.fnSetColumnVis(my.columns['damage_max'], this.checked);
-	  my.tl.fnSetColumnVis(my.columns['melee_damage_max'], this.checked);
-	  my.tl.fnSetColumnVis(my.columns['ranged_damage_max'], this.checked);
+	if(this.className == 'attack_max'){
+	  my.tl.fnSetColumnVis(my.columns['attack_max'], this.checked);
+	  my.tl.fnSetColumnVis(my.columns['melee_attack_max'], this.checked);
+	  my.tl.fnSetColumnVis(my.columns['ranged_attack_max'], this.checked);
 	}else{
 	  if(this.className && my.columns[this.className]){
 	    my.tl.fnSetColumnVis(my.columns[this.className], this.checked);

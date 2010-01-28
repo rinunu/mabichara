@@ -58,19 +58,23 @@ def enchants_json(request):
     if order and request.GET.get('sortorder') == 'descending':
         order = '-' + order
 
-    max = request.GET.get('max-results')
-    if max: max = int(max)
-    else: max = 50
+    limit = request.GET.get('max-results')
+    if limit: limit = int(limit)
+    else: limit = 50
 
     callback = request.GET.get('callback')
-    
-    result = []
 
-    cls = Enchant
-    q = cls.all()
-    if order: q.order(order)
-    
-    for a in q.fetch(max):
+    cond = {}
+    cond_names = ['name', 'rank', 'root', 'equipment', 'effects']
+    for name in cond_names:
+        value = request.GET.get(name)
+        if value:
+            cond[name] = value
+
+    q = Enchant.find(order=order, limit=limit, **cond)
+
+    result = []
+    for a in q:
         obj = {}
         obj['names'] = a.names
         obj['english_name'] = a.english_name
@@ -80,14 +84,14 @@ def enchants_json(request):
         obj['equipment'] = a.equipment
         obj['equipment_text'] = a.equipment_text
         obj['effects'] = a.effects.split('\n')
-        obj['effects_text'] = a.effects_text.split('\n')
+        obj['effect_texts'] = a.effects_text.split('\n')
         obj['season'] = a.season
         
         obj['wiki'] = str(a.source)
 
-        obj['damage_max'] = a.damage_max
-        obj['melee_damage_max'] = a.melee_damage_max
-        obj['ranged_damage_max'] = a.ranged_damage_max
+        obj['attack_max'] = a.attack_max
+        obj['melee_attack_max'] = a.melee_attack_max
+        obj['ranged_attack_max'] = a.ranged_attack_max
         obj['critical'] = int(a.critical * 100)
         obj['life_max'] = a.life_max
         obj['mana_max'] = a.mana_max
