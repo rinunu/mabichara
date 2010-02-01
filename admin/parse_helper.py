@@ -182,9 +182,9 @@ def to_effect_id(name):
     else: raise Exception, u'不明な効果です: ' + name
 
 def to_effect(text):
-    igrone_rank_re = re.compile(ur'ランクに関係なくエンチャント可能')
-    personal_rank_re = re.compile(ur'エンチャントアイテムが装備者専用になる')
-    pass_re = re.compile(ur'^注：')
+    ignore_rank_re = re.compile(ur'ランクに関係なくエンチャント可能')
+    personal_rank_re = re.compile(ur'エンチャントアイテムが装備者専用になる|エンチャント装備を専用にする')
+    pass_re = re.compile(ur'^注：|.*にのみエンチャント可能')
     cond_re = re.compile(ur'(?:([^(]+)(?:場合|の時)[の、\s]*)(.+)') # カッコ書きの中のものに引っかからないように
     title_re = re.compile(ur'(?:(.+)(?:にしている時|をつけているとき)、)(.+)')
     effect_re = re.compile(ur'([^\s\d]+)\s*([\d~〜]+)[％%]?\s*(増加|減少|倍|)')
@@ -214,7 +214,7 @@ def to_effect(text):
         effect = re.sub(ur'\([^)]*\)$', u'', effect) # 文末の補足を削除
 
         # ランクに関係なく
-        m = igrone_rank_re.match(effect)
+        m = ignore_rank_re.match(effect)
         if m:
             return None # todo
         else:

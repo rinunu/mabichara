@@ -21,8 +21,9 @@ def get_equipment_text(tr):
         return None
 
 def get_source(tr, base_url):
-    return base_url + tr.th.a['href']
-    
+    a = tr.th.a
+    if a: return base_url + tr.th.a['href']
+    else: base_url
 
 def get_english_name(tr):
     english_name_re = re.compile(r'\((?:of )?(.*)\)')
