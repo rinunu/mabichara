@@ -1,4 +1,4 @@
-
+/* -*- coding: utf-8 -*- */
 
 /* ---------------------------------------------------------------------- */
 
@@ -49,6 +49,15 @@ table.enchants{
 th.damage_max, th.melee_damage_max, th.ranged_damage_max, th.critical, th.life_max,
 th.mana_max, th.stamina_max, th.defence, th.protection{
     width: 60px;
+}
+
+td ul{
+    margin: 0;
+    padding: 0;
+}
+td li{
+    list-style-type: none;
+    display: block;
 }
 
 /* ---------------------------------------------------------------------- */

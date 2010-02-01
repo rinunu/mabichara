@@ -215,8 +215,8 @@ class Enchant(db.Model):
             equipment = re.compile(equipment)
 
         q = cls.all()
-        if order:
-            q.order(order)
+#         if order:
+#             q.order(order)
         if root:
             q.filter('root = ', root)
         if rank:
@@ -231,6 +231,8 @@ class Enchant(db.Model):
                 op = 'effect_%s = ' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
                 logging.info(op + str(v))
                 q.filter(op, v)
+
+        q = cls._sorted(q, order)
             
         result = []
         for e in q:
@@ -251,4 +253,14 @@ class Enchant(db.Model):
                 break
 
         return result
-    
+
+    @classmethod
+    def _sorted(cls, q, order):
+        if not order: return
+
+        m = re.match('([+-]?)([a-zA-Z_]+)', order)
+        dir = m.group(1)
+        key = m.group(2)
+        
+        q = sorted(q, key=lambda x:getattr(x, key))
+        return q

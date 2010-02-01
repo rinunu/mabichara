@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}マビノギ エンチャント検索{% endblock %}
+
+{% block content %}
+
+<script>
+$(document).ready(function(){
+  mabi.enchants.showEnchantList($('table.enchants2'));
+});
+</script>
+
+<div class="">
+  <form class="condition">
+    <div>
+      <label>スクロール名: <input name="name" type="text" /></label>
+      <label>貼り付け場所:
+	<select name="root">
+	  <option value=""></option>
+	  <option value="prefix">接頭</option>
+	  <option value="suffix">接尾</option>
+	</select>
+      </label>
+      
+      <label>装備:
+	<select name="equipment">
+	  <option value=""></option>
+	  <option value="^$|/武器/$|/両手武器/$|/右手/$|/右手/武器/刀剣/|/右手/武器/斧/|/右手/武器/鈍器/|/両手武器/武器/刀剣/|/両手武器/武器/ナックル/|/両手武器/武器/斧/|/両手武器/武器/鈍器/">
+	    近接武器</option>
+	  <option value="^$|/武器/$|/右手/$|/右手/武器/クロスボウ/|/右手/武器/弓/">遠距離武器</option>
+	  <option value="^$|/武器/$|/シリンダー/">シリンダー</option>
+	  <option value="^$|/武器/$|/ワンド/">ワンド</option>
+	  <option value="^$|/楽器/|/巨大料理道具/|/料理用道具/">楽器・料理用道具</option>
+	  <option value="^$|/左手/$|/左手/盾/">盾</option>
+	  <option value="^$|/頭/">頭</option>
+	  <option value="^$|/体/">体</option>
+	  <option value="^$|/手/">手</option>
+	  <option value="^$|/足/">足</option>
+	  <option value="^$|/アクセサリ/">アクセサリ</option>
+	</select>
+      </label>
+    </div>
+    
+    <div class="effects2">
+      効果:
+      <label><input name="attack_max" type="checkbox" value="+attack_max_dex_str" />最大ダメージ系+</label>
+      <label><input name="attack_min" type="checkbox" value="+attack_min_dex_str" />最小ダメージ系+</label>
+      <label><input name="critical" type="checkbox" value="+critical_luck_will" />クリティカル系+</label>
+      <label><input name="life_max" type="checkbox" value="+life_max" />生命力+</label>
+      <label><input name="mana_max" type="checkbox" value="+mana_max" />マナ+</label>
+      <label><input name="stamina_max" type="checkbox" value="+stamina_max" />スタミナ+</label>
+      <label><input name="defence" type="checkbox" value="+defence" />防御+</label>
+      <label><input name="protection" type="checkbox" value="+protection" />保護+</label>
+      
+      <a class="option_button" href="#">詳細</a>
+    </div>
+    
+    <div class="option" style="display:none;">
+      <div class="effects2">
+	<div>
+	  <label><input type="checkbox" value="+attack_max" />最大ダメージ+</label>
+	  <label><input type="checkbox" value="+attack_min" />最小ダメージ+</label>
+	  <label><input type="checkbox" value="+critical" />クリティカル+</label>
+	  
+	  <label><input type="checkbox" value="+str" />Str+</label>
+	  <label><input type="checkbox" value="+dex" />Dex+</label>
+	  <label><input type="checkbox" value="+will" />Will+</label>
+	  <label><input type="checkbox" value="+luck" />Luck+</label>
+	  <label><input type="checkbox" value="+int" />Int+</label>
+	  
+	  <label><input type="checkbox" value="+balance" />ダメージバランス+</label>
+	  
+	  <label><input type="checkbox" value="+injury_max" />最大負傷率+</label>
+	  <label><input type="checkbox" value="+injury_min" />最小負傷率+</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="-attack_max" />最大ダメージ-</label>
+	  <label><input type="checkbox" value="-attack_min" />最小ダメージ-</label>
+	  <label><input type="checkbox" value="-critical" />クリティカル-</label>
+	  
+	  <label><input type="checkbox" value="-str" />Str-</label>
+	  <label><input type="checkbox" value="-dex" />Dex-</label>
+	  <label><input type="checkbox" value="-will" />Will-</label>
+	  <label><input type="checkbox" value="-luck" />Luck-</label>
+	  <label><input type="checkbox" value="-int" />Int-</label>
+	  
+	  <label><input type="checkbox" value="-balance" />ダメージバランス-</label>
+	  
+	  <label><input type="checkbox" value="-injury_max" />最大負傷率-</label>
+	  <label><input type="checkbox" value="-injury_min" />最小負傷率-</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="-life_max" />生命力-</label>
+	  <label><input type="checkbox" value="-mana_max" />マナ-</label>
+	  <label><input type="checkbox" value="-stamina_max" />スタミナ-</label>
+	  <label><input type="checkbox" value="-defence" />防御-</label>
+	  <label><input type="checkbox" value="-protection" />保護-</label>
+	</div>
+	
+	<div>
+	  <label><input type="checkbox" value="+cp" />戦闘力+</label>
+	  <label><input type="checkbox" value="-cp" />戦闘力-</label>
+	  
+	  <label><input type="checkbox" value="+mana_consumption" />消費マナ減少</label>
+	  <label><input type="checkbox" value="+poison_resistance" />毒免疫</label>
+	  <label><input type="checkbox" value="+explosion_resistance" />爆発抵抗</label>
+	  
+	  <label><input type="checkbox" value="+crystal_making" />結晶製作成功率</label>
+	  <label><input type="checkbox" value="+dissolution" />分解成功率</label>
+	  <label><input type="checkbox" value="+synthesis" />合成成功率</label>
+	</div>
+	<div>
+	  <label><input type="checkbox" value="+alchemy_wind" />風属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="+alchemy_water" />水属性の錬金術ダメージ</label>
+	  <label><input type="checkbox" value="+alchemy_fire" />火属性の錬金術ダメージ</label>
+	</div>
+      </div>
+      
+    </div>
+  </form>
+  
+  <table class="enchants2 ui-widget ui-widget-content">
+    <thead>
+      <tr>
+	<th class="root">場所</th>
+	<th class="rank">ランク</th>
+	<th class="name" >スクロール名</th>
+	<th class="equipment_text">部位</th>
+	<th class="effects_text">性能・Lv制限・条件</th>
+	<th class="attack_max">最大</th>
+	<th class="melee_attack_max">近接</th>
+	<th class="ranged_attack_max">遠距離</th>
+	<th class="critical">クリティカル</th>
+	<th class="life_max">生命力</th>
+	<th class="mana_max">マナ</th>
+	<th class="stamina_max">スタミナ</th>
+	<th class="defence">防御</th>
+	<th class="protection">保護</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+    </tbody>
+    
+  </table>
+</div>
+
+  
+{% endblock %}
+  

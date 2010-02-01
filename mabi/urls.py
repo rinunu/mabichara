@@ -12,6 +12,7 @@ urlpatterns = patterns(
 
     (url(r'^equipment$', 'django.views.generic.simple.direct_to_template', {'template': 'equipment.html'}, name='equipment')),
 
+    (url(r'^enchants_ajax$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants_ajax.html'}, name='enchants_ajax')),
     
     (url(r'^enchants2$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants2.html'}, name='enchants2')),
 )
