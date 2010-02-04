@@ -48,6 +48,7 @@ def to_equipment(text):
         u'両手ナックル' : u'ナックル',
         u'鉄製の武器と防具' : u'材料が鉄の武器と防具',
         u'服？' : u'服',
+        u'王政錬金術師のブーツ' : u'王政錬金術師ブーツ',
         }
     if text in map1: text = map1[text]        
     
