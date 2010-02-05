@@ -59,9 +59,7 @@ my.makeESList = function(){
 	      });
 };
 
-$(document).ready(
-  function(){
-
+my.showEnchantList = function(){
     $.fn.dataTableExt.afnFiltering.push(
       function(oSettings, aData, iDataIndex){
 	var es_id = aData[0];
@@ -157,4 +155,4 @@ $(document).ready(
     });
 
 
-});
+};

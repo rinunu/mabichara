@@ -45,6 +45,7 @@ thead th {
 }
 
 table{
+    table-layout: fixed;
     border-collapse: collapse;
 }
 

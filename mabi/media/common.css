@@ -18,8 +18,8 @@
 
 /* ---------------------------------------------------------------------- */
 
-th{
-    font-size: 0.8em;
+table{
+    width: 900px;
 }
 
 th.root{
@@ -27,23 +27,22 @@ th.root{
 }
 
 th.rank{
-    width: 50px;
+    width: 55px;
 }
 
 th.name{
-    width: 120px;
+    width: 150px;
 }
 
 th.equipment_text{
     width: 100px;
 }
 
-/* th.effects_text{ */
-/*     width: 300px; */
-/* } */
+th.effects_text{
+}
 
 table.enchants{
-    width: 800px;
+    /* width: 800px; */
 }
 
 th.damage_max, th.melee_damage_max, th.ranged_damage_max, th.critical, th.life_max,

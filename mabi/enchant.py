@@ -7,6 +7,34 @@ import re
 import logging
 from google.appengine.ext import db
 
+class Filter(object):
+    def __init__(self, owner, name, value):
+        self.name = name
+        self.value = value
+        self.property = getattr(owner, name)
+        
+    def db_filter(self, query):
+        query.filter(self.name, self.value)
+
+    def match(self, entity):
+        return self.property.__get__(entity, type(entity)) == self.value
+    
+class PrefixFilter(object):
+    
+    '''前方一致を行うフィルター'''
+    
+    def __init__(self, owner, name, value):
+        self.name = name
+        self.value = unicode(value)
+        
+    def db_filter(self, query):
+        logging.info(self.name + self.value + u"\ufffd")
+        query.filter(self.name + ' >= ', self.value)
+        query.filter(self.name + ' < ', self.value + u"\ufffd")
+
+    def match(self, entity):
+        raise Exception, u'未実装'
+    
 class Enchant(db.Model):
     
     """エンチャントデータ
@@ -115,7 +143,7 @@ class Enchant(db.Model):
             }
         if self.rank >= 10: return map[self.rank]
         else: return self.rank
-    
+
     def update_computed(self):
         '''計算によって求まるプロパティを設定する'''
         self.attack_max = 0.0
@@ -189,61 +217,78 @@ class Enchant(db.Model):
         return q.get()
 
     @classmethod
-    def find(cls, name=None, root=None, rank=None, equipment=None, effects=None,
-            order=None, limit=None
+    def find(cls,
+             order=None, limit=None,
+             effects=None,
+             equipment=None,
+             name=None,
+             root=None
             ):
         '''指定された検索条件で検索する
 
         指定された条件はすべて AND で検索する
 
         Arguments:
-            name -- names, english_name と部分一致比較する
-            effect -- 効果。「+attack_max -critical」のような形式で指定する。 アンド検索を行う
-            
-            equipment -- 貼付け可能装備。 正規表現で指定する。
-
             order -- 並び順を指定する。 Enchant のプロパティのどれかを指定する。
             降順にする場合はプロパティ名の先頭に - をつける。
-            
 
+            limit --
+
+            root --
+
+            name -- names と前方一致比較する(TODO english_name も)
+            effects -- 効果。「+attack_max -critical」のような形式で指定する。 アンド検索を行う
+
+            equipment -- 貼付け可能装備。 正規表現で指定する。
+            
         '''
         
         if limit:
             limit = int(limit)
 
-        if isinstance(equipment, basestring):
-            equipment = re.compile(equipment)
+        # Filter を作成する
+        # なるべく GAE によって処理したいものを最初に作成する(なるべく絞り込めるもの)
+        filters = []
 
-        q = cls.all()
-#         if order:
-#             q.order(order)
-        if root:
-            q.filter('root = ', root)
-        if rank:
-            q.filter('rank = ', int(rank))
+        if name:
+            filters.append(PrefixFilter(Enchant, 'names', name))
+            order = None # 'names' # 名前検索時は、名前以外で並べかえはできない
 
+        # 効果用のフィルター作成
         if effects:
             effects = effects.split(u' ')
             effect_re = re.compile(ur'([-+])([a-zA-Z0-9_]+)')
             for e in effects:
                 m = effect_re.match(e)
-                v = 1 if m.group(1) == '+' else 2
-                op = 'effect_%s = ' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
-                logging.info(op + str(v))
-                q.filter(op, v)
+                value = 1 if m.group(1) == '+' else 2
+                key = 'effect_%s' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
+                filters.append(Filter(Enchant, key, value))
 
-        q = cls._sorted(q, order)
+        if root:
+            filters.append(Filter(Enchant, 'root', root))
+        
+        # GAE によるソートとフィルタ
+        q = cls.all()
+        if order:
+            q.order(order)
+
+        if len(filters) >= 1:
+            f = filters.pop(0)
+            f.db_filter(q)
             
+        # プログラムによるフィルタ
+        if isinstance(equipment, basestring):
+            equipment = re.compile(equipment)
+
         result = []
         for e in q:
-            if name:
-                if e.english_name.find(name) == -1:
-                    for a in e.names:
-                        if a.find(name) != -1:
-                            break
-                    else:
-                        continue
-
+            ok = True
+            for f in filters:
+                if not f.match(e):
+                    ok = False
+                    break
+            if not ok:
+                continue
             es_equipment = e.equipment or ''
             if equipment and not equipment.match(es_equipment):
                 continue
@@ -254,13 +299,3 @@ class Enchant(db.Model):
 
         return result
 
-    @classmethod
-    def _sorted(cls, q, order):
-        if not order: return
-
-        m = re.match('([+-]?)([a-zA-Z_]+)', order)
-        dir = m.group(1)
-        key = m.group(2)
-        
-        q = sorted(q, key=lambda x:getattr(x, key))
-        return q
