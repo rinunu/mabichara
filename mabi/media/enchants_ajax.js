@@ -19,8 +19,12 @@ mabi.enchants.getEnchants = function(params, callback){
  * リクエストの管理を行う
  *
  * リクエストした順番にレスポンスが返されることを保証する(古いレスポンスは破棄する)
+ *
+ * リクエストが大量に発生しないようにする。
  */
 mabi.requester = {
+  THROTTLE_PERIOD: 500,
+
   next_id: 0,
 
   /**
@@ -29,8 +33,16 @@ mabi.requester = {
   last_response_id: -1,
 
   /**
+   * 処理中のリクエスト
    */
   requests: [],
+
+  /**
+   * 処理待ちのリクエスト
+   */
+  wait_request: null,
+
+  timer: null,
 
   /**
    * リクエストを行う
@@ -41,33 +53,56 @@ mabi.requester = {
    */
   request: function(requestFunc, callback){
     var request = {
-      id: this.next_id++
+      id: this.next_id++,
+      requestFunc: requestFunc,
+      callback: callback
     };
 
-    this.requests.push(request);
+    this.wait_request = request; // 古いリクエストは破棄
 
-    var _this =	this;
-    requestFunc(function(result){
-		  // 古いリクエストを破棄する
-		  _this.requests = $.grep(_this.requests, function(a){return a.id > request.id;});
-
-		  if(request.id <= _this.last_response_id){
-		    // console.info('破棄: ' + request.id);
-		    return;
-		  }
-
-		  // console.info('処理: ' + request.id);
-		  _this.last_response_id = request.id;
-		  callback(result);
-		});
+    if(this.timer){
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(this.onTimeout, this.THROTTLE_PERIOD);
   },
 
   /**
    * 処理中の件数を返す
    */
   getRequestCount: function(){
-    return this.requests.length;
+    var i = this.requests.length;
+    if(this.wait_request){
+      ++i;
+    }
+    return i;
+  },
+
+  /**
+   * サーバへ問い合わせを行う
+   */
+  onTimeout: function(){
+    var _this =	mabi.requester;
+    _this.timer = null;
+
+    var request = _this.wait_request;
+    _this.wait_request = null;
+    _this.requests.push(request);
+    // console.info('開始: ' + request.id);
+    request.requestFunc(function(result){
+			  // 古いリクエストの情報を破棄する
+			  _this.requests = $.grep(_this.requests, function(a){return a.id > request.id;});
+
+			  if(request.id <= _this.last_response_id){
+			    // console.info('破棄: ' + request.id);
+			    return;
+			  }
+
+			  // console.info('処理: ' + request.id);
+			  _this.last_response_id = request.id;
+			  request.callback(result);
+			});
   }
+
 };
 
 /* ---------------------------------------------------------------------- */
@@ -79,8 +114,6 @@ mabi.ev = {
 
   // 検索条件
   conditions: {},
-
-  THROTTLE_PERIOD: 500,
 
   /**
    * テーブルの列名から DataTables 内での列インデックスへ変換する
@@ -205,18 +238,10 @@ mabi.ev.createNameToIndex = function(element){
 };
 
 /**
- * エンチャント名検索欄が変更されていたら、サーバへ問い合わせを行う
+ * エンチャントを検索する
  */
-mabi.ev.onTimeout = function(){
-  var value = mabi.ev.name.val();
-  if(mabi.ev.latestName != value){
-    delete mabi.ev.conditions['name'];
-    if(value){
-      mabi.ev.conditions['name'] = value;
-    }
-    mabi.ev.latestName = value;
-    mabi.ev.table.fnFilter('');
-  }
+mabi.ev.searchEnchants = function(){
+  mabi.ev.table.fnFilter('');
 };
 
 /**
@@ -250,8 +275,12 @@ mabi.showEnchantList = function(element){
 
   mabi.ev.condition_form.find("input[name='name']").keyup(
       function(){
-	clearTimeout(mabi.ev.timer);
-	mabi.ev.timer = setTimeout(mabi.ev.onTimeout, mabi.ev.THROTTLE_PERIOD);
+	var name = 'name';
+	delete mabi.ev.conditions[name];
+	if(this.value){
+	  mabi.ev.conditions[name] = this.value;
+	}
+	mabi.ev.searchEnchants();
       });
 
   mabi.ev.condition_form.find('select').change(
@@ -260,7 +289,7 @@ mabi.showEnchantList = function(element){
 	if(this.value){
 	  mabi.ev.conditions[this.name] = this.value;
 	}
-	mabi.ev.table.fnFilter('');
+	mabi.ev.searchEnchants();
       });
 
   $('.option_button').click(function(){
@@ -280,7 +309,7 @@ mabi.showEnchantList = function(element){
 		      conds.push(this.value);
 		    });
 	mabi.ev.conditions[name] = conds.join(' ');
-	mabi.ev.table.fnFilter('');
+	mabi.ev.searchEnchants();
       });
 
   mabi.ev.table = $(element).dataTable(
@@ -330,7 +359,5 @@ mabi.showEnchantList = function(element){
 	{ "bVisible": false }
       ]
     });
-
-  mabi.ev.timer = setTimeout(mabi.ev.onTimeout, mabi.ev.THROTTLE_PERIOD);
 };
 
