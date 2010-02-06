@@ -1,46 +1,117 @@
 var mabi = {
-  enchants: {
-    // 最後に入力したエンチャント名
-    latestName: '',
+  enchants : {}
+};
 
-    // 検索条件
-    conditions: {},
-    THROTTLE_PERIOD: 500,
+/**
+ * サーバからエンチャントデータを取得する
+ */
+mabi.enchants.getEnchants = function(params, callback){
+  // var url = 'http://mabichara.appspot.com/mabi/enchants.json?callback=?';
+  var url = '/mabi/enchants.json?callback=?';
+  $.getJSON(url, params, function(json){
+	      callback(json);
+	    });
+};
 
-    /**
-     * テーブルの列名から DataTables 内での列インデックスへ変換する
-     */
-    nameToIndexMap: {},
+/* ---------------------------------------------------------------------- */
 
-    /**
-     * 処理中のサーバへのリクエスト件数
-     */
-    requests: 0,
+/**
+ * リクエストの管理を行う
+ *
+ * リクエストした順番にレスポンスが返されることを保証する(古いレスポンスは破棄する)
+ */
+mabi.requester = {
+  next_id: 0,
 
-    /**
-     * テーブルの列の位置から、検索条件名を求める
-     */
-    indexToConditionNameMap: [
-      'root',
-      'rank',
-      'name',
-      'equipment',
-      'effects',
-      'attack_max',
-      'melee_attack_max',
-      'ranged_attack_max',
-      'critical',
-      'life_max',
-      'mana_max',
-      'stamina_max',
-      'defence',
-      'protection'
-    ]
+  /**
+   * 最後に処理したレスポンスの ID
+   */
+  last_response_id: -1,
+
+  /**
+   */
+  requests: [],
+
+  /**
+   * リクエストを行う
+   *
+   * @param requestFunc function(callback) リクエストを行う関数。 渡される callback をリクエスト完了時に呼び出す必要がある。
+   * callback はリクエストの結果を1つだけ受け取る。
+   * @param callback function(result) リクエスト完了時に処理を行う関数。
+   */
+  request: function(requestFunc, callback){
+    var request = {
+      id: this.next_id++
+    };
+
+    this.requests.push(request);
+
+    var _this =	this;
+    requestFunc(function(result){
+		  // 古いリクエストを破棄する
+		  _this.requests = $.grep(_this.requests, function(a){return a.id > request.id;});
+
+		  if(request.id <= _this.last_response_id){
+		    // console.info('破棄: ' + request.id);
+		    return;
+		  }
+
+		  // console.info('処理: ' + request.id);
+		  _this.last_response_id = request.id;
+		  callback(result);
+		});
+  },
+
+  /**
+   * 処理中の件数を返す
+   */
+  getRequestCount: function(){
+    return this.requests.length;
   }
 };
 
+/* ---------------------------------------------------------------------- */
+/* Enchant View */
 
-mabi.enchants.toDataTablesJson = function(json){
+mabi.ev = {
+  // 最後に入力したエンチャント名
+  latestName: '',
+
+  // 検索条件
+  conditions: {},
+
+  THROTTLE_PERIOD: 500,
+
+  /**
+   * テーブルの列名から DataTables 内での列インデックスへ変換する
+   */
+  nameToIndexMap: {},
+
+  /**
+   * テーブルの列の位置から、検索条件名を求める
+   */
+  indexToConditionNameMap: [
+    'root',
+    'rank',
+    'name',
+    'equipment',
+    'effects',
+    'attack_max',
+    'melee_attack_max',
+    'ranged_attack_max',
+    'critical',
+    'life_max',
+    'mana_max',
+    'stamina_max',
+    'defence',
+    'protection'
+  ]
+};
+
+/**
+ * サーバから返された JSON を DataTables 形式の JSON へ変換する
+ */
+mabi.ev.toDataTablesJson = function(json){
   var data = [];
   for(var i = 0; i < json.length; ++i){
     var o = json[i];
@@ -69,23 +140,22 @@ mabi.enchants.toDataTablesJson = function(json){
   };
 };
 
-mabi.enchants.serverData = function(sSource, aoData, fnCallback){
-  mabi.enchants.spinner.show();
-  mabi.enchants.requests++;
+mabi.ev.serverData = function(sSource, aoData, fnCallback){
+  mabi.ev.spinner.show();
 
   var params = {
   };
 
-  for(var name in mabi.enchants.conditions){
-    params[name] = mabi.enchants.conditions[name];
+  for(var name in mabi.ev.conditions){
+    params[name] = mabi.ev.conditions[name];
   }
 
-  for(i = 0; i < aoData.length; ++i){
+  for(var i = 0; i < aoData.length; ++i){
     var a = aoData[i];
 
     switch(a.name){
     case 'iSortCol_0':
-      params.orderby = mabi.enchants.indexToConditionNameMap[parseInt(a.value)];
+      params.orderby = mabi.ev.indexToConditionNameMap[parseInt(a.value)];
       break;
     case 'sSortDir_0':
       params.sortorder = a.value == 'asc' ? 'ascending' : 'descending';
@@ -96,39 +166,56 @@ mabi.enchants.serverData = function(sSource, aoData, fnCallback){
     }
   }
 
-  $.getJSON(sSource, params, function(json){
-	      fnCallback(mabi.enchants.toDataTablesJson(json));
-	      mabi.enchants.requests--;
-	      if(mabi.enchants.requests == 0){
-  		mabi.enchants.spinner.hide();
-	      }
-	    });
+  mabi.requester.request(function(callback){
+			   mabi.enchants.getEnchants(params, callback);
+			 },
+			 function(json){
+  			   fnCallback(mabi.ev.toDataTablesJson(json));
+			   // console.info(mabi.requester.getRequestCount());
+			   if(mabi.requester.getRequestCount() == 0){
+  			     mabi.ev.spinner.hide();
+			   }
+
+			   mabi.ev.updateColumnVisibility();
+			 });
+};
+
+/**
+ * 現在の検索条件にあわせ、カラムの表示/非表示を更新する
+ */
+mabi.ev.updateColumnVisibility = function(){
+  mabi.ev.checkboxes.each(function(){
+			    if(this.name == 'attack_max'){
+			      mabi.ev.toggleColumn('attack_max', this.checked);
+			      mabi.ev.toggleColumn('melee_attack_max', this.checked);
+			      mabi.ev.toggleColumn('ranged_attack_max', this.checked);
+			    }else{
+			      mabi.ev.toggleColumn(this.name, this.checked);
+			    }});
 };
 
 /**
  *
  */
-mabi.enchants.createNameToIndex = function(element){
+mabi.ev.createNameToIndex = function(element){
   var ths = element.find('thead tr th');
   ths.each(function(index){
-	     mabi.enchants.nameToIndexMap[this.className] = index;
+	     mabi.ev.nameToIndexMap[this.className] = index;
 	   });
 };
 
 /**
  * エンチャント名検索欄が変更されていたら、サーバへ問い合わせを行う
  */
-mabi.enchants.onTimeout = function(){
-  console.info('timeout');
-  var value = mabi.enchants.name.val();
-  if(mabi.enchants.latestName != value){
-    console.info('search: ' + value);
-    delete mabi.enchants.conditions['name'];
+mabi.ev.onTimeout = function(){
+  var value = mabi.ev.name.val();
+  if(mabi.ev.latestName != value){
+    delete mabi.ev.conditions['name'];
     if(value){
-      mabi.enchants.conditions['name'] = value;
+      mabi.ev.conditions['name'] = value;
     }
-    mabi.enchants.latestName = value;
-    mabi.enchants.table.fnFilter('');
+    mabi.ev.latestName = value;
+    mabi.ev.table.fnFilter('');
   }
 };
 
@@ -137,40 +224,43 @@ mabi.enchants.onTimeout = function(){
  *
  * @param name 列名称
  */
-mabi.enchants.toggleColumn = function(name, visibled){
-  var table = mabi.enchants.table;
+mabi.ev.toggleColumn = function(name, visibled){
+  var table = mabi.ev.table;
   var head = table.find('thead tr');
 
-  table.fnSetColumnVis(mabi.enchants.nameToIndexMap[name], visibled);
+  var index = mabi.ev.nameToIndexMap[name];
+  if(index){
+    table.fnSetColumnVis(index, visibled);
+  }
 };
 
 /**
  * エンチャントリストを表示する
  */
-mabi.enchants.showEnchantList = function(element){
+mabi.showEnchantList = function(element){
   // todo element に関連づいているものにイベントをつける
-  mabi.enchants.condition_form = $('form.condition');
-  mabi.enchants.spinner = $('.spinner');
+  mabi.ev.condition_form = $('form.condition');
+  mabi.ev.spinner = $('.spinner');
 
-  mabi.enchants.spinner.hide();
+  mabi.ev.spinner.hide();
 
-  mabi.enchants.createNameToIndex(element);
+  mabi.ev.createNameToIndex(element);
 
-  mabi.enchants.name = mabi.enchants.condition_form.find("input[name='name']");
+  mabi.ev.name = mabi.ev.condition_form.find("input[name='name']");
 
-  mabi.enchants.condition_form.find("input[name='name']").keyup(
+  mabi.ev.condition_form.find("input[name='name']").keyup(
       function(){
-	clearTimeout(mabi.enchants.timer);
-	mabi.enchants.timer = setTimeout(mabi.enchants.onTimeout, mabi.enchants.THROTTLE_PERIOD);
+	clearTimeout(mabi.ev.timer);
+	mabi.ev.timer = setTimeout(mabi.ev.onTimeout, mabi.ev.THROTTLE_PERIOD);
       });
 
-  mabi.enchants.condition_form.find('select').change(
+  mabi.ev.condition_form.find('select').change(
       function(){
-	delete mabi.enchants.conditions[this.name];
+	delete mabi.ev.conditions[this.name];
 	if(this.value){
-	  mabi.enchants.conditions[this.name] = this.value;
+	  mabi.ev.conditions[this.name] = this.value;
 	}
-	mabi.enchants.table.fnFilter('');
+	mabi.ev.table.fnFilter('');
       });
 
   $('.option_button').click(function(){
@@ -178,34 +268,25 @@ mabi.enchants.showEnchantList = function(element){
 			      return false;
 			    });
 
-  mabi.enchants.condition_form.find(".effects2 input[type='checkbox']").click(
+  mabi.ev.checkboxes = mabi.ev.condition_form.find(".effects input[type='checkbox']");
+  mabi.ev.checkboxes.click(
       function(){
-
-	if(this.name == 'attack_max'){
-	  mabi.enchants.toggleColumn('attack_max', this.checked);
-	  mabi.enchants.toggleColumn('melee_attack_max', this.checked);
-	  mabi.enchants.toggleColumn('ranged_attack_max', this.checked);
-	}else{
-	  mabi.enchants.toggleColumn(this.name, this.checked);
-	}
-
 	var name = 'effects';
-	delete mabi.enchants.conditions[name];
+	delete mabi.ev.conditions[name];
 
-	var checks = mabi.enchants.condition_form.find(".effects2 input[type='checkbox'][checked]");
+	var checks = mabi.ev.condition_form.find(".effects input[type='checkbox'][checked]");
 	var conds = [];
 	checks.each(function(){
 		      conds.push(this.value);
 		    });
-	mabi.enchants.conditions[name] = conds.join(' ');
-	mabi.enchants.table.fnFilter('');
+	mabi.ev.conditions[name] = conds.join(' ');
+	mabi.ev.table.fnFilter('');
       });
 
-  mabi.enchants.table = $(element).dataTable(
+  mabi.ev.table = $(element).dataTable(
     {
       "bServerSide": true,
-      "sAjaxSource": '/mabi/enchants.json',
-      "fnServerData": mabi.enchants.serverData,
+      "fnServerData": mabi.ev.serverData,
       "sPaginationType": "full_numbers",
       "sDom": 'rtp',
       "bAutoWidth": false,
@@ -250,6 +331,6 @@ mabi.enchants.showEnchantList = function(element){
       ]
     });
 
-  mabi.enchants.timer = setTimeout(mabi.enchants.onTimeout, mabi.enchants.THROTTLE_PERIOD);
+  mabi.ev.timer = setTimeout(mabi.ev.onTimeout, mabi.ev.THROTTLE_PERIOD);
 };
 

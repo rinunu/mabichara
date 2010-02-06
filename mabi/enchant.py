@@ -7,33 +7,7 @@ import re
 import logging
 from google.appengine.ext import db
 
-class Filter(object):
-    def __init__(self, owner, name, value):
-        self.name = name
-        self.value = value
-        self.property = getattr(owner, name)
-        
-    def db_filter(self, query):
-        query.filter(self.name, self.value)
-
-    def match(self, entity):
-        return self.property.__get__(entity, type(entity)) == self.value
-    
-class PrefixFilter(object):
-    
-    '''前方一致を行うフィルター'''
-    
-    def __init__(self, owner, name, value):
-        self.name = name
-        self.value = unicode(value)
-        
-    def db_filter(self, query):
-        logging.info(self.name + self.value + u"\ufffd")
-        query.filter(self.name + ' >= ', self.value)
-        query.filter(self.name + ' < ', self.value + u"\ufffd")
-
-    def match(self, entity):
-        raise Exception, u'未実装'
+import datastore_helper
     
 class Enchant(db.Model):
     
@@ -222,6 +196,7 @@ class Enchant(db.Model):
              effects=None,
              equipment=None,
              name=None,
+             rank=None,
              root=None
             ):
         '''指定された検索条件で検索する
@@ -236,6 +211,8 @@ class Enchant(db.Model):
 
             root --
 
+            rank --
+
             name -- names と前方一致比較する(TODO english_name も)
             effects -- 効果。「+attack_max -critical」のような形式で指定する。 アンド検索を行う
 
@@ -246,49 +223,44 @@ class Enchant(db.Model):
         if limit:
             limit = int(limit)
 
+        q = datastore_helper.DatastoreHelper(Enchant)
+        q.order_by_gae(True)
+
         # Filter を作成する
         # なるべく GAE によって処理したいものを最初に作成する(なるべく絞り込めるもの)
-        filters = []
 
         if name:
-            filters.append(PrefixFilter(Enchant, 'names', name))
+            q.add_filter(datastore_helper.PrefixFilter(Enchant, 'names', name))
             order = None # 'names' # 名前検索時は、名前以外で並べかえはできない
 
         # 効果用のフィルター作成
         if effects:
             effects = effects.split(u' ')
             effect_re = re.compile(ur'([-+])([a-zA-Z0-9_]+)')
+            q.order_by_gae(False) # 効果はたくさん絞り込めるので
             for e in effects:
                 m = effect_re.match(e)
                 value = 1 if m.group(1) == '+' else 2
                 key = 'effect_%s' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
-                filters.append(Filter(Enchant, key, value))
+                q.add_filter(datastore_helper.Filter(Enchant, key, value))
 
         if root:
-            filters.append(Filter(Enchant, 'root', root))
-        
-        # GAE によるソートとフィルタ
-        q = cls.all()
+            q.add_filter(datastore_helper.Filter(Enchant, 'root', root))
+            
+        if rank:
+            q.add_filter(datastore_helper.Filter(Enchant, 'rank', rank))
+
         if order:
             q.order(order)
+        
+        q = q.all()
 
-        if len(filters) >= 1:
-            f = filters.pop(0)
-            f.db_filter(q)
-            
         # プログラムによるフィルタ
         if isinstance(equipment, basestring):
             equipment = re.compile(equipment)
 
         result = []
         for e in q:
-            ok = True
-            for f in filters:
-                if not f.match(e):
-                    ok = False
-                    break
-            if not ok:
-                continue
             es_equipment = e.equipment or ''
             if equipment and not equipment.match(es_equipment):
                 continue

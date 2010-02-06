@@ -5,7 +5,7 @@
 
 <script>
 $(document).ready(function(){
-  mabi.enchants.showEnchantList($('table.enchants2'));
+  mabi.showEnchantList($('table.enchants'));
 });
 </script>
 
@@ -41,7 +41,7 @@ $(document).ready(function(){
       <img class='spinner' src='{{ MEDIA_URL }}global/images/spinner.gif'>
     </div>
     
-    <div class="effects2">
+    <div class="effects">
       効果:
       <label><input name="attack_max" type="checkbox" value="+attack_max_dex_str" />最大ダメージ系+</label>
       <label><input name="attack_min" type="checkbox" value="+attack_min_dex_str" />最小ダメージ系+</label>
@@ -56,7 +56,7 @@ $(document).ready(function(){
     </div>
     
     <div class="option" style="display:none;">
-      <div class="effects2">
+      <div class="effects">
 	<div>
 	  <label><input type="checkbox" value="+attack_max" />最大ダメージ+</label>
 	  <label><input type="checkbox" value="+attack_min" />最小ダメージ+</label>
@@ -119,7 +119,7 @@ $(document).ready(function(){
     </div>
   </form>
   
-  <table class="enchants2 ui-widget ui-widget-content">
+  <table class="enchants ui-widget ui-widget-content">
     <thead>
       <tr>
 	<th class="root">場所</th>

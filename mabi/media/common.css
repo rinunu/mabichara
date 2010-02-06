@@ -18,8 +18,8 @@
 
 /* ---------------------------------------------------------------------- */
 
-table{
-    width: 900px;
+table.enchants{
+    width: 800px;
 }
 
 th.root{
@@ -41,11 +41,7 @@ th.equipment_text{
 th.effects_text{
 }
 
-table.enchants{
-    /* width: 800px; */
-}
-
-th.damage_max, th.melee_damage_max, th.ranged_damage_max, th.critical, th.life_max,
+th.attack_max, th.melee_attack_max, th.ranged_attack_max, th.critical, th.life_max,
 th.mana_max, th.stamina_max, th.defence, th.protection{
     width: 60px;
 }
