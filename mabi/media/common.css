@@ -46,10 +46,21 @@ th.mana_max, th.stamina_max, th.defence, th.protection{
     width: 60px;
 }
 
+/* UP 効果 */
+li.up{
+    color: blue;
+}
+
+/* DOWN 効果 */
+li.down{
+    color: red;
+}
+
 td ul{
     margin: 0;
     padding: 0;
 }
+
 td li{
     list-style-type: none;
     display: block;

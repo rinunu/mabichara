@@ -153,7 +153,7 @@ mabi.ev.toDataTablesJson = function(json){
 		o.rank,
 		[o.names, o.wiki],
 		o.equipment_text || '',
-		o.effect_texts,
+		[o.effects, o.effect_texts],
 		o.attack_max,
 		o.melee_attack_max,
 		o.ranged_attack_max,
@@ -340,10 +340,19 @@ mabi.showEnchantList = function(element){
 	// 性能
 	{ "bSortable": false,
 	  "fnRender": function(oObj){
+	    var effects = oObj.aData[oObj.iDataColumn][0];
+	    var effect_texts = oObj.aData[oObj.iDataColumn][1];
 	    var list = [];
-	    var effects = oObj.aData[oObj.iDataColumn];
 	    for(var i = 0; i < effects.length; ++i){
-	      list.push('<li>' + effects[i] + '</li>');
+	      var up = true;
+	      if(effects[i].min < 0){
+		up = false;
+	      }
+	      if(effects[i].status == 'repair_cost'){
+		up = !up;
+	      }
+	      var style_class =	up ? 'up' : 'down';
+	      list.push('<li class="' + style_class + '">' + effect_texts[i] + '</li>');
 	    }
 	    return '<ul>' + list.join('\n') + '</ul>';
 	  }},

@@ -50,6 +50,52 @@ def enchants(request):
 
     return direct_to_template(request, 'enchants.html', context)
 
+def to_map(enchant):
+    '''Enchant をマップに変換する
+
+    (JSON に変換するための前処理)
+    '''
+    
+    obj = {}
+    obj['names'] = enchant.names
+    obj['english_name'] = enchant.english_name
+    obj['rank'] = enchant.rank
+    obj['rank_text'] = enchant.rank_text
+    obj['root'] = enchant.root
+    obj['equipment'] = enchant.equipment
+    obj['equipment_text'] = enchant.equipment_text
+
+    obj['effects'] = effects = []
+    for effect in enchant.effects.split('\n'):
+        a = effect.split(' ')
+        if a[1] == '-':
+            min = int(a[3]) * -1
+            max = int(a[2]) * -1
+        else:
+            min = int(a[2])
+            max = int(a[3])
+        effects.append({
+                'status': a[0],
+                'min': min,
+                'max': max
+                })
+    
+    obj['effect_texts'] = enchant.effects_text.split('\n')
+    obj['season'] = enchant.season
+    
+    obj['wiki'] = str(enchant.source)
+    
+    obj['attack_max'] = enchant.attack_max
+    obj['melee_attack_max'] = enchant.melee_attack_max
+    obj['ranged_attack_max'] = enchant.ranged_attack_max
+    obj['critical'] = int(enchant.critical * 100)
+    obj['life_max'] = enchant.life_max
+    obj['mana_max'] = enchant.mana_max
+    obj['stamina_max'] = enchant.stamina_max
+    obj['defence'] = enchant.defence
+    obj['protection'] = enchant.protection
+
+    return obj    
 
 def enchants_json(request):
     '''エンチャント一覧の json インタフェース'''
@@ -75,31 +121,7 @@ def enchants_json(request):
 
     result = []
     for a in q:
-        obj = {}
-        obj['names'] = a.names
-        obj['english_name'] = a.english_name
-        obj['rank'] = a.rank
-        obj['rank_text'] = a.rank_text
-        obj['root'] = a.root
-        obj['equipment'] = a.equipment
-        obj['equipment_text'] = a.equipment_text
-        obj['effects'] = a.effects.split('\n')
-        obj['effect_texts'] = a.effects_text.split('\n')
-        obj['season'] = a.season
-        
-        obj['wiki'] = str(a.source)
-
-        obj['attack_max'] = a.attack_max
-        obj['melee_attack_max'] = a.melee_attack_max
-        obj['ranged_attack_max'] = a.ranged_attack_max
-        obj['critical'] = int(a.critical * 100)
-        obj['life_max'] = a.life_max
-        obj['mana_max'] = a.mana_max
-        obj['stamina_max'] = a.stamina_max
-        obj['defence'] = a.defence
-        obj['protection'] = a.protection
-
-        result.append(obj)
+        result.append(to_map(a))
 
     if callback:
         result = jsonp(result, callback)
