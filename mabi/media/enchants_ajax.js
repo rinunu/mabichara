@@ -323,7 +323,31 @@ mabi.showEnchantList = function(element){
       "iDisplayLength": 20,
       "bJQueryUI": true,
       "aoColumns": [
-	null, null,
+	null,
+
+	// ランク
+	{
+	  "fnRender": function(oObj){
+	    var a = oObj.aData[oObj.iDataColumn];
+	    switch(a){
+	    case 10:
+	      return 'A';
+	    case 11:
+	      return 'B';
+	    case 12:
+	      return 'C';
+	    case 13:
+	      return 'D';
+	    case 14:
+	      return 'E';
+	    case 15:
+	      return 'F';
+	    default:
+	      return a;
+	    }
+	  }
+	},
+
 	// スクロール名
 	{ "bSortable": false,
 	  "fnRender": function(oObj){
@@ -360,7 +384,15 @@ mabi.showEnchantList = function(element){
 	{ "bVisible": false },
 	{ "bVisible": false },
 	{ "bVisible": false },
-	{ "bVisible": false },
+
+	// クリティカル
+	{ "bVisible": false,
+	  "fnRender": function(oObj){
+	    return oObj.aData[oObj.iDataColumn] + '%';
+	  }
+	},
+
+
 	{ "bVisible": false },
 	{ "bVisible": false },
 	{ "bVisible": false },
