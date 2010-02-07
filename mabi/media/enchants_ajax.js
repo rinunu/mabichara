@@ -309,7 +309,9 @@ mabi.showEnchantList = function(element){
 	checks.each(function(){
 		      conds.push(this.value);
 		    });
-	mabi.ev.conditions[name] = conds.join(' ');
+	if(conds.length >= 1){
+	  mabi.ev.conditions[name] = conds.join(' ');
+	}
 	mabi.ev.searchEnchants();
       });
 

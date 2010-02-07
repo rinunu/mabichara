@@ -49,16 +49,16 @@ class Enchant(db.Model):
     source = db.LinkProperty()
 
     # ステータス上昇(or 低下)
-    attack_max = db.FloatProperty()
-    critical = db.FloatProperty()
-    life_max = db.FloatProperty()
-    mana_max = db.FloatProperty()
-    stamina_max = db.FloatProperty()
-    defence = db.FloatProperty()
-    protection = db.FloatProperty()
+    attack_max = db.FloatProperty(default = 0.0)
+    critical = db.FloatProperty(default = 0.0)
+    life_max = db.FloatProperty(default = 0.0)
+    mana_max = db.FloatProperty(default = 0.0)
+    stamina_max = db.FloatProperty(default = 0.0)
+    defence = db.FloatProperty(default = 0.0)
+    protection = db.FloatProperty(default = 0.0)
 
-    melee_attack_max = db.FloatProperty()
-    ranged_attack_max = db.FloatProperty()
+    melee_attack_max = db.FloatProperty(default = 0.0)
+    ranged_attack_max = db.FloatProperty(default = 0.0)
 
     # 以下は検索用
     # ある属性が上昇するなら 1, 減少するなら 2, 変化無しなら 0
