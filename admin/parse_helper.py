@@ -209,8 +209,8 @@ def to_effect(text):
     if m:
         target = u'戦闘力'
         op = u'+'
-        min = u'todo'
-        max = u'todo'
+        min = u'1' # todo
+        max = u'1' # todo
     else:
         effect = re.sub(ur'\([^)]*\)$', u'', effect) # 文末の補足を削除
 
