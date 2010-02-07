@@ -24,6 +24,122 @@ indexes:
 
 - kind: mabi_enchant
   properties:
+  - name: effect_attack_max_dex_str
+  - name: attack_max
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: attack_max
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: equipment
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: equipment
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: melee_attack_max
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: melee_attack_max
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: ranged_attack_max
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: ranged_attack_max
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: rank
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: rank
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: root
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_attack_max_dex_str
+  - name: root
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: critical
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: critical
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: equipment
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: equipment
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: ranged_attack_max
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: rank
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: rank
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: root
+
+- kind: mabi_enchant
+  properties:
+  - name: effect_critical_luck_will
+  - name: root
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
   - name: root
   - name: attack_max
     direction: desc

@@ -77,6 +77,7 @@ class Enchant(db.Model):
     effect_mana_max = db.IntegerProperty(default = 0)
     effect_stamina_max = db.IntegerProperty(default = 0)
     effect_defence = db.IntegerProperty(default = 0)
+    
     effect_protection = db.IntegerProperty(default = 0)
     effect_injury_max = db.IntegerProperty(default = 0)
     effect_injury_min = db.IntegerProperty(default = 0)
@@ -137,13 +138,14 @@ class Enchant(db.Model):
             type = a[0]
             max = float(a[1] + a[3])
             up_or_down = 1 if max > 0 else 2
-            # todo attack_min etc.
             if type == u'attack_max':
                 self.attack_max += max
                 self.melee_attack_max += max
                 self.ranged_attack_max += max
                 self.effect_attack_max = up_or_down
                 self.effect_attack_max_dex_str = up_or_down
+            elif type == u'attack_min':
+                self.effect_attack_min = up_or_down
             elif type == u'critical':
                 self.critical += max / 100
                 self.effect_critical = up_or_down
@@ -166,6 +168,10 @@ class Enchant(db.Model):
                 self.critical += max / 500
                 self.effect_luck = up_or_down
                 self.effect_critical_luck_will = up_or_down
+            elif type == u'int':
+                self.effect_int = up_or_down
+            elif type == u'balance':
+                self.effect_balance = up_or_down
             elif type == u'life_max':
                 self.life_max += max
                 self.effect_life_max = up_or_down
@@ -181,6 +187,32 @@ class Enchant(db.Model):
             elif type == u'protection':
                 self.protection += max
                 self.effect_protection = up_or_down
+            elif type == u'injury_max':
+                self.effect_injury_max = up_or_down
+            elif type == u'injury_min':
+                self.effect_injury_min = up_or_down
+            elif type == u'cp':
+                self.effect_cp = up_or_down
+
+            elif type == u'mana_consumption':
+                self.effect_mana_consumption = up_or_down
+            elif type == u'poison_resistance':
+                self.effect_poison_resistance = up_or_down
+            elif type == u'explosion_resistance':
+                self.effect_explosion_resistance = up_or_down
+            elif type == u'crystal_making':
+                self.effect_crystal_making = up_or_down
+            elif type == u'dissolution':
+                self.effect_dissolution = up_or_down
+            elif type == u'synthesis':
+                self.effect_synthesis = up_or_down
+            elif type == u'alchemy_wind':
+                self.effect_alchemy_wind = up_or_down
+            elif type == u'alchemy_water':
+                self.effect_alchemy_water = up_or_down
+            elif type == u'alchemy_fire':
+                self.effect_alchemy_fire = up_or_down
+                
 
     @classmethod
     def get(cls, english_name, root, rank):
@@ -189,6 +221,10 @@ class Enchant(db.Model):
         q.filter('rank = ', rank)
         q.filter('root = ', root)
         return q.get()
+
+    # よく使うステータス。 インデックスを用意してある
+    # 全部のステータス用にインデックスを用意すると多いので。
+    _popular_status = ['attack_max_dex_str', 'critical_luck_will']
 
     @classmethod
     def find(cls,
@@ -231,18 +267,20 @@ class Enchant(db.Model):
 
         if name:
             q.add_filter(datastore_helper.PrefixFilter(Enchant, 'names', name))
-            order = None # 'names' # 名前検索時は、名前以外で並べかえはできない
+            q.order_by_gae(False)
 
         # 効果用のフィルター作成
         if effects:
             effects = effects.split(u' ')
             effect_re = re.compile(ur'([-+])([a-zA-Z0-9_]+)')
-            q.order_by_gae(False) # 効果はたくさん絞り込めるので
             for e in effects:
                 m = effect_re.match(e)
                 value = 1 if m.group(1) == '+' else 2
-                key = 'effect_%s' % m.group(2) # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
+                status = m.group(2)
+                key = 'effect_%s' % status # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
                 q.add_filter(datastore_helper.Filter(Enchant, key, value))
+                if status not in cls._popular_status:
+                    q.order_by_gae(False)
 
         if root:
             q.add_filter(datastore_helper.Filter(Enchant, 'root', root))
