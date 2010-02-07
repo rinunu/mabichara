@@ -63,7 +63,8 @@ mabi.requester = {
     if(this.timer){
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(this.onTimeout, this.THROTTLE_PERIOD);
+    // 処理中のリクエストがある場合には、新しいリクエストの実行を遅らせる
+    this.timer = setTimeout(this.onTimeout, this.THROTTLE_PERIOD * (this.requests.length + 1));
   },
 
   /**
