@@ -384,23 +384,23 @@ mabi.showEnchantList = function(element){
 	    return '<ul>' + list.join('\n') + '</ul>';
 	  }},
 
-	{ "bVisible": false },
-	{ "bVisible": false },
-	{ "bVisible": false },
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
 
 	// クリティカル
 	{ "bVisible": false,
+	  "asSorting": ['desc'],
 	  "fnRender": function(oObj){
 	    return oObj.aData[oObj.iDataColumn] + '%';
 	  }
 	},
 
-
-	{ "bVisible": false },
-	{ "bVisible": false },
-	{ "bVisible": false },
-	{ "bVisible": false },
-	{ "bVisible": false }
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']},
+	{ "bVisible": false, "asSorting": ['desc', 'asc']}
       ]
     });
 };
