@@ -39,12 +39,16 @@ class DatastoreHelper(object):
     
     def __init__(self, model_type):
         self.model_type = model_type
-        self.filters = []
+        self._filters = []
         self._order = None
         self._order_by_gae = True
 
+    @property
+    def filters(self):
+        return self._filters
+
     def add_filter(self, filter):
-        self.filters.append(filter)
+        self._filters.append(filter)
 
     def order(self, order):
         self._order = order
@@ -55,28 +59,34 @@ class DatastoreHelper(object):
     def all(self):
         q = self.model_type.all()
 
-        if len(self.filters) >= 1:
-            f = self.filters.pop(0)
+        if len(self._filters) >= 1:
+            f = self._filters.pop(0)
             f.db_filter(q)
 
         if self._order:
             if self._order_by_gae:
+                logging.debug('order by gae')
                 q.order(self._order)
             else:
+                logging.debug('order by python')
                 q = self._sorted(q, self._order)
 
+        result = []
         # 手動フィルター
-        if len(self.filters) >= 1:
+        if len(self._filters) >= 1:
+            logging.debug('filter by python')
             for e in q:
                 ok = True
-                for f in self.filters:
+                for f in self._filters:
                     if not f.match(e):
                         ok = False
                         break
-                if not ok:
-                    continue
+                if ok:
+                    result.append(e)
+        else:
+            result = q
             
-        return q
+        return result
 
     def _sorted(self, query, order):
         '''プログラムでデータをソートする'''

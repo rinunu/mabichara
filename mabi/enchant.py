@@ -226,6 +226,30 @@ class Enchant(db.Model):
     # 全部のステータス用にインデックスを用意すると多いので。
     _popular_status = ['attack_max_dex_str', 'critical_luck_will']
 
+    
+    common_index = ['rank', 'root', 'equipment']
+    # インデックスを作成しているもの
+    # これ以外のものは手動で並べ替える
+    # フィルタ: [オーダー, ...] の形になっている
+    indexes = {'root': common_index,
+               'effect_attack_max_dex_str': common_index + ['attack_max', 'melee_attack_max', 'ranged_attack_max'],
+               'effect_critical_luck_will': common_index + ['critical'],}
+
+    @classmethod
+    def _can_order_by_gae(cls, filters, order):
+        if len(filters) == 0:
+            return True
+        elif len(filters) >= 2:
+            return False
+        else:
+            f = filters[0]
+            index = cls.indexes.get(f.name)
+            order = re.sub('-', '', order)
+            if index and order in index:
+                return True
+            else:
+                return False
+    
     @classmethod
     def find(cls,
              order=None, limit=None,
@@ -267,7 +291,6 @@ class Enchant(db.Model):
 
         if name:
             q.add_filter(datastore_helper.PrefixFilter(Enchant, 'names', name))
-            q.order_by_gae(False)
 
         # 効果用のフィルター作成
         if effects:
@@ -279,8 +302,6 @@ class Enchant(db.Model):
                 status = m.group(2)
                 key = 'effect_%s' % status # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
                 q.add_filter(datastore_helper.Filter(Enchant, key, value))
-                if status not in cls._popular_status:
-                    q.order_by_gae(False)
 
         if root:
             q.add_filter(datastore_helper.Filter(Enchant, 'root', root))
@@ -289,6 +310,7 @@ class Enchant(db.Model):
             q.add_filter(datastore_helper.Filter(Enchant, 'rank', rank))
 
         if order:
+            q.order_by_gae(cls._can_order_by_gae(q.filters, order))
             q.order(order)
         
         q = q.all()
