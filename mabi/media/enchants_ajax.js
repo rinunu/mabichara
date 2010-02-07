@@ -390,7 +390,7 @@ mabi.showEnchantList = function(element){
 
 	// クリティカル
 	{ "bVisible": false,
-	  "asSorting": ['desc'],
+	  "asSorting": ['desc', 'asc'],
 	  "fnRender": function(oObj){
 	    return oObj.aData[oObj.iDataColumn] + '%';
 	  }
