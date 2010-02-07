@@ -147,6 +147,12 @@ indexes:
 - kind: mabi_enchant
   properties:
   - name: root
+  - name: critical
+    direction: desc
+
+- kind: mabi_enchant
+  properties:
+  - name: root
   - name: equipment
 
 - kind: mabi_enchant
