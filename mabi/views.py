@@ -97,7 +97,6 @@ def to_map(enchant):
     obj['wiki'] = str(enchant.source)
     
     obj['attack_max'] = enchant.attack_max
-    logging.info(obj['attack_max']);
     obj['melee_attack_max'] = enchant.melee_attack_max
     obj['ranged_attack_max'] = enchant.ranged_attack_max
     obj['critical'] = int(enchant.critical * 100)
