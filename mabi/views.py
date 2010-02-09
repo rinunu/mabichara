@@ -39,15 +39,15 @@ from mabi.weapon import Weapon
 
 ######################################################################
 
-def jsonp(obj, callback):
+class MyJsonWriter(json.JsonWriter):
+    def _write(self, obj):
+        ty = type(obj)
+        if ty is types.FloatType:
+            self._append(str(obj)) # 0.1000000 => 0.1 にする
+        else:
+            json.JsonWriter._write(self, obj)
 
-   class MyJsonWriter(json.JsonWriter):
-       def _write(self, obj):
-           ty = type(obj)
-           if ty is types.FloatType:
-               self._append(str(obj)) # 0.1000000 => 0.1 にする
-           else:
-               json.JsonWriter._write(self, obj)
+def jsonp(obj, callback):
 
    return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback), MyJsonWriter().write(obj))
 
@@ -72,7 +72,7 @@ def to_map(enchant):
     obj['english_name'] = enchant.english_name
     obj['rank'] = enchant.rank
     obj['rank_text'] = enchant.rank_text
-    obj['root'] = enchant.root
+    obj['root'] = 'p' if enchant.root == 'prefix' else 's'
     obj['equipment'] = enchant.equipment
     obj['equipment_text'] = enchant.equipment_text
 

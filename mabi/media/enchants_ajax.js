@@ -326,7 +326,16 @@ mabi.showEnchantList = function(element){
       "iDisplayLength": 20,
       "bJQueryUI": true,
       "aoColumns": [
-	null,
+
+
+        // root
+	{
+	  "fnRender": function(oObj){
+	    var a = oObj.aData[oObj.iDataColumn];
+	    if(a == 'p')return 'prefix';
+	    else return 'suffix';
+	  }
+	},
 
 	// ランク
 	{
