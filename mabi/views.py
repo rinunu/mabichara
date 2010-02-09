@@ -23,6 +23,8 @@ and もどれかにマッチしていれば OK
 """
 
 import re
+import logging
+import types
 
 from django.views.generic.simple import direct_to_template
 from django.shortcuts import render_to_response
@@ -38,7 +40,16 @@ from mabi.weapon import Weapon
 ######################################################################
 
 def jsonp(obj, callback):
-    return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback),  json.write(obj))
+
+   class MyJsonWriter(json.JsonWriter):
+       def _write(self, obj):
+           ty = type(obj)
+           if ty is types.FloatType:
+               self._append(str(obj)) # 0.1000000 => 0.1 にする
+           else:
+               json.JsonWriter._write(self, obj)
+
+   return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback), MyJsonWriter().write(obj))
 
 def enchants(request):
     """エンチャント一覧を表示する
@@ -86,6 +97,7 @@ def to_map(enchant):
     obj['wiki'] = str(enchant.source)
     
     obj['attack_max'] = enchant.attack_max
+    logging.info(obj['attack_max']);
     obj['melee_attack_max'] = enchant.melee_attack_max
     obj['ranged_attack_max'] = enchant.ranged_attack_max
     obj['critical'] = int(enchant.critical * 100)
