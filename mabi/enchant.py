@@ -344,7 +344,7 @@ class Enchant(db.Model):
             q.add_filter(datastore_helper.Filter(Enchant, 'root', root))
             
         if rank:
-            q.add_filter(datastore_helper.Filter(Enchant, 'rank', rank))
+            q.add_filter(datastore_helper.Filter(Enchant, 'rank', int(rank)))
 
         if order:
             q.order_by_gae(cls._can_order_by_gae(q.filters, order))
