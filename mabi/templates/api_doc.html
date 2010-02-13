@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}API 仕様(仮){% endblock %}
+
+{% block content %}
+
+ここに記載している API は突然仕様変更したり、なくなる可能性があります。
+また、下記のURLはすべて、サーバへ送信する前にURLエンコードする必要があります。
+
+<h2>エンチャント一覧取得</h2>
+<p>
+  条件に一致するエンチャントの一覧を JSON 形式で取得します。
+  パラメータで条件と並び順を指定します。条件を指定しなかった場合、すべてのエンチャントを対象とします。
+  <div class="url_sample">URL: ~/enchants.json?引数</div>
+
+  <div class="url_sample">
+    例: <a href='/enchants.json?effects=%2Bstr&amp;rank=9&amp;root=s'>/enchants.json?effects=+str&amp;rank=9&amp;root=s</a>
+    (最大ダメージが増加するランク9の接尾エンチャント)
+  </div>
+  
+
+  <table>
+    <tr><th>パラメータ名</th><th>説明</th></tr>
+    
+    <tr>
+      <td>name</td>
+      <td>エンチャント名。 このパラメータに前方一致するエンチャントを検索します。</td>
+    </tr>
+    
+    <tr>
+      <td>rank</td>
+      <td>ランク。 A~Fは10~15で指定します。</td>
+    </tr>
+
+    <tr>
+      <td>root</td>
+      <td>接頭/接尾。接頭なら p 、接尾なら s を指定します。</td>
+    </tr>
+
+    <tr>
+      <td>equipment</td>
+      <td>TODO</td>
+    </tr>
+
+    <tr>
+      <td>effects</td>
+      <td>
+	効果。「+/-ステータス名」の形で指定します。複数のステータス名を列挙すると AND で検索します。
+	<div>
+	  例: <span>+str +dex</span> (str と dex が両方共増加するものを検索する)
+	</div>
+	ステータス名は以下のものを指定します。
+	<table>
+	  <tr><th>attack_max_dex_str</th><td>最大ダメージ系(最大ダメージ or Dex or Str)</td></tr>
+	  <tr><th>attack_min_dex_str</th><td>最小ダメージ系(最小ダメージ or Dex or Str)</td></tr>
+	  <tr><th>critical_luck_will</th><td>クリティカル系(クリティカル or Luck or Will)</td></tr>
+	  
+	  <tr><th>life_max</th><td>生命力</td></tr>
+	  <tr><th>mana_max</th><td>マナ</td></tr>
+	  <tr><th>stamina_max</th><td>スタミナ</td></tr>
+
+	  <tr><th>str</th><td>Str</td></tr>
+	  <tr><th>dex</th><td>Dex</td></tr>
+	  <tr><th>will</th><td>Will</td></tr>
+	  <tr><th>luck</th><td>Luck</td></tr>
+	  <tr><th>int</th><td>Int</td></tr>
+	  
+	  <tr><th>defence</th><td>防御</td></tr>
+	  <tr><th>protection</th><td>保護</td></tr>
+	  
+      	  <tr><th>attack_max</th><td>最大ダメージ</td></tr>
+	  <tr><th>attack_min</th><td>最小ダメージ</td></tr>
+	  <tr><th>critical</th><td>クリティカル</td></tr>
+	  
+	  <tr><th>balance</th><td>ダメージバランス</td></tr>
+	  <tr><th>injury_max</th><td>最大負傷率</td></tr>
+	  <tr><th>injury_min</th><td>最小負傷率</td></tr>
+	  <tr><th>cp</th><td>戦闘力</td></tr>
+	  
+	  <tr><th>mana_consumption</th><td>消費マナ減少</td></tr>
+	  <tr><th>poison_resistance</th><td>毒免疫</td></tr>
+	  <tr><th>explosion_resistance</th><td>爆発抵抗</td></tr>
+	  <tr><th>crystal_making</th><td>結晶製作成功率</td></tr>
+	  <tr><th>dissolution</th><td>分解成功率</td></tr>
+	  <tr><th>synthesis</th><td>合成成功率</td></tr>
+	  <tr><th>alchemy_wind</th><td>風属性の錬金術ダメージ</td></tr>
+	  <tr><th>alchemy_water</th><td>水属性の錬金術ダメージ</td></tr>
+	  <tr><th>alchemy_fire</th><td>火属性の錬金術ダメージ</td></tr>
+	</table>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>orderby</td>
+      <td>
+	並び順を指定します。以下のどれかを指定します。
+	<ul>
+	  <li>root</li>
+	  <li>rank</li>
+	  <li>name</li>
+	  <li>equipment</li>
+	  <li>effects</li>
+	  <li>attack_max</li>
+	  <li>melee_attack_max</li>
+	  <li>ranged_attack_max</li>
+	  <li>critical</li>
+	  <li>life_max</li>
+	  <li>mana_max</li>
+	  <li>stamina_max</li>
+	  <li>defence</li>
+	  <li>protection</li>
+	</ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td>sortorder</td>
+      <td>ソート方向を指定します。ascending or descending</td>
+    </tr>
+    
+    <tr>
+      <td>max-results</td>
+      <td>取得する最大件数を指定します。</td>
+    </tr>
+    
+    <tr>
+      <td>callback</td>
+      <td>JSONP用</td>
+    </tr>
+  </table>
+</p>
+
+<h2>エンチャント詳細取得</h2>
+<p>
+  ID で指定したエンチャントの詳細を取得します。
+  ID は「エンチャント一覧取得」で取得できます。
+  (現在、一覧取得で取得出来る情報と、詳細取得で取得できる情報は同じです)
+  <div class="url_sample">URL: ~/enchants/ID.json</div>
+</p>
+
+{% endblock %}
