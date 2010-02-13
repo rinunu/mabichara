@@ -76,7 +76,6 @@ def to_map(enchant):
     obj['names'] = enchant.names
     obj['english_name'] = enchant.english_name
     obj['rank'] = enchant.rank
-    obj['rank_text'] = enchant.rank_text
     obj['root'] = 'p' if enchant.root.startswith('p') else 's'
     obj['equipment'] = enchant.equipment
     obj['equipment_text'] = enchant.equipment_text
