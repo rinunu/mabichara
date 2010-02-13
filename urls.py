@@ -8,8 +8,10 @@ admin.autodiscover()
 
 handler500 = 'ragendja.views.server_error'
 
-urlpatterns = auth_patterns + patterns('',
+urlpatterns = auth_patterns + patterns(
+    '',
     ('^django-admin/(.*)', admin.site.root),
     (r'^$', 'django.views.generic.simple.direct_to_template',
-        {'template': 'main.html'}),
+     {'template': 'main.html'}),
+    (r'',      include('mabi.urls')),
 ) + urlpatterns

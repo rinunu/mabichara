@@ -50,9 +50,9 @@ def parse(url, html):
     result = []
 
     if re.search(u'prefix', unicode(soup.title)):
-        root = u'prefix'
+        root = u'p'
     else:
-        root = u'suffix'
+        root = u's'
     
     body = soup.find(id = u'body')
     ranks = body.findAll(lambda tag: tag.name == u'h2' and tag.find(text = parse_helper.rank_re))
@@ -72,21 +72,17 @@ def parse(url, html):
                     effects_text = get_effects_text(tr)
                     english_name = get_english_name(tr)
 
-                    enchant = Enchant.get(english_name, root, rank)
-                    if not enchant:
-                        enchant = Enchant(
-                            english_name = english_name,
-                            root = root,
-                            rank = rank)
-                    
-                    enchant.names = get_names(tr)
-                    enchant.effects_text = effects_text
-                    enchant.effects = parse_helper.to_effects(effects_text)
-                    enchant.equipment_text = equipment_text
-                    enchant.equipment = parse_helper.to_equipment(equipment_text)
-                    enchant.source = get_source(tr, url)
-                    enchant.season = capter_name
-                    enchant.update_computed()
+                    enchant = Enchant.create_or_update(
+                        english_name = english_name,
+                        root = root,
+                        rank = rank,
+                        names = get_names(tr),
+                        effects_text = effects_text,
+                        effects = parse_helper.to_effects(effects_text),
+                        equipment_text = equipment_text,
+                        equipment = parse_helper.to_equipment(equipment_text),
+                        source = get_source(tr, url),
+                        season = capter_name)
                     result.append(enchant)
                 elif is_capter(tr):
                     break
@@ -110,7 +106,7 @@ def parse_unimplemented(url, html):
     for rank_h in ranks:
         m = rank_re.match(rank_h.contents[0])
         rank = parse_helper.to_rank(m.group(1))
-        root = m.group(2)
+        root = 'p' if m.group(2).startswith('p') else 's'
         
         table = rank_h.findNext(u'table').tbody
         # 各ESを列挙する. 
@@ -119,22 +115,18 @@ def parse_unimplemented(url, html):
             effects_text = get_effects_text(tr)
             english_name = get_english_name(tr)
             
-            enchant = Enchant.get(english_name, root, rank)
-            if not enchant:
-                enchant = Enchant(
-                    english_name = english_name,
-                    root = root,
-                    rank = rank)
-                
-            enchant.names = get_names(tr)
-            enchant.effects_text = effects_text
-            enchant.effects = parse_helper.to_effects(effects_text)
-            enchant.equipment_text = equipment_text
-            enchant.equipment = parse_helper.to_equipment(equipment_text)
-            enchant.source = url
-            enchant.season = get_season_unimplemented(tr)
-            enchant.implemented = False
-            enchant.update_computed()
+            enchant = Enchant.create_or_update(
+                english_name = english_name,
+                root = root,
+                rank = rank,
+                names = get_names(tr),
+                effects_text = effects_text,
+                effects = parse_helper.to_effects(effects_text),
+                equipment_text = equipment_text,
+                equipment = parse_helper.to_equipment(equipment_text),
+                source = url,
+                season = get_season_unimplemented(tr),
+                implemented = False)
             result.append(enchant)
     return result
 

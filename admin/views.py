@@ -195,17 +195,9 @@ def update_weapon_sequences(request):
 def update(request):
     """データを更新する(その場しのぎに)"""
 
-    # db.delete(Weapon.all())
-    ws = Weapon.all().fetch(300)
-    for w in ws:
-        w.delete()
+    db.delete(Enchant.all())
 
-    if len(ws) >= 300:
-        taskqueue.add(url=reverse('admin.views.update'))
-    
-    context = {
-        'result': None
-        }
+    context = {}
 
     return direct_to_template(request, 'update_result.html', context)
 

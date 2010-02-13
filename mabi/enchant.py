@@ -22,7 +22,7 @@ class Enchant(db.Model):
 
     rank = db.IntegerProperty(required = True)
     
-    # prefix or suffix
+    # p(prefix) or s(suffix)
     root = db.StringProperty(required = True)
 
     # 貼り付け可能装備
@@ -118,7 +118,11 @@ class Enchant(db.Model):
             }
         if self.rank >= 10: return map[self.rank]
         else: return self.rank
-
+        
+    @property
+    def id(self):
+        return self._create_key_name(self.english_name, self.root, self.rank)
+        
     def update_computed(self):
         '''計算によって求まるプロパティを設定する'''
         self.attack_max = 0.0
@@ -212,15 +216,48 @@ class Enchant(db.Model):
                 self.effect_alchemy_water = up_or_down
             elif type == u'alchemy_fire':
                 self.effect_alchemy_fire = up_or_down
-                
 
     @classmethod
-    def get(cls, english_name, root, rank):
-        q = cls.all()
-        q.filter('english_name = ', english_name)
-        q.filter('rank = ', rank)
-        q.filter('root = ', root)
-        return q.get()
+    def _create_key_name(cls, english_name, root, rank):
+        '''Enchant の ID を生成する'''
+        
+        root = 'p' if root.startswith('p') else 's'
+        return '%s%s%s' % (root, rank, english_name.replace(' ', '').lower())
+
+    @classmethod
+    def get_by_id(cls, id_):
+        '''
+        存在しない場合は None
+        '''
+        return cls.get_by_key_name(id_)
+    
+    @classmethod
+    def create_or_update(cls, english_name, root, rank,
+                         names, effects_text, effects, equipment_text, equipment, source, season,
+                         implemented = True
+                         ):
+        '''Enchant が存在しないなら作成 or 更新する'''
+        
+        key_name = cls._create_key_name(english_name, root, rank)
+
+        def tx():
+            a = cls.get_by_key_name(key_name)
+            if not a:
+                a = cls(key_name=key_name, english_name=english_name, root=root, rank=rank)
+            a.names = names
+            a.effects_text = effects_text
+            a.effects = effects
+            a.equipment_text = equipment_text
+            a.equipment = equipment
+            a.source = source
+            a.season = season
+            a.implemented = implemented
+            a.update_computed()
+            a.put()
+            return a
+
+        a = db.run_in_transaction(tx)
+        return a
 
     # よく使うステータス。 インデックスを用意してある
     # 全部のステータス用にインデックスを用意すると多いので。

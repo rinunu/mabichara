@@ -31,6 +31,7 @@ from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.http import Http404
 
 import json
 
@@ -49,7 +50,11 @@ class MyJsonWriter(json.JsonWriter):
 
 def jsonp(obj, callback):
 
-   return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback), MyJsonWriter().write(obj))
+    json = MyJsonWriter().write(obj)
+    if callback:
+        return '%s(%s);' % (re.sub('[^_\da-zA-Z]', '_', callback), json)
+    else:
+        return json
 
 def enchants(request):
     """エンチャント一覧を表示する
@@ -72,9 +77,11 @@ def to_map(enchant):
     obj['english_name'] = enchant.english_name
     obj['rank'] = enchant.rank
     obj['rank_text'] = enchant.rank_text
-    obj['root'] = 'p' if enchant.root == 'prefix' else 's'
+    obj['root'] = 'p' if enchant.root.startswith('p') else 's'
     obj['equipment'] = enchant.equipment
     obj['equipment_text'] = enchant.equipment_text
+
+    obj['id'] = enchant.id
 
     obj['effects'] = effects = []
     for effect in enchant.effects.split('\n'):
@@ -106,7 +113,31 @@ def to_map(enchant):
     obj['defence'] = enchant.defence
     obj['protection'] = enchant.protection
 
-    return obj    
+    return obj
+
+def create_feed(l, callback):
+    '''指定されたエンチャントのリストを含む feed を作成する'''
+
+    result = {}
+    result['version'] = '1.0'
+    result['entry'] = entry = []
+
+    for a in l:
+        entry.append(to_map(a))
+
+    return jsonp(result, callback)
+
+def enchant_json(request, id):
+    '''エンチャント詳細の json インタフェース'''
+
+    callback = request.GET.get('callback')
+
+    a = Enchant.get_by_id(id)
+
+    if not a:
+        raise Http404
+
+    return HttpResponse(create_feed([a], callback)) # , 'application/json')
 
 def enchants_json(request):
     '''エンチャント一覧の json インタフェース'''
@@ -130,16 +161,15 @@ def enchants_json(request):
 
     q = Enchant.find(order=order, limit=limit, **cond)
 
-    result = []
-    for a in q:
-        result.append(to_map(a))
+    return HttpResponse(create_feed(q, callback)) # , 'application/json')
 
-    if callback:
-        result = jsonp(result, callback)
-    else:
-        result = json.write(result)
-    return HttpResponse(result) # , 'application/json')
 
+# def blogparts(request, id_):
+#     a = Enchant.get_by_id(id)
+#     if not a:
+#         raise Http404
+
+#     return direct_to_template(request, 'blogparts_enchant.html', {enchant: a})
 
 ######################################################################
 # 武器一覧

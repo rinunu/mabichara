@@ -6,8 +6,8 @@ var mabi = {
  * サーバからエンチャントデータを取得する
  */
 mabi.enchants.getEnchants = function(params, callback){
-  // var url = 'http://mabichara.appspot.com/mabi/enchants.json?callback=?';
-  var url = '/mabi/enchants.json?callback=?';
+  // var url = 'http://mabichara.appspot.com/enchants.json?callback=?';
+  var url = '/enchants.json?callback=?';
   $.getJSON(url, params, function(json){
 	      callback(json);
 	    });
@@ -147,12 +147,12 @@ mabi.ev = {
  */
 mabi.ev.toDataTablesJson = function(json){
   var data = [];
-  for(var i = 0; i < json.length; ++i){
-    var o = json[i];
+  for(var i = 0; i < json.entry.length; ++i){
+    var o = json.entry[i];
     data.push([
 		o.root,
 		o.rank,
-		[o.names, o.wiki],
+		[o.names, o.wiki, o.id],
 		o.equipment_text || '',
 		[o.effects, o.effect_texts],
 		o.attack_max,
@@ -168,8 +168,8 @@ mabi.ev.toDataTablesJson = function(json){
   }
 
   return {
-    "iTotalRecords": json.length,
-    "iTotalDisplayRecords": json.length,
+    "iTotalRecords": json.entry.length,
+    "iTotalDisplayRecords": json.entry.length,
     "aaData": data
   };
 };
@@ -366,10 +366,11 @@ mabi.showEnchantList = function(element){
 	    var list = [];
 	    var names = oObj.aData[oObj.iDataColumn][0];
 	    var wiki = oObj.aData[oObj.iDataColumn][1];
+	    var id = oObj.aData[oObj.iDataColumn][2];
 	    for(var i = 0; i < names.length; ++i){
 	      list.push('<li>' + names[i] + '</li>');
 	    }
-	    var a = '<a href="' + wiki + '">wiki</a>';
+	    var a = '<a href="' + wiki + '">wiki</a>&nbsp;<span class="id">' + id + '</span>';
 	    return '<ul>' + list.join('\n') + '</ul>' + a;
 	  }},
 	null,

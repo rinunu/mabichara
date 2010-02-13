@@ -8,7 +8,8 @@ urlpatterns = patterns(
 
     (url(r'^enchants$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants_ajax.html'}, name='enchants_ajax')),
     # (r'^enchants$', 'mabi.views.enchants'),
-    (r'^enchants.json$', 'mabi.views.enchants_json'),
+    (r'^enchants\.json$', 'mabi.views.enchants_json'),
+    (r'^enchants/(?P<id>.*)\.json$', 'mabi.views.enchant_json'),
     
     (r'^weapons$', 'mabi.views.weapons'),
     (r'^weapons.json$', 'mabi.views.weapons_json'),

@@ -22,6 +22,10 @@ table.enchants{
     width: 800px;
 }
 
+span.id{
+    color: #d3d3d3;
+}
+
 th.root{
     width: 50px;
 }
