@@ -160,8 +160,6 @@ class Enchant(db.Model):
         for a in dir(self):
             if a.startswith('effect_'):
                 setattr(self, a, 0)
-        
-        effect_attack_max = db.IntegerProperty(default = 0)
 
         for effect in self.effects.split('\n'):
             a = effect.split(' ')
