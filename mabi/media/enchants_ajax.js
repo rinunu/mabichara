@@ -152,7 +152,7 @@ mabi.ev.toDataTablesJson = function(json){
     data.push([
 		o.root,
 		o.rank,
-		[o.names, o.wiki, o.id],
+		[o.names, o.wiki, o.id, o.implemented],
 		o.equipment_text || '',
 		[o.effects, o.effect_texts],
 		o.attack_max,
@@ -367,10 +367,12 @@ mabi.showEnchantList = function(element){
 	    var names = oObj.aData[oObj.iDataColumn][0];
 	    var wiki = oObj.aData[oObj.iDataColumn][1];
 	    var id = oObj.aData[oObj.iDataColumn][2];
+	    var implemented = oObj.aData[oObj.iDataColumn][3];
 	    for(var i = 0; i < names.length; ++i){
 	      list.push('<li>' + names[i] + '</li>');
 	    }
-	    var a = '<a href="' + wiki + '">wiki</a>&nbsp;<span class="id">' + id + '</span>';
+	    var a = '<a href="' + wiki + '" target="_blank">wiki</a>&nbsp;<span class="id">' + id + '</span>';
+	    a += implemented ? '' : '<br /><span class="unimplemented">未実装</span>';
 	    return '<ul>' + list.join('\n') + '</ul>' + a;
 	  }},
 	null,

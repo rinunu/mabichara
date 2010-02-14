@@ -111,6 +111,7 @@ def to_map(enchant):
     obj['stamina_max'] = enchant.stamina_max
     obj['defence'] = enchant.defence
     obj['protection'] = enchant.protection
+    obj['implemented'] = enchant.implemented
 
     return obj
 
