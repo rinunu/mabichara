@@ -323,7 +323,7 @@ mabi.showEnchantList = function(element){
       "sDom": 'rtp',
       "bAutoWidth": false,
       "bLengthChange": false,
-      "iDisplayLength": 20,
+      "iDisplayLength": 30,
       "bJQueryUI": true,
       "aoColumns": [
 
