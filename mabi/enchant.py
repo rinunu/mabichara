@@ -122,6 +122,25 @@ class Enchant(db.Model):
     @property
     def id(self):
         return self._create_key_name(self.english_name, self.root, self.rank)
+
+    def _set_effect(self, status, max_):
+        '''指定された status を max_ 増加させる。 また、 effect_status を更新する
+
+        どちらもそのプロパティが存在しない場合は何もしない。
+        '''
+        try:
+            prop = getattr(Enchant, status)
+            a = prop.__get__(self, Enchant)
+            prop.__set__(self, float(a) + max_)
+        except AttributeError:
+            pass
+        
+        try:
+            prop = getattr(Enchant, 'effect_' + status)
+            a = prop.__get__(self, Enchant)
+            prop.__set__(self, 1 if max_ > 0 else 2)
+        except AttributeError:
+            pass
         
     def update_computed(self):
         '''計算によって求まるプロパティを設定する'''
@@ -139,83 +158,30 @@ class Enchant(db.Model):
             a = effect.split(' ')
             if a[1] == '*' or a[2] == 'todo': continue
 
-            type = a[0]
-            max = float(a[1] + a[3])
-            up_or_down = 1 if max > 0 else 2
-            if type == u'attack_max':
-                self.attack_max += max
-                self.melee_attack_max += max
-                self.ranged_attack_max += max
-                self.effect_attack_max = up_or_down
-                self.effect_attack_max_dex_str = up_or_down
-            elif type == u'attack_min':
-                self.effect_attack_min = up_or_down
-            elif type == u'critical':
-                self.critical += max / 100
-                self.effect_critical = up_or_down
-                self.effect_critical_luck_will = up_or_down
-            elif type == u'str':
-                self.melee_attack_max += max / 2.5
-                self.effect_str = up_or_down
-                self.effect_attack_max_dex_str = up_or_down
-                self.effect_attack_min_dex_str = up_or_down
-            elif type == u'dex':
-                self.ranged_attack_max += max / 2.5
-                self.effect_dex = up_or_down
-                self.effect_attack_max_dex_str = up_or_down
-                self.effect_attack_min_dex_str = up_or_down
-            elif type == u'will':
-                self.critical += max / 1000
-                self.effect_will = up_or_down
-                self.effect_critical_luck_will = up_or_down
-            elif type == u'luck':
-                self.critical += max / 500
-                self.effect_luck = up_or_down
-                self.effect_critical_luck_will = up_or_down
-            elif type == u'int':
-                self.effect_int = up_or_down
-            elif type == u'balance':
-                self.effect_balance = up_or_down
-            elif type == u'life_max':
-                self.life_max += max
-                self.effect_life_max = up_or_down
-            elif type == u'mana_max':
-                self.mana_max += max
-                self.effect_mana_max = up_or_down
-            elif type == u'stamina_max':
-                self.stamina_max += max
-                self.effect_stamina_max = up_or_down
-            elif type == u'defence':
-                self.defence += max
-                self.effect_defence = up_or_down
-            elif type == u'protection':
-                self.protection += max
-                self.effect_protection = up_or_down
-            elif type == u'injury_max':
-                self.effect_injury_max = up_or_down
-            elif type == u'injury_min':
-                self.effect_injury_min = up_or_down
-            elif type == u'cp':
-                self.effect_cp = up_or_down
-
-            elif type == u'mana_consumption':
-                self.effect_mana_consumption = up_or_down
-            elif type == u'poison_resistance':
-                self.effect_poison_resistance = up_or_down
-            elif type == u'explosion_resistance':
-                self.effect_explosion_resistance = up_or_down
-            elif type == u'crystal_making':
-                self.effect_crystal_making = up_or_down
-            elif type == u'dissolution':
-                self.effect_dissolution = up_or_down
-            elif type == u'synthesis':
-                self.effect_synthesis = up_or_down
-            elif type == u'alchemy_wind':
-                self.effect_alchemy_wind = up_or_down
-            elif type == u'alchemy_water':
-                self.effect_alchemy_water = up_or_down
-            elif type == u'alchemy_fire':
-                self.effect_alchemy_fire = up_or_down
+            status = a[0]
+            max_ = float(a[1] + a[3])
+            if status == u'attack_max':
+                self._set_effect('melee_attack_max', max_)
+                self._set_effect('ranged_attack_max', max_)
+                self._set_effect('attack_max_dex_str', max_)
+            elif status == u'critical':
+                self._set_effect('critical_luck_will', max_)
+            elif status == u'str':
+                self._set_effect('melee_attack_max', max_ / 2.5)
+                self._set_effect('attack_max_dex_str', max_ / 2.5)
+                self._set_effect('attack_min_dex_str', max_ / 3)
+            elif status == u'dex':
+                self._set_effect('ranged_attack_max', max_ / 2.5)
+                self._set_effect('attack_max_dex_str', max_ / 3.5)
+                self._set_effect('attack_min_dex_str', max_ / 3.5)
+            elif status == u'will':
+                self._set_effect('critical', max_ / 10)
+                self._set_effect('critical_luck_will', max_ / 10)
+            elif status == u'luck':
+                self._set_effect('critical', max_ / 5)
+                self._set_effect('critical_luck_will', max_ / 5)
+                
+            self._set_effect(status, max_)
 
     @classmethod
     def _create_key_name(cls, english_name, root, rank):
@@ -354,6 +320,7 @@ class Enchant(db.Model):
 
         # プログラムによるフィルタ
         if isinstance(equipment, basestring):
+            logging.info('equipment: ' + equipment);
             equipment = re.compile(equipment)
 
         result = []
