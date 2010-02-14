@@ -138,7 +138,10 @@ class Enchant(db.Model):
         try:
             prop = getattr(Enchant, 'effect_' + status)
             a = prop.__get__(self, Enchant)
-            prop.__set__(self, 1 if max_ > 0 else 2)
+            # TODO 現在プラス効果もマイナス効果もひとつのプロパティで持っている。 そのためプラスとマイナスの効果が混在していると問題になる
+            # 現在はそのような場合はプラスの効果を優先する。
+            if a != 1:
+                prop.__set__(self, 1 if max_ > 0 else 2)
         except AttributeError:
             pass
         
@@ -153,6 +156,12 @@ class Enchant(db.Model):
         self.stamina_max = 0.0
         self.defence = 0.0
         self.protection = 0.0
+
+        for a in dir(self):
+            if a.startswith('effect_'):
+                setattr(self, a, 0)
+        
+        effect_attack_max = db.IntegerProperty(default = 0)
 
         for effect in self.effects.split('\n'):
             a = effect.split(' ')
