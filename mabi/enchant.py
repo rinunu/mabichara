@@ -126,14 +126,17 @@ class Enchant(db.Model):
     def _set_effect(self, status, max_):
         '''指定された status を max_ 増加させる。 また、 effect_status を更新する
 
+        status に関しては、マイナス効果は反映しないようにする(メタニー等、マイナス効果の影響で検索上位に出てこないものがあるので)。
+
         どちらもそのプロパティが存在しない場合は何もしない。
         '''
-        try:
-            prop = getattr(Enchant, status)
-            a = prop.__get__(self, Enchant)
-            prop.__set__(self, float(a) + max_)
-        except AttributeError:
-            pass
+        if max_ > 0:
+            try:
+                prop = getattr(Enchant, status)
+                a = prop.__get__(self, Enchant)
+                prop.__set__(self, float(a) + max_)
+            except AttributeError:
+                pass
         
         try:
             prop = getattr(Enchant, 'effect_' + status)
@@ -327,13 +330,12 @@ class Enchant(db.Model):
 
         # プログラムによるフィルタ
         if isinstance(equipment, basestring):
-            logging.info('equipment: ' + equipment);
             equipment = re.compile(equipment)
 
         result = []
         for e in q:
             es_equipment = e.equipment or ''
-            if equipment and not equipment.match(es_equipment):
+            if equipment and not equipment.search(es_equipment):
                 continue
 
             result.append(e)

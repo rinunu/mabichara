@@ -26,7 +26,7 @@ def get_td(table, name):
 def to_equipment(text):
     """Enchant.equipment_text を元に Enchant.equipment を設定する"""
     
-    if not text: return text
+    if not text: return '*'
 
     text = re.compile(u'[\s　]*のみ').sub('', text)
 

@@ -105,7 +105,7 @@ def to_map(enchant):
     obj['attack_max'] = enchant.attack_max
     obj['melee_attack_max'] = enchant.melee_attack_max
     obj['ranged_attack_max'] = enchant.ranged_attack_max
-    obj['critical'] = int(enchant.critical * 100)
+    obj['critical'] = enchant.critical
     obj['life_max'] = enchant.life_max
     obj['mana_max'] = enchant.mana_max
     obj['stamina_max'] = enchant.stamina_max
