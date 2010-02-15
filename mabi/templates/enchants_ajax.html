@@ -6,6 +6,10 @@
 <script>
 $(document).ready(function(){
   mabi.showEnchantList($('table.enchants'));
+
+  var help = $('.help');
+  help.dialog(/*{ autoOpen: false }*/);
+  $('.help_button').click(function(){help.dialog('open');});
 });
 </script>
 
@@ -54,6 +58,7 @@ $(document).ready(function(){
       <label><input name="protection" type="checkbox" value="+protection" />保護+</label>
       
       <a class="option_button" href="#">詳細</a>
+      <a class="help_button" href="#">ヘルプ</a>
     </div>
     
     <div class="option" style="display:none;">
@@ -143,6 +148,31 @@ $(document).ready(function(){
     </tbody>
     
   </table>
+</div>
+
+<div class="help">
+  <h2>基本的な使い方</h2>
+  検索条件欄に検索条件を指定し、しばらく待つと結果が表示されます。
+
+  <h2>効果による絞り込み</h2>
+  <p>
+    検索条件の「効果」を指定すると、その効果をもつエンチャントのみが表示されます。
+    <div>
+      例: 「最大ダメージ系+」を指定すると、最大ダメージ・Str・Dex のいずれかが上昇するエンチャントのみ表示されます。
+    </div>
+  </p>
+
+  <p>
+    また、効果による絞り込みを行うと、表に「最大」等の行が追加される場合があります。
+    この性能欄は、エンチャントのプラス効果を足しあわせた値を表示しています。
+    エンチャントのマイナス効果は考慮していないため、正確な値にはなっていませんが、目安として利用してください。
+  </p>
+
+  <h2>並び替え</h2>
+  表のヘッダー部をクリックすると、その行の値によって並び替えを行います。
+
+  <h2>不具合等</h2>
+  <a href="{% url about %}">こちら</a>を御覧下さい。
 </div>
 
   
