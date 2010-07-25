@@ -293,9 +293,9 @@ mabi.showEnchantList = function(element){
 	mabi.ev.searchEnchants();
       });
 
+  $('div.option').hide();
   $('.option_button').click(function(){
-			      $('div.option').toggle('normal');
-			      return false;
+			      $('div.option').toggle("fast");
 			    });
 
   mabi.ev.checkboxes = mabi.ev.condition_form.find(".effects input[type='checkbox']");
