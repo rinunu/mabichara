@@ -26,7 +26,7 @@ from admin.source import Source
 
 @staff_only
 def setup(request):
-    """初期設定を行う"""
+    """初期設定/HTMLキャッシュのクリアを行う"""
 
     db.delete(Source.all())
     
