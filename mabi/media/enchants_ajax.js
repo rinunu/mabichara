@@ -1,6 +1,6 @@
-var mabi = {
-  enchants : {}
-};
+var mabi = mabi || {};
+
+mabi.enchants = {};
 
 /**
  * サーバからエンチャントデータを取得する
@@ -110,8 +110,7 @@ mabi.requester = {
 /* Enchant View */
 
 mabi.ev = {
-  // 最後に入力したエンチャント名
-  latestName: '',
+  prevName: "",
 
   // 検索条件
   conditions: {},
@@ -274,7 +273,8 @@ mabi.showEnchantList = function(element){
 
   mabi.ev.name = mabi.ev.condition_form.find("input[name='name']");
 
-  mabi.ev.condition_form.find("input[name='name']").keyup(
+  var text = mabi.ev.condition_form.find("input[name='name']");
+  text.keyup(
       function(){
 	var name = 'name';
 	delete mabi.ev.conditions[name];
@@ -284,7 +284,8 @@ mabi.showEnchantList = function(element){
 	mabi.ev.searchEnchants();
       });
 
-  mabi.ev.condition_form.find('select').change(
+  var conditionSelects = mabi.ev.condition_form.find('select');
+  conditionSelects.change(
       function(){
 	delete mabi.ev.conditions[this.name];
 	if(this.value){
@@ -300,7 +301,7 @@ mabi.showEnchantList = function(element){
 
   mabi.ev.checkboxes = mabi.ev.condition_form.find(".effects input[type='checkbox']");
   mabi.ev.checkboxes.click(
-      function(){
+      function(event){
 	var name = 'effects';
 	delete mabi.ev.conditions[name];
 
@@ -371,7 +372,8 @@ mabi.showEnchantList = function(element){
 	    for(var i = 0; i < names.length; ++i){
 	      list.push('<li>' + names[i] + '</li>');
 	    }
-	    var a = '<a href="' + wiki + '" target="_blank">wiki</a>&nbsp;<span class="id">' + id + '</span>';
+	    var a = '<a href="' + wiki + '" target="_blank" class="wiki">wiki</a>'
+		  + '&nbsp;<span class="id">' + id + '</span>';
 	    a += implemented ? '' : '<br /><span class="unimplemented">未実装</span>';
 	    return '<ul>' + list.join('\n') + '</ul>' + a;
 	  }},
@@ -415,5 +417,31 @@ mabi.showEnchantList = function(element){
 	{ "bVisible": false, "asSorting": ['desc', 'asc']}
       ]
     });
+
+
+    mabi.ev.checkboxes.click(
+	function(){
+	    mabi.Track.track("enchant", "filter", this.value + (this.checked ? " on" : " off"));
+	});
+    conditionSelects.change(
+	function(){
+	    mabi.Track.track("enchant", "filter", this.value);
+	});
+    $(".enchants th").live(
+	"click",
+	function(event){
+	    var th = $(this);
+	    var class_ = th.attr("class").split(" ")[0];
+	    mabi.Track.track("enchant", "sort", class_);
+	});
+    $("a.wiki").live(
+	"click",
+	function(){
+	    mabi.Track.track("enchant", "wiki", this.href);
+	});
+    text.change(
+	function(){
+	    mabi.Track.track("enchant", "text", this.value);
+	});
 };
 
