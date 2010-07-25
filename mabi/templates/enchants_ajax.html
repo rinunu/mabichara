@@ -7,8 +7,8 @@
 $(document).ready(function(){
   mabi.showEnchantList($('table.enchants'));
 
-  var help = $('.help');
-  help.dialog(/*{ autoOpen: false }*/);
+  var help = $('#help');
+  help.dialog({autoOpen: true});
   $('.help_button').click(function(){help.dialog('open');});
 });
 </script>
@@ -151,7 +151,8 @@ $(document).ready(function(){
   </table>
 </div>
 
-<div class="help">
+
+<div id="help" title="ヘルプ">
   <h2>基本的な使い方</h2>
   検索条件欄に検索条件を指定し、しばらく待つと結果が表示されます。
 
