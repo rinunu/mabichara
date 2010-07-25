@@ -1,5 +1,12 @@
-testtest
-test
+* デプロイ
+- media を更新したら MEDIA_VERSION を更新する
+- manage.py update
 
-メモ
+* データ更新
+- HTML キャッシュをクリアする
+- 「取り込み」を行う
+- エラーの場合、ソースの修正が必要
+
+* メモ
 - 未実装ESのパースは現在未対応
+
