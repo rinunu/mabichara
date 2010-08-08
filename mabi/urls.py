@@ -17,6 +17,7 @@ urlpatterns = patterns(
     (url(r'^equipment$', 'django.views.generic.simple.direct_to_template', {'template': 'equipment.html'}, name='equipment')),
 
     (url(r'^about$', 'django.views.generic.simple.direct_to_template', {'template': 'about.html'}, name='about')),
+    (url(r'^twitter_bot$', 'django.views.generic.simple.direct_to_template', {'template': 'twitter_bot.html'}, name='twitter_bot')),
     (url(r'^api_doc$', 'django.views.generic.simple.direct_to_template', {'template': 'api_doc.html'}, name='api_doc')),
 
     # 一時的なもの
