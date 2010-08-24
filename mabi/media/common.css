@@ -81,3 +81,37 @@ table.status th{
 
 table.status td{
 }
+
+/* ---------------------------------------------------------------------- */
+
+.editable{
+    border: solid 1px #aa8;
+    background-color: #ffa;
+}
+
+.drophover{
+   background-color: #ffa;
+}
+
+/* ---------------------------------------------------------------------- */
+/* status */
+
+.status{
+    border: solid 1px black;
+}
+
+/* ---------------------------------------------------------------------- */
+/* equipment_set */
+
+.equipment_set{
+    border: solid 1px black;
+    float: left;
+}
+
+/* ---------------------------------------------------------------------- */
+/* inventory */
+
+.inventory{
+    border: solid 1px black;
+    float: left;
+}
