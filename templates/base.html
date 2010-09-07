@@ -2,18 +2,18 @@
 <html>
   <head>
     <title>{% block title %}{% endblock %} - site name</title>
-    {% block css %}
-      <link rel="stylesheet" type="text/css"  media="screen, projection" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
-    {% endblock %}
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
+    {% load media %}
+    {% include_media 'main.css' %}
+    {% include_media 'main.js' %}
 
     {% block js %}
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-      <script type="text/javascript" src="{{ MEDIA_URL }}combined-{{ LANGUAGE_CODE }}.js"></script>
     {% endblock %}
 
     {% block extra-head %}{% endblock %}
-
 
       <script type="text/javascript">
 	var _gaq = _gaq || [];
@@ -37,9 +37,9 @@
           {% if user.is_authenticated %}
             {{ user.username }}
 	    <a href="{% url admin.views.index %}">管理</a> |
-            <a href="{% url django.contrib.auth.views.logout %}">ログアウト</a>
+            <a href="">ログアウト</a>
           {% else %}
-            <a href="{% url django.contrib.auth.views.login %}">ログイン</a>(サイト管理用)
+            <a href="">ログイン</a>(サイト管理用)
 	    
           {% endif %}
         </div>
