@@ -6,14 +6,13 @@
 import logging
 from google.appengine.ext import db
 from google.appengine.api.labs import taskqueue
+from google.appengine.api import users
 
 from django.views.generic.simple import direct_to_template
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-
-from ragendja.auth.decorators import staff_only
 
 import enchant_importer
 import weapon_importer
@@ -24,7 +23,6 @@ from mabi.weapon import Weapon
 from admin.source import Source
 
 
-@staff_only
 def setup(request):
     """初期設定/HTMLキャッシュのクリアを行う"""
 
@@ -62,7 +60,6 @@ def setup(request):
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
-@staff_only
 def index(request):
     """取り込み元一覧を表示する
     """
@@ -74,7 +71,6 @@ def index(request):
 
     return direct_to_template(request, 'index.html', context)
 
-@staff_only
 def source_content(request, key):
     """取り込み元の内容を返す"""
 
@@ -91,7 +87,6 @@ def _import_equipments(source):
     
     return HttpResponseRedirect(reverse('admin.views.index'))
 
-@staff_only
 def import_data(request, key):
     """取り込み元の内容を取り込む"""
 
@@ -128,7 +123,6 @@ def import_data(request, key):
     else:
         return map[source.type](source)
 
-@staff_only
 def _update_weapon(weapon_class, upgrades, process):
     '''
     Arguments:
@@ -164,7 +158,6 @@ def _update_weapon(weapon_class, upgrades, process):
         
 
 
-@staff_only
 def update_weapon(request):
     """指定された武器の情報を更新する"""
 
@@ -174,7 +167,6 @@ def update_weapon(request):
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
-@staff_only
 def update_weapon_sequences(request):
     """指定された武器の情報を更新する"""
 
@@ -191,7 +183,6 @@ def update_weapon_sequences(request):
 
     return HttpResponse()
 
-@staff_only
 def update(request):
     """データを更新する(その場しのぎに)"""
 
@@ -200,4 +191,16 @@ def update(request):
     context = {}
 
     return direct_to_template(request, 'update_result.html', context)
+
+
+def login(request):
+    """管理機能用のログイン画面を表示する"""
+
+    return HttpResponseRedirect(users.create_login_url("/"))
+
+def logout(request):
+    """管理機能用のログアウト画面を表示する"""
+
+    return HttpResponseRedirect(users.create_logout_url("/"))
+
 

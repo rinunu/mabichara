@@ -21,6 +21,7 @@ mabi.Track.setVar("no_report");
     <td><a href="{% url admin.views.source_content source.key.id %}">ソース</a></td>
     <td>
       <form action="{% url admin.views.import_data source.key %}" method="post">
+	{% csrf_token %}
 	<input type="submit" value="取り込み"/>
       </form>
     </td>
@@ -31,19 +32,24 @@ mabi.Track.setVar("no_report");
 
 
 <form action="{% url admin.views.setup %}" method="post">
+  {% csrf_token %}
   <input type="submit" value="初期ソースセットアップ/HTML キャッシュクリア"/>
 </form>
 
 <form action="{% url admin.views.update %}" method="post">
+  {% csrf_token %}
   <input type="submit" value="いろいろ"/>
 </form>
 
 <h2>武器</h2>
 
 <form action="{% url admin.views.update_weapon %}" method="post">
+  {% csrf_token %}
   <table>
     <thead>
-      <th></th>
+      <tr>
+	<th></th>
+      </tr>
     </thead>
     
     

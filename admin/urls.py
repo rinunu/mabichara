@@ -9,4 +9,7 @@ urlpatterns = patterns(
     (r'^update$', 'views.update'),
     (r'^update_weapon$', 'views.update_weapon'),
     (r'^update_weapon_sequences$', 'views.update_weapon_sequences'),
+
+    (r'^login$', 'views.login'),
+    (r'^logout$', 'views.logout'),
 )
