@@ -1,6 +1,6 @@
 {% extends "base.html" %}
+{% load media %}
 {% block title %}エンチャントさーち αばん{% endblock %}
-
 
 {% block js %}
 <script type="text/javascript">
@@ -48,7 +48,7 @@ $(document).ready(function(){
 	  <option value="\*|/アクセサリ/">アクセサリ</option>
 	</select>
       </label>
-      <img class='spinner' src='{{ MEDIA_URL }}global/images/spinner.gif'>
+      <img class='spinner' src="{% media_url 'images/spinner.gif' %}">
     </div>
     
     <div class="effects">
