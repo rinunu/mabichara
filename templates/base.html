@@ -8,9 +8,9 @@
 
     {% load media %}
     {% include_media 'main.css' %}
-    {% include_media 'main.js' %}
 
     {% block js %}
+    {% include_media 'main.js' %}
     {% endblock %}
 
     {% block extra-head %}{% endblock %}

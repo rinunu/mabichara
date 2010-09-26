@@ -127,21 +127,14 @@ td li{
 }
 
 /* ---------------------------------------------------------------------- */
-/* ステータス */
-
-table.status{
-}
-
-table.status th{
-}
-
-table.status td{
-}
-
-/* ---------------------------------------------------------------------- */
+/* common */
 
 .editable{
+    cursor: pointer;
     border: solid 1px #aa8;
+    background-color: #ffe;
+}
+.editable:hover{
     background-color: #ffa;
 }
 
@@ -149,25 +142,94 @@ table.status td{
    background-color: #ffa;
 }
 
-/* ---------------------------------------------------------------------- */
-/* status */
+.ui-draggable{
+}
 
-.status{
+/**
+ * 1装備を構成する要素
+ */
+span.element{
+    margin-right: 5px;
+}
+
+/**
+ * 仮想装備
+ */
+.virtual{
+    color: #555;
+    font-style: italic;
+}
+
+/* ---------------------------------------------------------------------- */
+/* 装備画面 全体構成 */
+
+.character{
+    margin: 10px;
+}
+
+.equipment_set{
+    margin: 10px;
+    width: 600px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* character */
+
+.character{
+    width: 320px;
+}
+
+.character table{
     border: solid 1px black;
+    margin: 3px;
+}
+
+.character table td, .character table th{
+    border: none;
+}
+
+.character .basic1{
+    float: left;
+}
+
+.character .basic2, .character .attack, .character .defence{
+    width: 200px;
+    float: right;
+}
+
+.character .basic2 th, .character .attack th, .character .defence th{
+    width: 80px;
+}
+
+.character .ui-widget-content{
+  overflow: hidden;
 }
 
 /* ---------------------------------------------------------------------- */
 /* equipment_set */
 
 .equipment_set{
-    border: solid 1px black;
-    float: left;
+}
+
+.equipment_set .memo{
+    margin: 5px;
+}
+
+.equipment_set table{
+    width: 100%;
 }
 
 /* ---------------------------------------------------------------------- */
-/* inventory */
+/* equipment_view - 個別装備画面 */
 
-.inventory{
+.equipment_view .tabs{
+    float: left;
+    width: 300px;
+}
+
+.equipment_view .spec{
     border: solid 1px black;
     float: left;
+    width: 220px;
 }
+

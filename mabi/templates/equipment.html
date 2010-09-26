@@ -1,329 +1,45 @@
 {% extends "base.html" %}
+{% load media %}
+
 {% block title %}マビノギ お気に入り装備{% endblock %}
 
-{% block content %}
+{% block js %}
+{% include_media 'equipment_tmp.js' %}
 
 <script type="text/javascript">
   $(function() {
-  $("#tabs").tabs();
-  $("div.equipment").dialog({autoOpen: true});
 
-  $(".draggable").draggable({ helper: 'clone' });
-
-  $(".droppable").droppable({
-  drop: function(event, ui) {alert("test");},
-  hoverClass: 'drophover'
-  });
-
+  initialize();
 
   });
 </script>
 
-<div class="ui-widget">
-  <div class="ui-widget-header">
-    キャラクター情報
+{% endblock %}
+
+{% block content %}
+
+<div class="tabs">
+  <ul>
+    <li><a href="#tabs_recommended">おすすめ装備セット</a></li>
+    <li><a href="#tabs_equipment">装備セット編集</a></li>
+    <li><a href="#tabs_character">キャラクター編集</a></li>
+    <li><a href="#tabs_compare">装備セット比較</a></li>
+  </ul>
+  <div id="tabs_recommended">
+    {% include "recommended.html" %}
   </div>
-  <div class="status">
-    <table class="status">
-      <tr>
-	<th>名前</th>
-	<td>りぬぬ</td>
-	<th>種族</th>
-	<td>人間 女性</td>
-      </tr>
-    </table>
-
-    <table class="status">
-      <tr>
-	<th>生命力</th>
-	<td>80(70)</td>
-      </tr>
-      <tr>
-	<th class="mana_max">マナ</th>
-	<td>80(70)</td>
-      </tr>
-      <tr>
-	<th class="stamina_max">スタミナ</th>
-	<td>80(70)</td>
-      </tr>
-    </table>
-
-    <table class="status">
-      <tr>
-	<th>Lv</th>
-	<td>50</td>
-      </tr>
-    </table>
-
-    <table class="status">
-      <tbody>
-	<tr>
-	  <th class="">Str</th>
-	  <td>80(50)</td>
-	</tr>
-	<tr>
-	  <th class="">Int</th>
-	  <td>80(60)</td>
-	</tr>
-	<tr>
-	  <th class="">Dex</th>
-	  <td>80(50)</td>
-	</tr>
-	<tr>
-	  <th class="">Will</th>
-	  <td>80(50)</td>
-	</tr>
-	<tr>
-	  <th class="">Luck</th>
-	  <td>80(50)</td>
-	</tr>
-      </tbody>
-    </table>
-    
-    <table class="status attack">
-      <tbody class="">
-	<tr>
-	  <th class="damage_max">ダメージ</th>
-	  <td>80~100(60~80)</td>
-	</tr>
-	<tr>
-	  <th class="critical">クリティカル</th>
-	  <td>80(70)</td>
-	</tr>
-      </tbody>
-    </table>
-    
-    <table class="status defence">
-      <tbody class="">
-	<tr>
-	  <th class="defence">防御</th>
-	  <td>10(2)</td>
-	</tr>
-	<tr>
-	  <th class="protection">保護</th>
-	  <td>10(2)</td>
-	</tr>
-      </tbody>
-    </table>
+  <div id="tabs_equipment">
+    {% include "character_overview.html" %}
+    {% include "equipment_set.html" %}
+  </div>
+  <div id="tabs_character">
   </div>
 </div>
 
-
-<!-- 装備セット -->
-<div class="equipment_set">
-  <div class="ui-widget-header">
-    クリティカル特化装備
-  </div>
-  <div>
-    現在最もクリティカルが高くなる装備。
-  </div>
-
-  <div>
-    <table class="ui-widget ui-widget-content">
-      <tr class="ui-widget-header">
-	<th class="">部位</th>
-	<th class="">名称</th>
-	<th class="">最小</th>
-	<th class="">最大</th>
-	<th class="">防御</th>
-	<th class="">保護</th>
-      </tr>
-
-      <tr>
-	<td>
-	  タイトル
-	</td>
-	<td class="droppable">
-	  クリティカルヒットマスター
-	  <button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-
-      <tr>
-	<td>
-	  右手
-	</td>
-	<td>
-	  <span class="es">リッチ</span>
-	  <span class="es">クロコダイル</span>
-	  <span class="equipment">100式 1級 クレイモア</span>
-	  <button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>      
-
-      <tr>
-	<td>
-	  左手
-	</td>
-	<td>
-	  <button>変更</button>
-	</td>
-	<td>0</td>
-	<td>0</td>
-	<td>0</td>
-	<td>0</td>
-      </tr>      
-      
-      <tr>
-	<td>
-	  頭
-	</td>
-	<td>
-	  荒い 激しい 尻尾帽子<button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-      <tr>
-	<td>
-	  アクセサリー1
-	</td>
-	<td>
-	  原理 暗黒 軽鎧<button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-      <tr>
-	<td>
-	  アクセサリー2
-	</td>
-	<td>
-	  原理 暗黒 軽鎧<button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-      <tr>
-	<td>
-	  体
-	</td>
-	<td>
-	  原理 暗黒 軽鎧<button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-      <tr>
-	<td>
-	  手
-	</td>
-	<td>
-	  原理 暗黒 軽鎧<button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-      <tr>
-	<td>
-	  足
-	</td>
-	<td>
-	  原理 暗黒 軽鎧
-	  <button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-
-      <tr>
-	<td>
-	  ローブ
-	</td>
-	<td>
-	  <button>変更</button>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>
-      
-    </table>
-  </div>
-</div>
-
-
-<!-- インベントリ -->
-<div class="inventory">
-
-  <div>
-    <table class="ui-widget ui-widget-content">
-      <tr class="ui-widget-header">
-	<th class="">名称</th>
-	<th class="">最小</th>
-	<th class="">最大</th>
-	<th class="">防御</th>
-	<th class="">保護</th>
-      </tr>
-
-
-      <tr>
-  	<td>
-	  <div class="draggable">
-	    <span class="es">リッチ</span>
-	    <span class="es">クロコダイル</span>
-	    <span class="equipment">100式 1級 クレイモア</span>
-	  </div>
-	</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-	<td>10</td>
-      </tr>      
-
-      
-    </table>
-  </div>
-</div>
-
-
-
-<!-- 装備作成 -->
-<div class="equipment">
-  <div>
-    <span class="editable">クレイモア</span>
-  </div>
-  <div>
-    <select>
-      <option>1級</option>
-      <option>テスト</option>
-      <option>あいう</option>
-    </select>
-  </div>
-  <div>
-    <span class="editable">リッチ</span>
-  </div>
-  <div>
-    <span class="editable">クロコダイル</span>
-  </div>
-
-  <button>OK</button>
-</div>
+{% include "enchant.html" %}
+{% include "options.html" %}
+{% include "inventory.html" %}
+{% include "equipment_detail.html" %}
 
 {% endblock %}
+
