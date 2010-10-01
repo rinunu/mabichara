@@ -87,6 +87,14 @@ def _import_equipments(source):
     
     return HttpResponseRedirect(reverse('admin.views.index'))
 
+def _put_enchants(enchants):
+    result = []
+    for enchant in enchants:
+        model = Enchant.create_or_update(**enchant)
+        model.put()
+        result.append(model)
+    return result
+
 def import_data(request, key):
     """取り込み元の内容を取り込む"""
 
@@ -100,18 +108,18 @@ def import_data(request, key):
 
     if source.type == u'enchant':
         result = enchant_importer.parse(source.url, source.content)
+        result = _put_enchants(result)
         context = {
             'result': result
             }
-        for a in result: a.put()
         return direct_to_template(request, 'import_result.html', context)
-    if source.type == u'enchant_unimplemented':
-        result = enchant_importer.parse_unimplemented(source.url, source.content)
-        context = {
-            'result': result
-            }
-        for a in result: a.put()
-        return direct_to_template(request, 'import_result.html', context)
+    # if source.type == u'enchant_unimplemented':
+    #     result = enchant_importer.parse_unimplemented(source.url, source.content)
+    #     context = {
+    #         'result': result
+    #         }
+    #     for a in result: a.put()
+    #     return direct_to_template(request, 'import_result.html', context)
     elif source.type == u'weapon':
         weapon_class, upgrades = weapon_importer.import_data(source.url, source.content)
         context = {

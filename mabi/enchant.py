@@ -14,27 +14,29 @@ class Enchant(db.Model):
     """エンチャントデータ
     """
 
-    url = db.StringProperty()
-
+    # 英語名
     english_name = db.StringProperty(required = True)
-    
+
+    # 日本語名
     names = db.StringListProperty()
 
+    # 
     rank = db.IntegerProperty(required = True)
     
     # p(prefix) or s(suffix)
     root = db.StringProperty(required = True)
 
-    # 貼り付け可能装備
+    # 貼り付け可能装備(内部用)
     equipment = db.StringProperty()
 
-    # 貼り付け可能装備の説明
+    # 貼り付け可能装備(ユーザ用)
     equipment_text = db.StringProperty()
 
-    # 効果
+    # 効果(内部用)
+    # 効果を改行区切りにしたもの。各効果は(対象効果,増減,min,max,条件)をカンマ区切りしたもの。
     effects = db.StringProperty(multiline = True)
 
-    # 効果の説明
+    # 効果(ユーザ用)
     effects_text = db.StringProperty(multiline = True)
 
     updated_at = db.DateTimeProperty(auto_now = True)
@@ -45,8 +47,14 @@ class Enchant(db.Model):
     # 未実装なら False
     implemented = db.BooleanProperty(default = True)
 
+    # 専用化
+    personalized = db.BooleanProperty(default = False)
+
     # データ元へのリンク
     source = db.LinkProperty()
+
+    # ----------------------------------------------------------------------
+    # 以下は表示用
 
     # ステータス上昇(or 低下)
     attack_max = db.FloatProperty(default = 0.0)
@@ -60,6 +68,7 @@ class Enchant(db.Model):
     melee_attack_max = db.FloatProperty(default = 0.0)
     ranged_attack_max = db.FloatProperty(default = 0.0)
 
+    # ----------------------------------------------------------------------
     # 以下は検索用
     # ある属性が上昇するなら 1, 減少するなら 2, 変化無しなら 0
 
@@ -97,6 +106,9 @@ class Enchant(db.Model):
     effect_attack_max_dex_str = db.IntegerProperty(default = 0)
     effect_attack_min_dex_str = db.IntegerProperty(default = 0)
     effect_critical_luck_will = db.IntegerProperty(default = 0)
+
+    # TODO 未使用？
+    url = db.StringProperty()
 
     @property
     def critical_text(self):
@@ -149,7 +161,9 @@ class Enchant(db.Model):
             pass
         
     def update_computed(self):
-        '''計算によって求まるプロパティを設定する'''
+        '''計算によって求まるプロパティを設定する
+        1. effect から検索用の属性を設定する
+        '''
         self.attack_max = 0.0
         self.melee_attack_max = 0.0
         self.ranged_attack_max = 0.0
@@ -165,7 +179,7 @@ class Enchant(db.Model):
                 setattr(self, a, 0)
 
         for effect in self.effects.split('\n'):
-            a = effect.split(' ')
+            a = effect.split(',')
             if a[1] == '*' or a[2] == 'todo': continue
 
             status = a[0]

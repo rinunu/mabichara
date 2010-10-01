@@ -2,10 +2,10 @@
 
 {% block extra-head %}
 <script type="text/javascript">
-  var my = {};
+  /*var my = {};
   $(document).ready(function(){
     my.tl = $('#result').dataTable({"iDisplayLength": 1000});
-  });
+  });*/
 </script>
 {% endblock %}
 
@@ -38,8 +38,8 @@
       <td>{{ e.id }}</td>
       <td>{{ e.root }}</td>
       <td>{{ e.rank }}</td>
-      <td>{{ e.equipment_text|default_if_none:"" }}</td>
-      <td>{{ e.equipment|default_if_none:"" }}</td>
+      <td>{# e.equipment_text|default_if_none:"" #}</td>
+      <td>{# e.equipment|default_if_none:"" #}</td>
       <td>{{ e.effects_text|linebreaksbr }}</td>
       <td>{{ e.effects|linebreaksbr }}</td>
       <td>{{ e.updated_at }}</td>
