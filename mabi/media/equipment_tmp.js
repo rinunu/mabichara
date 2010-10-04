@@ -1,8 +1,6 @@
 // ----------------------------------------------------------------------
 
 function initialize(){
-    tmp.createDummtData();
-
     $(".tabs").tabs();
     $(".buttons").buttonset();
     $("button").button();
@@ -13,9 +11,15 @@ function initialize(){
 	    hoverClass: 'drophover'
 	});
 
-    var equipmentSetView = new mabi.EquipmentSetView($(".equipment_set"), tmp.set);
-    var optionView = new mabi.OptionsView();
-    var inventoryView = new mabi.InventoryView();
-    var equipmentView = new mabi.EquipmentView();
-    var enchantView = new mabi.EnchantView();
+    mabi.enchants = new mabi.EnchantStore();
+    var c = mabi.enchants.initialize();
+    c.success(function(){
+		  var set =tmp.createDummtData();
+		  mabi.equipmentSetView.setModel(set);
+	      });
+    mabi.equipmentSetView = new mabi.EquipmentSetView($(".equipment_set"));
+    mabi.optionView = new mabi.OptionsView();
+    mabi.inventoryView = new mabi.InventoryView();
+    mabi.equipmentView = new mabi.EquipmentView();
+    mabi.enchantView = new mabi.EnchantView();
 }

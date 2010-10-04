@@ -36,9 +36,9 @@ mabi.Track.setVar("no_report");
   <input type="submit" value="初期ソースセットアップ/HTML キャッシュクリア"/>
 </form>
 
-<form action="{% url admin.views.update %}" method="post">
+<form action="{% url admin.views.delete_all %}" method="post">
   {% csrf_token %}
-  <input type="submit" value="いろいろ"/>
+  <input type="submit" value="エンチャント全て削除"/>
 </form>
 
 <h2>武器</h2>

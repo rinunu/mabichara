@@ -1,10 +1,18 @@
 
 mabi.Element = function(options){
     options = options || {};
-    this.name_ = options.name;
 
     // [{slot:, element:}, ...]
     this.children_ = [];
+
+    this.effects_ = [];
+
+    this.name_ = options.name;
+
+    var effects = options.effects || [];
+    for(var i = 0; i < effects.length; i++){
+	this.addEffect(new mabi.Effect(effects[i]));
+    }
 };
 
 // ----------------------------------------------------------------------
@@ -34,6 +42,21 @@ mabi.Element.prototype.addChild = function(child, slot){
  * Effect を追加する
  */
 mabi.Element.prototype.addEffect = function(effect){
+    this.effects_.push(effect);
+};
+
+/**
+ * この Element のもつ Effect を列挙する
+ */
+mabi.Element.prototype.eachEffect = function(fn){
+    var i;
+    for(i = 0; i < this.children_.length; i++){
+	this.children_[i].eachEffect(fn);
+    }
+
+    for(i = 0; i < this.effects_.length; i++){
+	fn(this.effects_[i]);
+    }
 };
 
 /**
@@ -47,6 +70,35 @@ mabi.Element.prototype.child = function(slot){
 	return null;
     }
     return this.children_[i].element;
+};
+
+/**
+ * 指定したパラメータの値を取得する
+ * 
+ * 値は Character や EquipmentSet によって変化するため、それらも引数で指定する。
+ */
+mabi.Element.prototype.param = function(param, character, equipmentSet){
+    var result = 0;
+    this.eachEffect(
+	function(effect){
+	    if(effect.param() == param){
+		result += effect.min();
+	    }
+	});
+    return result;
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * source から Effect をコピーする
+ */
+mabi.Element.prototype.copyEffectsFrom = function(source){
+    var this_ = this;
+    source.eachEffect(
+	function(effect){
+	    this_.addEffect(effect);
+	});
 };
 
 // ----------------------------------------------------------------------

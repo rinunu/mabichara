@@ -66,6 +66,21 @@ def enchants(request):
 
     return direct_to_template(request, 'enchants.html', context)
 
+def to_effects_map(effects_str):
+    effects = []
+    for effect in effects_str.split('\n'):
+        a = effect.split(',')
+        b = {
+                'op': a[1],
+                'param': a[0],
+                'min': int(a[2]),
+                'max': int(a[3]),
+                }
+        if len(a) >= 5: b['condition'] = a[4]
+        effects.append(b)
+    return effects
+
+
 def to_map(enchant):
     '''Enchant をマップに変換する
 
@@ -82,20 +97,7 @@ def to_map(enchant):
 
     obj['id'] = enchant.id
 
-    obj['effects'] = effects = []
-    for effect in enchant.effects.split('\n'):
-        a = effect.split(' ')
-        if a[1] == '-':
-            min = int(a[3]) * -1
-            max = int(a[2]) * -1
-        else:
-            min = int(a[2])
-            max = int(a[3])
-        effects.append({
-                'status': a[0],
-                'min': min,
-                'max': max
-                })
+    obj['effects'] = to_effects_map(enchant.effects)
     
     obj['effect_texts'] = enchant.effects_text.split('\n')
     obj['season'] = enchant.season

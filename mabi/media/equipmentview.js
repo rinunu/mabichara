@@ -1,9 +1,12 @@
 
+/**
+ * 個別装備の編集を行うビュー
+ */
 mabi.EquipmentView = function(){
     this.$element_ = $('.equipment_view');
     this.$element_.dialog(
 	{
-	    autoOpen: true,
+	    autoOpen: false,
 	    width: 700,
 	    height: 600,
 	    buttons: {"OK": function() {}}

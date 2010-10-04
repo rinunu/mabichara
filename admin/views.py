@@ -191,10 +191,10 @@ def update_weapon_sequences(request):
 
     return HttpResponse()
 
-def update(request):
-    """データを更新する(その場しのぎに)"""
+def delete_all(request):
+    '''データを全て削除する'''
 
-    db.delete(Enchant.all())
+    db.delete(Enchant.all(keys_only=True))
 
     context = {}
 

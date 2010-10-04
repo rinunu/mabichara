@@ -3,7 +3,7 @@ mabi.InventoryView = function(){
     this.$element_ = $('.inventory');
     this.$element_.dialog(
 	{
-	    autoOpen: true,
+	    autoOpen: false,
 	    buttons: {"OK": function() {}}
 	});
 
