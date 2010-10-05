@@ -15,3 +15,7 @@ mabi.ContextualElement.prototype.param = function(param){
 mabi.ContextualElement.prototype.name = function(){
     return this.element_.name();
 };
+
+mabi.ContextualElement.prototype.element = function(){
+    return this.element_;
+};

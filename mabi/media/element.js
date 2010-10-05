@@ -2,6 +2,8 @@
 mabi.Element = function(options){
     options = options || {};
 
+    this.id_ = mabi.Element.nextId_++;
+
     // [{slot:, element:}, ...]
     this.children_ = [];
 
@@ -18,7 +20,11 @@ mabi.Element = function(options){
 // ----------------------------------------------------------------------
 // property
 
-mabi.Element.prototype.name = function(name){
+mabi.Element.prototype.id = function(){
+    return this.id_;
+};
+
+mabi.Element.prototype.name = function(){
     return this.name_;
 };
 
@@ -36,6 +42,8 @@ mabi.Element.prototype.setName = function(name){
 mabi.Element.prototype.addChild = function(child, slot){
     // TODO 上書き処理
     this.children_.push({slot: slot, element: child});
+
+    util.Event.trigger(this, 'addChild', [{element: child, slot: slot}]);
 };
 
 /**
@@ -51,7 +59,7 @@ mabi.Element.prototype.addEffect = function(effect){
 mabi.Element.prototype.eachEffect = function(fn){
     var i;
     for(i = 0; i < this.children_.length; i++){
-	this.children_[i].eachEffect(fn);
+	this.children_[i].element.eachEffect(fn);
     }
 
     for(i = 0; i < this.effects_.length; i++){
@@ -60,16 +68,31 @@ mabi.Element.prototype.eachEffect = function(fn){
 };
 
 /**
- * 指定した slot の子要素を取得する
+ * 指定した slot or index の子要素を取得する
  * 
  * 存在しない場合は null を返す。
  */
-mabi.Element.prototype.child = function(slot){
-    var i = this.indexOf(slot);
+mabi.Element.prototype.child = function(slotOrIndex){
+    var i;
+    if(typeof slotOrIndex == 'number'){
+	i = slotOrIndex;
+    }else{
+	i = this.indexOf(slotOrIndex);
+    }
     if(i == -1){
 	return null;
     }
     return this.children_[i].element;
+};
+
+/**
+ * この Element のもつ子供を列挙する
+ */
+mabi.Element.prototype.eachChild = function(fn){
+    for(var i = 0; i < this.children_.length; i++){
+	var c = this.children_[i];
+	fn(c.element, c.slot);
+    }
 };
 
 /**
@@ -103,6 +126,8 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 
 // ----------------------------------------------------------------------
 // private
+
+mabi.Element.nextId_ = 0;
 
 /**
  */

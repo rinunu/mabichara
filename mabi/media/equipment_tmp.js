@@ -11,15 +11,19 @@ function initialize(){
 	    hoverClass: 'drophover'
 	});
 
+    // todo これも初期化を待つ
+    mabi.inventory = new mabi.Inventory();
+    mabi.inventory.initialize();
+
     mabi.enchants = new mabi.EnchantStore();
     var c = mabi.enchants.initialize();
     c.success(function(){
-		  var set =tmp.createDummtData();
-		  mabi.equipmentSetView.setModel(set);
+		  tmp.createDummtData();
+		  mabi.equipmentSetView.setModel(tmp.set);
 	      });
     mabi.equipmentSetView = new mabi.EquipmentSetView($(".equipment_set"));
     mabi.optionView = new mabi.OptionsView();
-    mabi.inventoryView = new mabi.InventoryView();
+    mabi.inventoryView = new mabi.InventoryView(mabi.inventory);
     mabi.equipmentView = new mabi.EquipmentView();
     mabi.enchantView = new mabi.EnchantView();
 }

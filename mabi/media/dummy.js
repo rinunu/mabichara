@@ -3,6 +3,22 @@
  */
 var tmp = {};
 
+tmp.createEquipment = function(equipmentName, prefixName, suffixName){
+    var element = new mabi.ConcreteEquipment();
+
+    var equipment = new mabi.NoEnchantedEquipment();
+    equipment.addChild(mabi.Equipment.find(equipmentName), 'equipment');
+    element.addChild(equipment, 'equipment');
+
+    if(prefixName){
+	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(prefixName)), 'prefix');
+    }
+    if(suffixName){
+	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(suffixName)), 'suffix');
+    }
+    return element;
+};
+
 tmp.createEquipmentSet = function(json){
     var set = new mabi.EquipmentSet();
     set.setName(json.name);
@@ -12,10 +28,7 @@ tmp.createEquipmentSet = function(json){
 	var prefix = row[1];
 	var suffix = row[2];
 
-	var element = new mabi.ConcreteEquipment();
-	element.addChild(mabi.Equipment.find(equipment), 'equipment');
-	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(prefix)), 'prefix');
-	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(suffix)), 'suffix');
+	var element = tmp.createEquipment(equipment, prefix, suffix);
 	set.addChild(element, slot);
     }
 
@@ -23,7 +36,7 @@ tmp.createEquipmentSet = function(json){
 };
 
 tmp.createDummtData = function(){
-    return tmp.createEquipmentSet(
+    tmp.set = tmp.createEquipmentSet(
 	{
 	    name: 'クリティカル特化装備セット',
 	    children: {
@@ -38,6 +51,20 @@ tmp.createDummtData = function(){
 	}
     );
     // タイトル	ラノとコンヌースをつないだ
+
+    mabi.inventory.addChild(
+	tmp.createEquipmentSet(
+	    {
+		name: '',
+		children: {
+		    // title クリティカルヒットマスター
+		    body: ['軽鎧', '原理の', null],
+		    accessory1: ['アクセサリ', 'ライト', null]
+		}
+	    }));
+
+    mabi.inventory.addChild(tmp.createEquipment('軽鎧', null, 'ダークネス')); // 暗黒(14)
+    mabi.inventory.addChild(tmp.createEquipment('アクセサリ', 'ユリ'));
 };
 
 tmp.createEnchant = function(name, effects){
