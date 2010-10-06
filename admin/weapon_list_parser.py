@@ -5,6 +5,7 @@ import logging
 from BeautifulSoup import BeautifulSoup
 
 import parse_helper
+from exceptions import ParseException
 
 
 race_re = re.compile(ur'\[(.*?)\]')
@@ -15,7 +16,6 @@ class WeaponListParser:
 
     def parse_header(self, s):
         '''「【木工:6】[HE] コンポジットボウ」のような文字列をパースする
-
         '''
 
         m = race_re.search(s)
@@ -41,8 +41,11 @@ class WeaponListParser:
 
         td = parse_helper.get_td(table, u'詳細ページ')
         if td:
-            url = td.a['href']
-            item['url'] = url
+            if not td.a:
+                logging.warning(u'詳細ページがありません: ' + name)
+            else:
+                url = td.a['href']
+                item['url'] = url
 
         return item
 

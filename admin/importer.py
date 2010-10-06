@@ -4,15 +4,14 @@ from google.appengine.ext import db
 
 from admin.source import Source
 
-from mabi.enchant import Enchant
-from mabi.title import Title
-from mabi.weapon_class import WeaponClass
-from mabi.weapon_upgrade import WeaponUpgrade
-from mabi.weapon import Weapon
-
 import enchant_importer
 import title_importer
-import weapon_importer
+import weapon_parser
+from weapon_list_parser import WeaponListParser
+
+from mabi import Enchant
+from mabi import Title
+from mabi import EquipmentClass
 
 class Importer:
     def setup(self):
@@ -50,10 +49,10 @@ class Importer:
         self.add_source(name=u'タイトルスキルマスター', type='title', url=u'%A5%BF%A5%A4%A5%C8%A5%EB%2F%A5%B9%A5%AD%A5%EB%A5%DE%A5%B9%A5%BF%A1%BC')
         
         self.add_source(name=u'刀剣類',
-                   type=u'equipments',
+                   type=u'weapon_list',
                    url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0')
         self.add_source(name=u'遠距離',
-                   type=u'equipments',
+                   type=u'weapon_list',
                    url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%B1%F3%B5%F7%CE%A5')
         
     def add_source(self, name, type, url):
@@ -79,6 +78,17 @@ class Importer:
             result.append(model)
         return result
 
+    def _put_equipment_list(self, items):
+        '''装備リストを解析した情報を保存する'''
+        result = []
+        for item in items:
+            model = EquipmentClass.create_or_update(
+                name=item['name'],
+                source=item.get('url')
+                )
+            result.append(model)
+        return result
+
     def import_data(self, source):
         '''取り込み元の内容を取り込む'''
 
@@ -91,7 +101,11 @@ class Importer:
             'title': {
                 'parser': title_importer.parse,
                 'saver': self._put_titles,
-                }
+                },
+            'weapon_list': {
+                'parser': WeaponListParser().parse,
+                'saver': self._put_equipment_list,
+                },
             }
     
         source.load()

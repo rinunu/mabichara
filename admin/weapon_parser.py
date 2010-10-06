@@ -188,19 +188,3 @@ def import_data(url, html):
     parse_upgrade_sequences(soup, weapon_class, upgrades)
 
     return (weapon_class, upgrades)
-
-######################################################################
-
-def import_equipments(url, html):
-    """装備一覧ページを解析し、武器情報を保存する
-
-    TODO 武器だけじゃなく装備も
-        
-    """
-    
-    soup = BeautifulSoup(html)
-
-    for th in soup(lambda tag: tag.name == u'th' and tag.find(text = re.compile(ur'詳細ページ'))):
-        a = th.findNext('td').find('a')
-        if a: # 詳細ページがないものも存在する
-            Source.create_or_update(type='weapon', name=parse_helper.get_string(a), url=a['href'])

@@ -48,20 +48,30 @@ mabi.Track.setVar("no_report");
     <thead>
       <tr>
 	<th></th>
+	<th></th>
       </tr>
     </thead>
     
     
     <tbody>
-      {% for w in weapon_classes %}
+      {% for i in equipments %}
       <tr>
-	<td><input name="key" type="checkbox" value="{{ w.key }}"> {{ w.name }}</td>
+	<td>
+	  {% if i.source %}
+	  <input name="key" type="checkbox" value="{{ w.key }}"> 
+	  <a href="{{ i.source }}">{{ i.name }}</a>
+	  {% else %}
+	  {{ i.name }}
+	  {% endif %}
+	</td>
+	<td>
+	</td>
       </tr>
       {% endfor %}
     </tbody>  
   </table>
   
-  <input type="submit" value="武器情報更新"/>
+  <input type="submit" value="取り込み"/>
 </form>
 
 {% endblock %}

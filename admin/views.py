@@ -18,7 +18,7 @@ from importer import Importer
 
 from admin.source import Source
 
-from mabi.weapon_class import WeaponClass
+from mabi import EquipmentClass
 
 def setup(request):
     '''初期設定/HTMLキャッシュのクリアを行う'''
@@ -34,7 +34,7 @@ def index(request):
     
     context = {
         'sources': Source.all(),
-        'weapon_classes': WeaponClass.all(),
+        'equipments': EquipmentClass.all(),
         }
 
     return direct_to_template(request, 'index.html', context)
@@ -48,7 +48,10 @@ def import_data(request, key):
             },
         'title': {
             'result_page': 'titles.html'
-            }
+            },
+        'weapon_list': {
+            'result_page': 'titles.html'
+            },
         }
 
 
@@ -60,7 +63,11 @@ def import_data(request, key):
     context = {
         'result': result
         }
-    return direct_to_template(request, types[source.type]['result_page'], context)
+
+    if source.type == 'weapon_list':
+        return HttpResponseRedirect(reverse('admin.views.index'))
+    else:
+        return direct_to_template(request, types[source.type]['result_page'], context)
 
 def delete_all(request):
     '''データを全て削除する'''
