@@ -26,10 +26,12 @@ def get_string(tag, separator=''):
         return separator.join(tag.findAll(text=True)).strip()
 
 def get_td(table, name):
-    '''指定された TH の次にでてくる TD を返す'''
-    
-    return table(text=name)[0].findNext('td')
-    
+    '''指定された TH に対応する TD を返す'''
+
+    th = table.find(text=name)
+    if not th:
+        return None
+    return th.findNext('td')
 
 def to_float(s):
     """〜%という文字を float に変換する"""
