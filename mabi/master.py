@@ -39,4 +39,6 @@ param_name_id_map = {
     u'風属性錬金術ダメージ' : u'alchemy_wind',
     u'水属性錬金術ダメージ' : u'alchemy_water',
     u'火属性錬金術ダメージ' : u'alchemy_fire',
+
+    u'魔法ダメージ' : u'magic',
 }

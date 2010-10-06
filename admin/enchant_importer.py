@@ -6,6 +6,7 @@ import logging
 from BeautifulSoup import BeautifulSoup
 
 import mabi.master
+import parse_helper
 
 # ----------------------------------------------------------------------
 
@@ -119,29 +120,6 @@ def to_equipment(text):
         raise Exception, u'不明な装備: ' + text
 
 
-def to_param_id(name):
-    '''効果の日本語名から内部 ID へ変換する'''
-
-    # ゆらぎ修正
-    map = {
-        u'生命力' : u'最大生命力',
-        u'スタミナ' : u'最大スタミナ',
-        u'マナ' : u'最大マナ',
-
-        u'ダメージバランス' : u'バランス',
-
-        u'修理費用' : u'修理費',
-
-        u'風属性の錬金術ダメージ' : u'風属性錬金術ダメージ',
-        u'水属性の錬金術ダメージ' : u'水属性錬金術ダメージ',
-        u'火属性の錬金術ダメージ' : u'火属性錬金術ダメージ',
-        }
-    name = map.get(name, name)
-
-    id = mabi.master.param_name_id_map.get(name)
-    if id: return id
-    else: raise Exception, u'不明な効果です: ' + name
-
 def split_effect(text):
     '''text を条件部と効果に分離する'''
     base_re = re.compile(ur'(.*?)(?:時|の場合|の時|場合|とき)[、\s]*')
@@ -210,6 +188,11 @@ def parse_condition(text):
     except Exception, e:
         raise Exception(u'条件をパース出来ませんでした:' + text + u', ' + e.message)
 
+
+ignore_re = re.compile(ur'^注：|.*にのみエンチャント可能') # 無視する記述
+rank_regardless_re = re.compile(ur'ランクに関係なくエンチャント可能')
+personalized_re = re.compile(ur'エンチャントアイテムが装備者専用になる|エンチャント装備を専用にする')
+
 def to_effect(text):
     '''Effect の文字列表現を内部形式へ変換する
     '''
@@ -218,15 +201,7 @@ def to_effect(text):
     text = text.replace(u'〜', u'~')
     text = text.replace(u'、', u'')
 
-    try:
-        ignore_re = re.compile(ur'^注：|.*にのみエンチャント可能') # 無視する記述
-    
-        rank_regardless_re = re.compile(ur'ランクに関係なくエンチャント可能')
-        personalized_re = re.compile(ur'エンチャントアイテムが装備者専用になる|エンチャント装備を専用にする')
-    
-        effect_re = re.compile(ur'(.+?)\s*([\d~]+)[％%]?\s*(増加|減少|倍|)\s*$')
-        cp_re = re.compile(ur'((?:ほんの)?(:?少し)?(?:弱|強)そう)\((?:戦闘力)?(.*)\)')
-    
+    try:    
         if ignore_re.match(text):
             return None
     
@@ -242,42 +217,9 @@ def to_effect(text):
         # 条件
         condition, effect = parse_condition(text)
     
-        # 強そう弱そう系
-        m = cp_re.match(effect)
-        if m:
-            param = u'cp'
-            op = u'+'
-            min = u'1' # todo
-            max = u'1' # todo
-        else:
-            # effect = re.sub(ur'\([^)]*\)$', u'', effect) # 文末の補足を削除
-    
-            # 増加・減少系の効果解析
-            m = effect_re.match(effect)
-            if m:
-                param = to_param_id(m.group(1))
-                num = m.group(2)
-                op = m.group(3)
-
-                if op == u'増加' or op == u'':
-                    op = u'+'
-                elif m.group(3) == u'減少':
-                    op = u'-'
-                elif m.group(3) == u'倍':
-                    op = u'*'
-                else:
-                    raise Exception(u'')
-                
-                values = re.split(u'[~]', num)
-                min = values[0]
-                if len(values) == 2:
-                    max = values[1]
-                else:
-                    max = values[0]
-            else:
-                raise Exception(u'')
-    
-        return u'%s,%s,%s,%s,%s' % (param, op, min, max, condition)
+        e = parse_helper.parse_effect(effect)
+        e.condition = condition
+        return unicode(e)
     except Exception, e:
         raise Exception(u'パースできませんでした: "' + text + u'", ' + e.message)
     
