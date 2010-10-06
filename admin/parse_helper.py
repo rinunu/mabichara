@@ -5,11 +5,26 @@ import re
 import mabi.master
 from mabi.effect import Effect
 
-def normalize(text):
+class int_range:
+    '''最大と最小を持つ int
+    型の識別にのみ使用する
+    '''
+    pass
+
+class float_range:
+    '''最大と最小をもつ float
+    型の識別にのみ使用する
+    '''
+    pass
+
+def normalize(s):
     '''基本的なゆらぎを解消する
     (空白、英数字、記号)'''
-    return text # todo
-    
+
+    s = s.replace(u'～', u'~')
+    s = s.replace(u'〜', u'~')
+
+    return s
 
 def get_string(tag, separator=''):
     '''タグの子供のテキストを取得する
@@ -39,13 +54,19 @@ def to_float(s):
 
 def to_int(s):
     return int(re.sub(ur'[^\d-]', u'', get_string(s)))
-        
 
 def to_min_max(s):
-    s = re.split(u'[~〜]', get_string(s))
+    '''「1~2」という文字列を解析する'''
+    s = re.split(u'~', normalize(get_string(s)))
     return (int(s[0]), int(s[1]))
 
+def to_float_range(s):
+    '''「1~2%」という文字列を解析する'''
+    s = re.split(u'~', normalize(get_string(s)))
+    return (to_float(s[0]), to_float(s[1]))
+
 def to_cost(s):
+    s = get_string(s)
     a = re.sub(ur'[^\d-]', u'', s)
     if len(a) == 0: raise Exception, u'金額として扱えません:' + s
     return int(a)
@@ -55,24 +76,6 @@ def to_param_id(name):
 
     # ゆらぎ修正
     name = name.capitalize()
-    map = {
-        u'生命力' : u'最大生命力',
-        u'スタミナ' : u'最大スタミナ',
-        u'マナ' : u'最大マナ',
-
-        u'ダメージバランス' : u'バランス',
-
-        u'修理費用' : u'修理費',
-        u'結晶制作成功率' : u'結晶製作成功率',
-
-        u'風属性の錬金術ダメージ' : u'風属性錬金術ダメージ',
-        u'水属性の錬金術ダメージ' : u'水属性錬金術ダメージ',
-        u'火属性の錬金術ダメージ' : u'火属性錬金術ダメージ',
-
-        u'水属性の錬金ダメージ' : u'水属性錬金術ダメージ',
-        u'火属性の錬金ダメージ' : u'火属性錬金術ダメージ',
-        }
-    name = map.get(name, name)
 
     id = mabi.master.param_name_id_map.get(name)
     if id:
@@ -81,7 +84,7 @@ def to_param_id(name):
         # print name
         raise Exception, u'不明な効果です: ' + name
 
-effect_re = re.compile(ur'(.+?)[\s+-]*([\d~]+)[％%]?\s*(増加|減少|倍|)\s*$')
+effect_re = re.compile(ur'(.+?)\s*([+-]*)\s*([\d~]+)[％%]?\s*(増加|減少|倍|)\s*$')
 cp_re = re.compile(ur'((?:ほんの)?(:?少し)?(?:弱|強)そう)\((?:戦闘力)?(.*)\)')
 def parse_effect(s):
     '''攻撃力+10 のような文字列を解析する
@@ -103,14 +106,15 @@ def parse_effect(s):
         m = effect_re.match(s)
         if m:
             param = to_param_id(m.group(1))
-            num = m.group(2)
-            op = m.group(3)
+            op1 = m.group(2)
+            num = m.group(3)
+            op2 = m.group(4)
 
-            if op == u'増加' or op == u'':
+            if op1 == '+' or op2 == u'増加':
                 op = u'+'
-            elif m.group(3) == u'減少':
+            elif op1 == '-' or op2 == u'減少':
                 op = u'-'
-            elif m.group(3) == u'倍':
+            elif op2 == u'倍':
                 op = u'*'
             else:
                 raise Exception(u'')
@@ -126,3 +130,12 @@ def parse_effect(s):
 
     return Effect(param=param, op=op, min=min, max=max)
 
+def topic_path(root):
+    '''パンくずリストを解析し、アイテムの配列を返す'''
+    topicpath = root.find(id = 'topicpath')
+    items = [unicode(item.text).strip() for item in topicpath.findAll('a')]
+
+    items.append(
+        re.sub(ur'^ &gt; ', u'', topicpath.contents[-1]).strip())
+
+    return items

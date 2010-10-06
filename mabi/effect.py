@@ -14,7 +14,12 @@ class Effect:
         self.condition = condition
 
     def __unicode__(self):
-        '''文字列形式に変換する'''
+        ''''''
+        return u'%s,%s,%s,%s,%s' % (
+            self.param, self.op, self.min, self.max, self.condition)
+
+    def __repr__(self):
+        ''''''
         return u'%s,%s,%s,%s,%s' % (
             self.param, self.op, self.min, self.max, self.condition)
 
