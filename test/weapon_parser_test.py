@@ -19,6 +19,9 @@ class WeaponParserTest(unittest.TestCase):
     def parse_effects(self, s):
         return WeaponParser().parse_effects(self.node(s))
 
+    def parse_upgrade_sequence(self, s, upgrades):
+        return WeaponParser().parse_upgrade_sequence(s, upgrades)
+
     def test_whole(self):
         '''全体的なパース処理'''
 
@@ -71,6 +74,18 @@ class WeaponParserTest(unittest.TestCase):
                  'cost': 25000,
                  }, item['jewel_upgrades'][0])
 
+            # おすすめ改造式
+            self.assertEqual(2, len(item['upgrade_sequences']))
+            ugs = item['upgrades']
+
+            seq = item['upgrade_sequences'][0]
+            self.assertEqual(
+                {'name': u'105式 クリティカル特化型',
+                 'upgrades': [ugs[0], ugs[1], ugs[2], ugs[2], ugs[2]]},
+                seq)
+                 
+            
+
         finally:
             f.close()
 
@@ -96,6 +111,15 @@ class WeaponParserTest(unittest.TestCase):
              Effect(param='critical', op='+', min=1),
              Effect(param='balance', op='-', min=2)],
             self.parse_effects(src))
+                
+    def test_parse_upgrade_sequence_wb(self):
+        '''略されている改造名'''
+        upgrades = [{'name': u'ネリス式ウィングボウ強化'}]
+
+        self.assertEqual(
+            [upgrades[0]],
+            self.parse_upgrade_sequence(
+                u'ネリス式WB強化', upgrades))
                 
 
  
