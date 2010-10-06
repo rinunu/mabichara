@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from google.appengine.ext import db
-from mabi import Element
+from mabi.element import Element
 
 class EquipmentClass(Element):
     '''装備データ

@@ -13,7 +13,7 @@ param_id_name_map = {
     u'dex': [u'Dex'],
     u'will': [u'Will'],
     u'luck': [u'Luck'],
-    u'int': u'Int',
+    u'int': [u'Int'],
     
     u'attack_max': [u'最大ダメージ', u'最大攻撃力'],
     u'attack_min': [u'最小ダメージ', u'最小攻撃力'],

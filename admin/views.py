@@ -18,7 +18,7 @@ from importer import Importer
 
 from admin.source import Source
 
-from mabi import EquipmentClass
+from mabi.equipment_class import EquipmentClass
 
 def setup(request):
     '''初期設定/HTMLキャッシュのクリアを行う'''

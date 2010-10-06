@@ -81,7 +81,7 @@ def to_param_id(name):
     if id:
         return id
     else: 
-        # print name
+        # print '[' + name + u']'
         raise Exception, u'不明な効果です: ' + name
 
 effect_re = re.compile(ur'(.+?)\s*([+-]*)\s*([\d~]+)[％%]?\s*(増加|減少|倍|)\s*$')

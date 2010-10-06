@@ -221,6 +221,7 @@ def to_effect(text):
         e.condition = condition
         return unicode(e)
     except Exception, e:
+        # raise
         raise Exception(u'パースできませんでした: "' + text + u'", ' + e.message)
     
 def to_effects(text):

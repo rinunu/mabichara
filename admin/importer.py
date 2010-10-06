@@ -9,9 +9,9 @@ import title_importer
 import weapon_parser
 from weapon_list_parser import WeaponListParser
 
-from mabi import Enchant
-from mabi import Title
-from mabi import EquipmentClass
+from mabi.enchant import Enchant
+from mabi.title import Title
+from mabi.equipment_class import EquipmentClass
 
 class Importer:
     def setup(self):
