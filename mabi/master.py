@@ -53,7 +53,7 @@ param_id_name_map = {
     u'durability': [u'最大耐久', u'最大耐久度'],
     u'splash_range': [u'スプラッシュ打撃距離'],
     u'splash_damage': [u'スプラッシュ打撃ダメージ'],
-    u'splash_range': [u'攻撃距離', u'攻撃射程'],
+    u'range': [u'攻撃距離', u'攻撃射程', u'射程', u'有効射距離', u'有効射程距離', u'有効射程'],
 }
 
 param_name_id_map = {}

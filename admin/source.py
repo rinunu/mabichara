@@ -12,7 +12,6 @@ class Source(db.Model):
     """
 
     url = db.StringProperty(required=True)
-
     name = db.StringProperty()
     type = db.StringProperty()
     
@@ -40,6 +39,13 @@ class Source(db.Model):
                 self.date = datetime.now()
             except urllib2.URLError, e:
                 raise
+
+    def delete_cache(self):
+        '''キャッシュをクリアする'''
+        self.content = None
+        self.date = None
+        self.size = None
+        self.put()
             
     @classmethod
     def create_or_update(cls, url, type, name):

@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from google.appengine.ext import db
 
 from admin.source import Source
 
 import enchant_importer
 import title_importer
-import weapon_parser
 from weapon_list_parser import WeaponListParser
+from weapon_parser import WeaponParser
 
 from mabi.enchant import Enchant
 from mabi.title import Title
+from mabi.effect import Effect
 from mabi.equipment_class import EquipmentClass
+from mabi.upgrade_class import UpgradeClass
+
+from mabi.element import Element
 
 class Importer:
     def setup(self):
@@ -54,6 +59,11 @@ class Importer:
         self.add_source(name=u'遠距離',
                    type=u'weapon_list',
                    url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%B1%F3%B5%F7%CE%A5')
+
+    def delete_source_caches(self):
+        '''Source のキャッシュを削除する'''
+        for s in Source.all():
+            s.delete_cache()
         
     def add_source(self, name, type, url):
         source = Source(name=name,
@@ -79,15 +89,59 @@ class Importer:
         return result
 
     def _put_equipment_list(self, items):
-        '''装備リストを解析した情報を保存する'''
+        '''装備リストを解析した情報を保存する
+        また、その装備を更新するための Source を追加する'''
         result = []
         for item in items:
+            url = item.get('url')
+            if not url:
+                continue
             model = EquipmentClass.create_or_update(
                 name=item['name'],
-                source=item.get('url')
+                source=url
                 )
             result.append(model)
+
+            source = Source(name=item['name'], type='weapon', url=url)
+            source.put()
         return result
+
+    def _put_upgrade(self, item, equipment):
+        '''解析した改造情報を保存する'''
+        model = UpgradeClass.create_or_update(
+            name = item['name'],
+            effects = [unicode(e) for e in item['effects']],
+            equipment = equipment,
+            proficiency = item['proficiency'],
+            ug_min = item['ug'][0],
+            ug_max = item['ug'][1],
+            cost = item['cost'])
+        return model
+
+    def _put_equipment(self, item):
+        '''装備を解析した情報を保存する'''
+
+        effects = []
+        effects.append(Effect(param='range', min=item['range']))
+        effects.append(Effect(param='attack_min', min=item['attack'][0]))
+        effects.append(Effect(param='attack_max', min=item['attack'][1]))
+        effects.append(Effect(param='durability', min=item['durability']))
+        effects.append(Effect(param='wound_min', min=item['wound'][0]))
+        effects.append(Effect(param='wound_max', min=item['wound'][1]))
+        effects.append(Effect(param='critical', min=item['critical']))
+        effects.append(Effect(param='balance', min=item['balance']))
+        effects = [unicode(e) for e in effects]
+
+        model = EquipmentClass.create_or_update(
+            name = item['name'],
+            effects = effects,
+            category = item['category'],
+            ug = item['ug'],
+            )
+            
+        upgrades = [self._put_upgrade(u, model) for u in item['upgrades']]
+
+        return model
 
     def import_data(self, source):
         '''取り込み元の内容を取り込む'''
@@ -106,6 +160,10 @@ class Importer:
                 'parser': WeaponListParser().parse,
                 'saver': self._put_equipment_list,
                 },
+            'weapon': {
+                'parser': WeaponParser().parse,
+                'saver': self._put_equipment,
+                },
             }
     
         source.load()
@@ -118,20 +176,3 @@ class Importer:
         return result
     
     
-        # if source.type == u'enchant_unimplemented':
-        #     result = enchant_importer.parse_unimplemented(source.url, source.content)
-        #     context = {
-        #         'result': result
-        #         }
-        #     for a in result: a.put()
-        #     return direct_to_template(request, 'import_result.html', context)
-        # elif source.type == u'weapon':
-        #     weapon_class, upgrades = weapon_importer.import_data(source.url, source.content)
-        #     context = {
-        #         'weapon_class': weapon_class,
-        #         'upgrades': upgrades,
-        #         'weapons': Weapon.all().filter('weapon_class = ', weapon_class), # todo 条件足りない
-        #         }
-        #     return direct_to_template(request, 'import_result_weapons.html', context)
-        # else:
-        #     return map[source.type](source)

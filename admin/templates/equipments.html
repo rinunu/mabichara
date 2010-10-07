@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>カテゴリ</th>
+      <th>ID</th>
+      <th>名前</th>
+      <th>性能</th>
+      <th>改造</th>
+      <th>UG</th>
+      <th>更新日</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for i in items %}
+    <tr>
+      <td>{{ i.equipment.category }}</td>
+      <td>{{ i.equipment.key.id_or_name }}</td>
+      <td>{{ i.equipment.name }}</td>
+      <td>
+	{% for effect in i.equipment.effects %}
+	{{ effect }}<br>
+	{% endfor %}
+      </td>
+      <td>
+	<table>
+	  <tr>
+	    <th></th>
+	    <th></th>
+	    <th></th>
+	    <th></th>
+	    <th></th>
+	  </tr>
+	  {% for u in i.upgrades %}
+	  <tr>
+	    <td>{{ u.name }}</td>
+	    <td>{{ u.proficiency }}</td>
+	    <td>{{ u.effects }}</td>
+	    <td>{{ u.ug_min }}~{{ u.ug_max }}</td>
+	    <td>{{ u.cost }}</td>
+	  </tr>
+	  {% endfor %}
+	</table>
+      </td>
+      <td>{{ i.equipment.ug }}</td>
+      <td>{{ i.equipment.updated_at|date:"m/d H:i" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  
+</table>
+{% endblock %}
+

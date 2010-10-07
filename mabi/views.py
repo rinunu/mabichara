@@ -36,7 +36,6 @@ from django.http import Http404
 import json
 
 from mabi.enchant import Enchant
-from mabi.weapon import Weapon
 
 ######################################################################
 

@@ -6,6 +6,32 @@
 mabi.Track.setVar("no_report");
 </script>
 
+<a href="{% url admin.views.equipments %}">装備一覧</a>
+<a href="">タイトル一覧</a>
+<a href="">エンチャント一覧</a>
+
+<form action="{% url admin.views.setup %}" method="post">
+  {% csrf_token %}
+  <input type="submit" value="初期ソースセットアップ"/>
+</form>
+
+<form action="{% url admin.views.delete_source_caches %}" method="post">
+  {% csrf_token %}
+  <input type="submit" value="HTML キャッシュクリア"/>
+</form>
+
+<form action="{% url admin.views.delete_all %}" method="post">
+  {% csrf_token %}
+  <input type="submit" value="エンチャント全て削除"/>
+</form>
+
+<form action="{% url admin.views.delete_equipments %}" method="post">
+  {% csrf_token %}
+  <input type="submit" value="装備を全て削除"/>
+</form>
+
+
+<h2>ソース</h2>
 <table>
   <tr>
     <th>URL</th>
@@ -30,49 +56,8 @@ mabi.Track.setVar("no_report");
 </table>
 
 
-<form action="{% url admin.views.setup %}" method="post">
-  {% csrf_token %}
-  <input type="submit" value="初期ソースセットアップ/HTML キャッシュクリア"/>
-</form>
 
-<form action="{% url admin.views.delete_all %}" method="post">
-  {% csrf_token %}
-  <input type="submit" value="エンチャント全て削除"/>
-</form>
 
-<h2>武器</h2>
-
-<form action="{# url admin.views.update_weapon #}" method="post">
-  {% csrf_token %}
-  <table>
-    <thead>
-      <tr>
-	<th></th>
-	<th></th>
-      </tr>
-    </thead>
-    
-    
-    <tbody>
-      {% for i in equipments %}
-      <tr>
-	<td>
-	  {% if i.source %}
-	  <input name="key" type="checkbox" value="{{ w.key }}"> 
-	  <a href="{{ i.source }}">{{ i.name }}</a>
-	  {% else %}
-	  {{ i.name }}
-	  {% endif %}
-	</td>
-	<td>
-	</td>
-      </tr>
-      {% endfor %}
-    </tbody>  
-  </table>
-  
-  <input type="submit" value="取り込み"/>
-</form>
 
 {% endblock %}
 

@@ -4,7 +4,7 @@ class Effect:
     '''各種効果を表す
     '''
 
-    def __init__(self, op=None, min=None, max=None, param=None, condition=''):
+    def __init__(self, op='+', min=None, max=None, param=None, condition=''):
         if max == None: max = min
 
         self.op = op

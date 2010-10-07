@@ -14,6 +14,8 @@ from parse_helper import to_float
 from parse_helper import to_cost
 from parse_helper import get_td
 
+from exceptions import ParseException
+
 class WeaponParser:
     def parse_effects(self, td):
         '''改造の効果をパースする'''
@@ -33,9 +35,9 @@ class WeaponParser:
         item['range'] = to_int(get_td(table, u'射程'))
         item['attack'] = to_min_max(get_td(table, u'攻撃'))
         item['durability'] = to_int(get_td(table, u'耐久'))
-        item['wound'] = to_float_range(get_td(table, u'負傷率'))
-        item['critical'] = to_float(get_td(table, u'クリティカル'))
-        item['balance'] = to_float(get_td(table, u'バランス'))
+        item['wound'] = to_min_max(get_td(table, u'負傷率'))
+        item['critical'] = to_int(get_td(table, u'クリティカル'))
+        item['balance'] = to_int(get_td(table, u'バランス'))
         item['ug'] = to_int(get_td(table, u'UG'))
     
     def parse_upgrades(self, table):
@@ -59,6 +61,7 @@ class WeaponParser:
         name = re.sub(ur'ぎ', ur'', name) # 剣研ぎ etc.
         name = re.sub(ur'刃', ur'刀', name)
         name = re.sub(ur'の', ur'', name)
+        name = re.sub(ur'機', ur'器', name)
         return name
     
     def find_upgrade(self, upgrades, name):
@@ -70,7 +73,7 @@ class WeaponParser:
     
         '''
 
-        if re.match(ur'\([^)]*余り\)', name):
+        if re.match(ur'\([^)]*余り\)|-', name):
             return None
     
         name = self.normalize_upgrade_name(name)
@@ -98,40 +101,49 @@ class WeaponParser:
     def parse_upgrade_sequences(self, body, upgrades):
         '''おすすめ改造を解析し、 Weapon として登録する
         '''
-    
-        seq_name_re = re.compile(ur'(.*式.*)')
-    
-        seqs = body.findAll(lambda tag: tag.name == u'h4' and tag.find(text = seq_name_re))
 
-        list = []
-        for seq in seqs:
-            name = parse_helper.get_string(seq)
-            text = parse_helper.get_string(seq.findNext('p', 'quotation'))
-            seq = self.parse_upgrade_sequence(text, upgrades)
-            list.append({'name': name, 'upgrades': seq})
+        try:
+            seq_name_re = re.compile(ur'(.*式.*)')
+    
+            seqs = body.findAll(lambda tag: tag.name == u'h4' and
+                                tag.find(text = seq_name_re))
 
-        return list
+            list = []
+            for seq in seqs:
+                name = get_string(seq)
+                text = get_string(seq.findNext('p', 'quotation'))
+                seq = self.parse_upgrade_sequence(text, upgrades)
+                list.append({'name': name, 'upgrades': seq})
+
+            return list
+        except Exception, e:
+            raise ParseException(u'改造式の解析に失敗しました, %s' % e.message)
     
     def parse(self, url, html):
         """HTML を解析し、保存する
     
             
         """
+
+        try:
         
-        soup = BeautifulSoup(html)
-        body = soup.find(id = 'body')
+            soup = BeautifulSoup(html)
+            body = soup.find(id = 'body')
 
-        item = {}
+            item = {}
 
-        topic_path = parse_helper.topic_path(soup)
-        item['name'] = topic_path[-1]
+            topic_path = parse_helper.topic_path(soup)
+            name = topic_path[-1]
+            item['name'] = name
         
-        self.parse_basic_info(body, item)
+            self.parse_basic_info(body, item)
 
-        upgrades = self.parse_upgrades(body.findAll('table')[1])
-        item['upgrades'] = upgrades
-        item['jewel_upgrades'] = self.parse_upgrades(body.findAll('table')[2])
-        item['upgrade_sequences'] = self.parse_upgrade_sequences(body, upgrades)
+            upgrades = self.parse_upgrades(body.findAll('table')[1])
+            item['upgrades'] = upgrades
+            item['jewel_upgrades'] = self.parse_upgrades(body.findAll('table')[2])
+            item['upgrade_sequences'] = self.parse_upgrade_sequences(body, upgrades)
+        except Exception, e:
+            raise ParseException(u'解析に失敗しました: %s, %s' % (name, e.message))
 
         return item
     

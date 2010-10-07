@@ -58,7 +58,7 @@ def to_int(s):
 def to_min_max(s):
     '''「1~2」という文字列を解析する'''
     s = re.split(u'~', normalize(get_string(s)))
-    return (int(s[0]), int(s[1]))
+    return (to_int(s[0]), to_int(s[1]))
 
 def to_float_range(s):
     '''「1~2%」という文字列を解析する'''

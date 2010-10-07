@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
@@ -19,29 +21,40 @@ class Element(polymodel.PolyModel):
     updated_at = db.DateTimeProperty(auto_now = True)
 
     @classmethod
-    def create_or_update(cls, name, effects = [], source=None, implemented=True):
-        '''存在しないなら作成 or 更新する'''
+    def create_or_update_impl(cls, name, parent, **kwdargs):
+        '''create_or_update の実装
+        サブクラスにて create_or_update の挙動をカスタマイズする際に使用する
+        '''
 
-        ancestor = db.Key.from_path(cls.__name__, 'root')
-        
         def tx():
             q = cls.all()
-            q.ancestor(ancestor)
+            q.ancestor(parent)
             q.filter('name =', name)
             a = q.get()
 
             if not a:
                 a = cls(name=name, 
-                        effects=effects, 
-                        implemented=implemented,
-                        source = source,
-                        parent=ancestor)
+                        parent=parent,
+                        **kwdargs)
             a.name = name
-            a.effects = effects
-            a.implemented = implemented
-            a.source = source
+
+            for key, value in kwdargs.iteritems():
+                setattr(a, key, value)
+
             a.put()
             return a
 
         a = db.run_in_transaction(tx)
         return a
+
+    @classmethod
+    def create_or_update(cls, name, **kwdargs):
+        '''存在しないなら作成 or 更新する
+        parent を指定しなかった場合、クラス毎のエンティティグループになるように parent が設定される
+        '''
+
+        return cls.create_or_update_impl(
+            name = name,
+            parent = db.Key.from_path(cls.__name__, 'root'),
+            **kwdargs)
+

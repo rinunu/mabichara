@@ -17,8 +17,9 @@ from django.http import HttpResponse
 from importer import Importer
 
 from admin.source import Source
-
 from mabi.equipment_class import EquipmentClass
+from mabi.upgrade_class import UpgradeClass
+from mabi.element import Element
 
 def setup(request):
     '''初期設定/HTMLキャッシュのクリアを行う'''
@@ -34,7 +35,6 @@ def index(request):
     
     context = {
         'sources': Source.all(),
-        'equipments': EquipmentClass.all(),
         }
 
     return direct_to_template(request, 'index.html', context)
@@ -49,11 +49,7 @@ def import_data(request, key):
         'title': {
             'result_page': 'titles.html'
             },
-        'weapon_list': {
-            'result_page': 'titles.html'
-            },
         }
-
 
     importer = Importer()
 
@@ -64,7 +60,7 @@ def import_data(request, key):
         'result': result
         }
 
-    if source.type == 'weapon_list':
+    if source.type in ('weapon_list', 'weapon'):
         return HttpResponseRedirect(reverse('admin.views.index'))
     else:
         return direct_to_template(request, types[source.type]['result_page'], context)
@@ -78,6 +74,33 @@ def delete_all(request):
 
     return direct_to_template(request, 'update_result.html', context)
 
+def delete_source_caches(request):
+    Importer().delete_source_caches()
+    return HttpResponseRedirect(reverse('admin.views.index'))
+
+def delete_equipments(request):
+    '''装備を全て削除する'''
+
+    db.delete(EquipmentClass.all(keys_only=True))
+    db.delete(UpgradeClass.all(keys_only=True))
+
+    context = {}
+
+    return HttpResponseRedirect(reverse('admin.views.index'))
+
+def equipments(request):
+    '''装備をすべて表示する'''
+
+    equipments = []
+    for i in EquipmentClass.all():
+        equipments.append({
+                'equipment': i,
+                'upgrades': UpgradeClass.get_by_equipment(i)})
+    context = {
+        'items': equipments
+        }
+    return direct_to_template(request, 'equipments.html', context)
+
 def login(request):
     """管理機能用のログイン画面を表示する"""
 
@@ -87,66 +110,5 @@ def logout(request):
     """管理機能用のログアウト画面を表示する"""
 
     return HttpResponseRedirect(users.create_logout_url("/"))
-
-# def _update_weapon(weapon_class, upgrades, process):
-#     '''
-#     Arguments:
-        
-#     '''
-
-#     times = len(process) # 何回目の改造か(0-). 0 のときは無改造
-#     url = reverse('admin.views.update_weapon_sequences')
-
-#     name = unicode(times) + '-' + u'-'.join([unicode(hash(a.name)) for a in [weapon_class] + process]) # 名前をつけるのはデバッグ用
-    
-#     if times < 3:
-#         # process までの改造を登録する
-#         taskqueue.add(url=url,
-#                       # name=name,
-#                       params={
-#                 'weapon_class_key': weapon_class.key(),
-#                 'upgrade_keys': u','.join([unicode(i.key()) for i in process]),
-#                 'upgrade_max': times,
-#                 })
-#         for u in upgrades:
-#             if u.ug_min <= times <= u.ug_max:
-#                 _update_weapon(weapon_class, upgrades, process + [u])
-#     else: # これ以降の times は登録時にループする
-#         taskqueue.add(url=url,
-#                       # name=name,
-#                       params={
-#                 'weapon_class_key': weapon_class.key(),
-#                 'upgrade_keys': u','.join([unicode(i.key()) for i in process]),
-#                 'upgrade_max': -1,
-#                 })
-#         return
-        
-
-
-# def update_weapon(request):
-#     """指定された武器の情報を更新する"""
-
-#     w = WeaponClass.get(request.POST['key'])
-    
-#     _update_weapon(w, w.upgrades, [])
-
-#     return HttpResponseRedirect(reverse('admin.views.index'))
-
-# def update_weapon_sequences(request):
-#     """指定された武器の情報を更新する"""
-
-#     w = WeaponClass.get(request.POST['weapon_class_key'])
-#     max = int(request.POST['upgrade_max'])
-#     if len(request.POST['upgrade_keys']) == 0:
-#         u = []
-#     else:
-#         u = [WeaponUpgrade.get(ukey) for ukey in request.POST['upgrade_keys'].split(',')]
-
-#     logging.info(u'update_sequence: ' + unicode(max))
-
-#     weapon_importer.update_sequences(w, u, max)
-
-#     return HttpResponse()
-
 
 
