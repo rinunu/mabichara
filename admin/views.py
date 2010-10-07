@@ -24,9 +24,7 @@ from mabi.upgrade_class import UpgradeClass
 from mabi.element import Element
 
 def setup(request):
-    '''初期設定/HTMLキャッシュのクリアを行う'''
-    importer = Importer()
-    importer.setup()
+    Importer().setup()
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
@@ -36,7 +34,7 @@ def index(request):
     """
     
     context = {
-        'sources': Source.all(),
+        'sources': Source.all().order("type"),
         }
 
     return direct_to_template(request, 'index.html', context)

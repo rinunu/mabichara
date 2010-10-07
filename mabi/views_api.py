@@ -18,6 +18,7 @@ from django.http import Http404
 import json
 
 from mabi.enchant_class import EnchantClass
+from mabi.equipment_class import EquipmentClass
 
 # ----------------------------------------------------------------------
 # JSON
@@ -39,6 +40,17 @@ def jsonp(obj, callback):
     else:
         return json
 
+def create_feed(items, callback):
+    '''指定された items を含む feed を作成する'''
+
+    result = {}
+    result['version'] = '1.0'
+    result['entry'] = items
+
+    return jsonp(result, callback)
+
+# ----------------------------------------------------------------------
+
 def to_effect_map(s):
     '''Effect の文字列表現を Map に変換する'''
 
@@ -52,27 +64,15 @@ def to_effect_map(s):
     if len(a) >= 5: b['condition'] = a[4]
     return b
 
-def to_effects_map(effects_str):
-    '''Effect の文字列表現を Map に変換する'''
+def to_effects_list(effects_str):
+    '''Effect の文字列表現をリストに変換する'''
 
     effects = []
     for effect in effects_str.split('\n'):
         effects.append(to_effect_map(effect))
     return effects
 
-def create_feed(items, callback):
-    '''指定された items を含む feed を作成する'''
-
-    result = {}
-    result['version'] = '1.0'
-    result['entry'] = items
-
-    return jsonp(result, callback)
-
-# ----------------------------------------------------------------------
-# Enchant API
-
-def to_map(enchant):
+def to_enchant_map(enchant):
     '''Enchant をマップに変換する
 
     (JSON に変換するための前処理)
@@ -88,12 +88,12 @@ def to_map(enchant):
 
     obj['id'] = enchant.id
 
-    obj['effects'] = to_effects_map(enchant.effects)
+    obj['effects'] = to_effects_list(enchant.effects)
     
     obj['effect_texts'] = enchant.effects_text.split('\n')
     obj['season'] = enchant.season
     
-    obj['wiki'] = str(enchant.source)
+    obj['wiki'] = unicode(enchant.source)
     
     obj['attack_max'] = enchant.attack_max
     obj['melee_attack_max'] = enchant.melee_attack_max
@@ -108,6 +108,40 @@ def to_map(enchant):
 
     return obj
 
+def to_element_map(source):
+    '''Effect をマップに変換する'''
+    obj = {}
+    obj['name'] = source.name
+    obj['effects'] = [to_effect_map(e) for e in source.effects]
+    obj['source'] = source.source
+    return obj
+
+def to_equipment_map(source):
+    '''Equipment をマップに変換する
+    '''
+    
+    obj = to_element_map(source)
+    obj['ug'] = source.ug
+    obj['category'] = source.category
+    return obj
+
+# ----------------------------------------------------------------------
+# ビュー
+
+def query(request, model_class, to_map):
+    '''request を元に検索を行う
+
+    結果を JSON 形式で返す
+
+    to_map に JSON 用のマップへ変換する関数を指定する'''
+
+    callback = request.GET.get('callback')
+
+    q = model_class.all()
+    
+    items = [to_map(i) for i in q.fetch(1000)]
+    return create_feed(items, callback)
+
 def enchant_json(request, id):
     '''エンチャント詳細の json インタフェース'''
 
@@ -118,7 +152,7 @@ def enchant_json(request, id):
     if not a:
         raise Http404
 
-    return HttpResponse(create_feed([to_map(a)], callback)) # , 'application/json')
+    return HttpResponse(create_feed([to_enchant_map(a)], callback)) # , 'application/json')
 
 def enchants_json(request):
     '''エンチャント一覧の json インタフェース'''
@@ -144,45 +178,14 @@ def enchants_json(request):
 
     items = []
     for i in q:
-        items.append(to_map(i))
+        items.append(to_enchant_map(i))
 
     return HttpResponse(create_feed(items, callback)) # , 'application/json')
 
+def equipments_json(request):
+    '''Equipment 一覧 JSON 取得'''
 
-def weapons_json(request):
-
-    order = request.GET.get('orderby')
-    if order and request.GET.get('sortorder') == 'descending':
-        order = '-' + order
-
-    max = request.GET.get('max-results')
-    if max: max = int(max)
-    else: max = 50
+    result = query(request, EquipmentClass, to_equipment_map)
     
-    json = []
-
-
-    cls = Weapon
-    q = cls.all()
-    if order: q.order(order)
-    
-    for w in q.fetch(max):
-        obj = {}
-        obj['name'] = w.weapon_class.name
-        obj['attack_min'] = w.attack_min
-        obj['attack_max'] = w.attack_max
-        obj['balance'] = w.balance
-        obj['critical'] = w.critical
-        obj['durability'] = w.durability
-        obj['cost'] = w.cost
-        obj['proficiency'] = w.proficiency
-        obj['upgrades_text'] = '>'.join(u.name for u in w.upgrades)
-        # obj['injury_min'] = w.injury_min
-        # obj['injury_max'] = w.injury_max
-
-        obj['initial_attack_min'] = w.initial_attack_min
-        
-        json.append(obj)
-            
-    return HttpResponse(_to_json(json)) # , 'application/json')
+    return HttpResponse(result) # , 'application/json')
 

@@ -22,7 +22,7 @@ class Importer:
     def setup(self):
         '''初期 Source を追加する'''
 
-        db.delete(Source.all(keys_only=True))
+        # db.delete(Source.all(keys_only=True))
     
         self.add_source(name=u'suffix(英字)',
                    type=u'enchant',

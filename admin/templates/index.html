@@ -34,13 +34,15 @@ mabi.Track.setVar("no_report");
 <h2>ソース</h2>
 <table>
   <tr>
-    <th>URL</th>
+    <th>種類</th>
+    <th>名前</th>
     <th>最終処理日時</th>
     <th>ページサイズ</th>
   </tr>
   
   {% for source in sources %}
   <tr>
+    <td>{{ source.type }}</a></td>
     <td><a href="{{ source.url }}">{{ source.name }}</a></td>
     <td>{{ source.date }}</td>
     <td>{{ source.size }}</td>
