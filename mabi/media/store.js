@@ -33,26 +33,19 @@ mabi.Store.prototype.add = function(element){
  */
 mabi.Store.prototype.load = function(){
     var this_ =  this;
-    var cmd = new util.AsyncCommand(
-	function(){
-	    var options = {
-		url: this_.url_,
-		callbackParameter: 'callback',
-		data: {
-		    'max-results': 10000
-		},
-		success: function(json){
-		    for(var i = 0; i < json.entry.length; i++){
-			var o = this_.toEntity(json.entry[i]);
-			this_.add(o);
-		    }
-		    cmd.onSuccess();
-		},
-		error: function(){alert('エンチャントデータの読み込みに失敗しました');}
-	    };
-	    $.jsonp(options);
+    var cmd = mabi.ajax.load(
+	{
+	    url: this.url_,
+	    data: {
+		'max-results': 10000
+	    },
+	    success: function(json){
+		for(var i = 0; i < json.entry.length; i++){
+		    var o = this_.toEntity(json.entry[i]);
+		    this_.add(o);
+		}
+	    }
 	});
-    cmd.execute();
     return cmd;
 };
 

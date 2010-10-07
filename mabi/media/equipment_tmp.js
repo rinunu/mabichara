@@ -11,6 +11,8 @@ function initialize(){
 	    hoverClass: 'drophover'
 	});
 
+    mabi.ajax = new mabi.Ajax();
+
     mabi.enchants = new mabi.EnchantStore();
     mabi.equipments = new mabi.EquipmentStore();
     mabi.titles = new mabi.TitleStore();

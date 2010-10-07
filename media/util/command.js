@@ -104,25 +104,15 @@ util.AsyncCommand = function(execute, options){
 util.extend(util.AsyncCommand, util.Command);
 
 // ======================================================================
+//
 
 /**
- * Ajax Command
+ * [未実装] 複数の Command を同時に実行する Command
+ * 
+ * すべての Command が完了すると、この Command も完了する
  */
-util.AjaxCommand = function(request, options){
-    util.Command.call(this, options);
-
-    var this_ = this;
-    var callback = request.callback;
-    request.callback = function(){
-	callback.apply(this, arguments);
-	this_.onSuccess();
-    };
-
-    this.request_ = request;
+util.ConcurrentCommand = function(commands){
 };
 
-util.extend(util.AjaxCommand, util.Command);
+util.extend(util.ConcurrentCommand, util.Command);
 
-util.AjaxCommand.prototype.execute = function(){
-    util.ajax.ajax(this.request_);
-};
