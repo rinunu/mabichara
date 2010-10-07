@@ -20,9 +20,9 @@ from mabi.element import Element
 
 class Importer:
     def setup(self):
-        '''初期設定/HTMLキャッシュのクリアを行う'''
+        '''初期 Source を追加する'''
 
-        db.delete(Source.all())
+        db.delete(Source.all(keys_only=True))
     
         self.add_source(name=u'suffix(英字)',
                    type=u'enchant',
@@ -53,12 +53,14 @@ class Importer:
         self.add_source(name=u'タイトルシールブレイカー', type='title', url=u'%A5%BF%A5%A4%A5%C8%A5%EB%2F%A5%B7%A1%BC%A5%EB%A5%D6%A5%EC%A5%A4%A5%AB%A1%BC')
         self.add_source(name=u'タイトルスキルマスター', type='title', url=u'%A5%BF%A5%A4%A5%C8%A5%EB%2F%A5%B9%A5%AD%A5%EB%A5%DE%A5%B9%A5%BF%A1%BC')
         
-        self.add_source(name=u'刀剣類',
-                   type=u'weapon_list',
-                   url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0')
-        self.add_source(name=u'遠距離',
-                   type=u'weapon_list',
-                   url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%B1%F3%B5%F7%CE%A5')
+        self.add_source(name=u'刀剣類', type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C5%E1%B7%F5%CE%E0')
+        self.add_source(name=u'遠距離',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%B1%F3%B5%F7%CE%A5')
+        self.add_source(name=u'鈍器類',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%C6%DF%B4%EF%CE%E0')
+        self.add_source(name=u'ナックル',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%A5%CA%A5%C3%A5%AF%A5%EB')
+        self.add_source(name=u'ワンド',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%A5%EF%A5%F3%A5%C9')
+        self.add_source(name=u'錬金術(武器)',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%CF%A3%B6%E2%BD%D1')
+        self.add_source(name=u'採集用',  type=u'weapon_list', url=u'%C1%F5%C8%F7%2F%C9%F0%B4%EF%2F%BA%CE%BD%B8%CD%D1')
+        self.add_source(name=u'楽器',  type=u'weapon_list', url=u'%B2%BB%B3%DA%2F%B3%DA%B4%EF')
 
     def delete_source_caches(self):
         '''Source のキャッシュを削除する'''
@@ -66,9 +68,10 @@ class Importer:
             s.delete_cache()
         
     def add_source(self, name, type, url):
-        source = Source(name=name,
-                        type=type,
-                        url='http://mabinogi.wikiwiki.jp/index.php?' + url)
+        source = Source.create_or_update(
+            name=name,
+            type=type,
+            url='http://mabinogi.wikiwiki.jp/index.php?' + url)
         source.put()
 
     def _put_enchants(self, enchants):
