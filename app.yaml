@@ -1,5 +1,5 @@
 application: mabichara
-version: 3
+version: 4
 runtime: python
 api_version: 1
 
@@ -14,6 +14,9 @@ handlers:
   script: djangoappengine/deferred/handler.py
   login: admin
 
+- url: /media
+  static_dir: _generated_media/
+
 - url: /media/admin
   static_dir: django/contrib/admin/media/
 
@@ -26,3 +29,4 @@ handlers:
 
 - url: /.*
   script: djangoappengine/main/main.py
+
