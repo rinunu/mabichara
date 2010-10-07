@@ -18,7 +18,10 @@ urlpatterns = patterns(
     # API
     (r'^enchants\.json$', 'mabi.views_api.enchants_json'),
     (r'^enchants/(?P<id>.*)\.json$', 'mabi.views_api.enchant_json'),
+
     (r'^equipments.json$', 'mabi.views_api.equipments_json'),
+    (r'^equipments/(?P<id>.*)\.json$', 'mabi.views_api.equipment_json'),
+
     (r'^titles.json$', 'mabi.views_api.titles_json'),
 
     # 一時的なもの

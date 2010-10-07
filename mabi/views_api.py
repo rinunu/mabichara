@@ -19,6 +19,7 @@ import json
 
 from mabi.enchant_class import EnchantClass
 from mabi.equipment_class import EquipmentClass
+from mabi.upgrade_class import UpgradeClass
 from mabi.title import Title
 
 # ----------------------------------------------------------------------
@@ -112,9 +113,17 @@ def to_enchant_map(enchant):
 def to_element_map(source):
     '''Effect をマップに変換する'''
     obj = {}
+    obj['id'] = unicode(source.key())
     obj['name'] = source.name
     obj['effects'] = [to_effect_map(e) for e in source.effects]
     obj['source'] = source.source
+    return obj
+
+def to_upgrade_map(source):
+    obj = to_element_map(source)
+    obj['ug'] = (source.ug_min, source.ug_max)
+    obj['cost'] = source.cost
+    obj['proficiency'] = source.proficiency
     return obj
 
 def to_equipment_map(source):
@@ -124,6 +133,15 @@ def to_equipment_map(source):
     obj = to_element_map(source)
     obj['ug'] = source.ug
     obj['category'] = source.category
+    return obj
+
+def to_equipment_detail_map(source):
+    '''Equipment をマップに変換する
+    '''
+    
+    obj = to_equipment_map(source)
+    obj['upgrades'] = [to_upgrade_map(i) for i in UpgradeClass.get_by_equipment(source)]
+
     return obj
 
 def to_title_map(source):
@@ -148,19 +166,24 @@ def query(request, model_class, to_map):
     q = model_class.all()
     
     items = [to_map(i) for i in q.fetch(1000)]
-    return create_feed(items, callback)
+    
+    return HttpResponse(create_feed(items, callback)) # , 'application/json')
 
-def enchant_json(request, id):
-    '''エンチャント詳細の json インタフェース'''
+
+def get(request, key, model_class, to_map):
+    '''装備詳細の json インタフェース'''
 
     callback = request.GET.get('callback')
 
-    a = EnchantClass.get_by_id(id)
+    a = model_class.get(key)
 
     if not a:
         raise Http404
 
-    return HttpResponse(create_feed([to_enchant_map(a)], callback)) # , 'application/json')
+    return HttpResponse(create_feed([to_map(a)], callback)) # , 'application/json')
+
+def enchant_json(request, id):
+    return get(request, id, EnchantClass, to_enchant_map)
 
 def enchants_json(request):
     '''エンチャント一覧の json インタフェース'''
@@ -191,16 +214,11 @@ def enchants_json(request):
     return HttpResponse(create_feed(items, callback)) # , 'application/json')
 
 def equipments_json(request):
-    '''Equipment 一覧 JSON 取得'''
+    return query(request, EquipmentClass, to_equipment_map)
 
-    result = query(request, EquipmentClass, to_equipment_map)
-    
-    return HttpResponse(result) # , 'application/json')
+def equipment_json(request, id):
+    return get(request, id, EquipmentClass, to_equipment_detail_map)
 
 def titles_json(request):
-    '''Title 一覧 JSON 取得'''
-
-    result = query(request, Title, to_title_map)
-    
-    return HttpResponse(result) # , 'application/json')
+    return query(request, Title, to_title_map)
 
