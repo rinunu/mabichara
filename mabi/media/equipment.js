@@ -1,23 +1,22 @@
 
-mabi.Equipment = function(options){
+mabi.EquipmentClass = function(options){
     mabi.Element.call(this, options);
+    this.ug_ = options.ug;
 };
 
-util.extend(mabi.Equipment, mabi.Element);
+util.extend(mabi.EquipmentClass, mabi.Element);
 
-// ----------------------------------------------------------------------
-// private
+/**
+ * 本装備を実体化した装備を作成する
+ */
+mabi.EquipmentClass.prototype.create = function(){
+    var noEnchantedEquipment = new mabi.NoEnchantedEquipment();
+    noEnchantedEquipment.addChild(this, 'equipment');
 
-mabi.Equipment.elements = [];
-
-// ----------------------------------------------------------------------
-// ConcreteEquipment
-
-mabi.ConcreteEquipment = function(options){
-    mabi.Element.call(this, options);
+    var equipment = new mabi.Equipment();
+    equipment.addChild(noEnchantedEquipment, 'equipment');
+    return equipment;
 };
-
-util.extend(mabi.ConcreteEquipment, mabi.Element);
 
 // ----------------------------------------------------------------------
 // NoEnchantedEquipment
@@ -33,6 +32,19 @@ mabi.NoEnchantedEquipment.prototype.name = function(){
 };
 
 // ----------------------------------------------------------------------
-// 開発用
+// Equipment
 
-mabi.Equipment.find = mabi.Element.find;
+mabi.Equipment = function(options){
+    mabi.Element.call(this, options);
+};
+
+util.extend(mabi.Equipment, mabi.Element);
+
+/**
+ * エンチャントを追加する
+ */
+mabi.Equipment.prototype.enchant = function(enchant){
+    console.assert(enchant instanceof mabi.Enchant);
+    this.addChild(enchant, enchant.type());
+};
+

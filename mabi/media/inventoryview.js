@@ -32,23 +32,3 @@ mabi.InventoryView = function(model){
     this.elementsView_.setModel(model);
 };
 
-// ----------------------------------------------------------------------
-// private
-
-// mabi.ElementsView2.prototype.addRow = function(element){
-
-//     var $tbody = $('tbody', this.$table_);
-//     var $tr = $('<tr>');
-//     $('<td>')
-// 	.append($('<input type="checkbox">'))
-// 	.append($('<button/>').text('装備').button())
-// 	.appendTo($tr);
-
-//     this.createNameColumn(element).appendTo($tr);
-
-//     $('<td>').appendTo($tr);
-//     $('<td>').appendTo($tr);
-//     $('<td>').appendTo($tr);
-//     $tr.appendTo($tbody);
-// };
-

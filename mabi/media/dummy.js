@@ -3,20 +3,37 @@
  */
 var tmp = {};
 
+/**
+ * Store から指定された名前の要素を取得する
+ */
+tmp.get = function(store, name){
+    var result = null;
+    store.each(function(i, element){
+		   if(element.name() == name){
+		       result = element;
+		       return false;
+		   }
+		   return true;
+	       });
+
+    if(!result){
+	throw 'error:' + name;	
+    }
+    return result;
+};
+
+/**
+ * 指定したエンチャントを貼った装備を作成する
+ */
 tmp.createEquipment = function(equipmentName, prefixName, suffixName){
-    var element = new mabi.ConcreteEquipment();
-
-    var equipment = new mabi.NoEnchantedEquipment();
-    equipment.addChild(mabi.Equipment.find(equipmentName), 'equipment');
-    element.addChild(equipment, 'equipment');
-
+    var equipment = tmp.get(mabi.equipments, equipmentName).create();
     if(prefixName){
-	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(prefixName)), 'prefix');
+	equipment.enchant(tmp.get(mabi.enchants, prefixName).create());
     }
     if(suffixName){
-	element.addChild(new mabi.ConcreteEnchant(mabi.enchants.find(suffixName)), 'suffix');
+	equipment.enchant(tmp.get(mabi.enchants, suffixName).create());
     }
-    return element;
+    return equipment;
 };
 
 tmp.createEquipmentSet = function(json){
@@ -36,90 +53,103 @@ tmp.createEquipmentSet = function(json){
 };
 
 /**
- * テスト用の装備をテスト用 DB に登録する
+ * ダミーの装備セットを作成する
  */
-tmp.addEquipment = function(){
-    new mabi.Equipment(
-	{
-	    name: 'ウィングボウ(1級 105式)',
-	    effects: [
-		{param: 'attack_max', op: '+', min: 14},
-		{param: 'critical', op: '+', min: 71}]
-	});
-};
-
 tmp.createDummtData = function(){
-    tmp.addEquipment();
-
     tmp.set = tmp.createEquipmentSet(
-	{
-	    name: 'クリティカル特化装備セット',
-	    children: {
-		right_hand: ['ウィングボウ(1級 105式)', 'リザード', 'カリバーン'],
-		head: ['帽子', '丸い', '火炎'],
-		hand: ['グローブ', '鋼鉄針', '品位ある'],
-		foot: ['ブーツ?', '作曲家の', '優雅な'],
-		body: ['服', '不安な', 'ホワイトホース'],
-		accessory1: ['アクセサリ', 'サプライジング', 'ヤグルマギク'],
-		accessory2: ['アクセサリ', 'サプライジング', 'ヤグルマギク']
-	    }
-	}
+    	{
+    	    name: 'クリティカル特化装備セット',
+    	    children: {
+    		right_hand: ['ウィングボウ', 'リザード', 'カリバーン'],
+    		head: ['帽子', '丸い', '火炎'],
+    		hand: ['グローブ', '鋼鉄針', '品位ある'],
+    		foot: ['ブーツ?', '作曲家の', '優雅な'],
+    		body: ['服', '不安な', 'ホワイトホース'],
+    		accessory1: ['アクセサリ', 'サプライジング', 'ヤグルマギク'],
+    		accessory2: ['アクセサリ', 'サプライジング', 'ヤグルマギク']
+    	    }
+    	}
     );
     // タイトル	ラノとコンヌースをつないだ
 
     mabi.inventory.addChild(
-	tmp.createEquipmentSet(
-	    {
-		name: '',
-		children: {
-		    // title クリティカルヒットマスター
-		    body: ['軽鎧', '原理の', null],
-		    accessory1: ['アクセサリ', 'ライト', null]
-		}
-	    }));
+    	tmp.createEquipmentSet(
+    	    {
+    		name: '',
+    		children: {
+    		    // title クリティカルヒットマスター
+    		    body: ['軽鎧', '原理の', null],
+    		    accessory1: ['アクセサリ', 'ライト', null]
+    		}
+    	    }));
 
     mabi.inventory.addChild(tmp.createEquipment('軽鎧', null, 'ダークネス')); // 暗黒(14)
     mabi.inventory.addChild(tmp.createEquipment('アクセサリ', 'ユリ'));
 };
 
-tmp.createEnchant = function(name, effects){
+tmp.onEnchantsLoaded = function(){
+    console.log('Enchant ロード完了');
+
+    mabi.equipments.load().success(tmp.onEquipmentsLoaded);
 };
 
-// ----------------------------------------------------------------------
+tmp.onEquipmentsLoaded = function(){
+    console.log('Equipment ロード完了');
+    tmp.createDummtData();
 
-mabi.Equipment.elements.push(
-    new mabi.Equipment(
-	{
-	    name: '軽鎧',
-	    effects: [
-		{param: 'defense', op: '+', min: 4},
-		{param: 'protection', op: '+', min: 1}]
-	}),
-    new mabi.Equipment(
-	{
-	    name: 'ウィングボウ(1級 105式)',
-	    effects: [
-		{param: 'attack_max', op: '+', min: 14},
-		{param: 'critical', op: '+', min: 71}]
-	}),
-    new mabi.Equipment(
-	{
-	    name: '帽子'
-	}),
-    new mabi.Equipment(
-	{
-	    name: 'グローブ'
-	}),
-    new mabi.Equipment(
-	{
-	    name: 'ブーツ?'
-	}),
-    new mabi.Equipment(
-	{
-	    name: '服'
-	}),
-    new mabi.Equipment(
-	{
-	    name: 'アクセサリ'
-	})
-);
+    mabi.equipmentSetView.setModel(tmp.set);
+};
+
+tmp.run = function(){
+    console.log('処理開始');
+
+    mabi.enchants.load().success(tmp.onEnchantsLoaded);
+    tmp.addDummyEquipments();
+};
+
+/**
+ * ダミーの装備情報を登録する
+ */
+tmp.addDummyEquipments = function(){
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: '軽鎧',
+		effects: [
+		    {param: 'defense', op: '+', min: 4},
+		    {param: 'protection', op: '+', min: 1}]
+	    }));
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: '帽子'
+	    }));
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: 'グローブ'
+	    }));
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: 'ブーツ?'
+	    }));
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: '服'
+	    }));
+    mabi.equipments.add(
+	new mabi.EquipmentClass(
+	    {
+		name: 'アクセサリ'
+	    }));
+};
+
+    // new mabi.Equipment(
+    // 	{
+    // 	    name: 'ウィングボウ(1級 105式)',
+    // 	    effects: [
+    // 		{param: 'attack_max', op: '+', min: 14},
+    // 		{param: 'critical', op: '+', min: 71}]
+    // 	}),

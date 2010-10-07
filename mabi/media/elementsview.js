@@ -97,7 +97,7 @@ mabi.ElementsView.nextId_ = 0;
 		 function(equipment){
 		     renderName($parent, equipment);
 		 });
-	 }else if(element instanceof mabi.ConcreteEquipment){
+	 }else if(element instanceof mabi.Equipment){
 	     var $div = $('<div/>').appendTo($parent);
 	     var a = ['prefix', 'suffix', 'equipment'];
 	     for(var i = 0; i < a.length; i++){
