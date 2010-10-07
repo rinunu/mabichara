@@ -19,6 +19,7 @@ urlpatterns = patterns(
     (r'^enchants\.json$', 'mabi.views_api.enchants_json'),
     (r'^enchants/(?P<id>.*)\.json$', 'mabi.views_api.enchant_json'),
     (r'^equipments.json$', 'mabi.views_api.equipments_json'),
+    (r'^titles.json$', 'mabi.views_api.titles_json'),
 
     # 一時的なもの
     (url(r'^enchants2$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants2.html'}, name='enchants2')),

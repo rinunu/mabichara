@@ -41,12 +41,16 @@ tmp.createEquipmentSet = function(json){
     set.setName(json.name);
     for(var slot in json.children){
 	var row = json.children[slot];
-	var equipment = row[0];
-	var prefix = row[1];
-	var suffix = row[2];
-
-	var element = tmp.createEquipment(equipment, prefix, suffix);
-	set.addChild(element, slot);
+	if(slot == 'title'){
+	    set.addChild(tmp.get(mabi.titles, row), slot);
+	}else{
+	    var equipment = row[0];
+	    var prefix = row[1];
+	    var suffix = row[2];
+	    
+	    var element = tmp.createEquipment(equipment, prefix, suffix);
+	    set.addChild(element, slot);
+	}
     }
 
     return set;
@@ -60,6 +64,7 @@ tmp.createDummtData = function(){
     	{
     	    name: 'クリティカル特化装備セット',
     	    children: {
+		title: 'ラノとコンヌースをつないだ',
     		right_hand: ['ウィングボウ', 'リザード', 'カリバーン'],
     		head: ['帽子', '丸い', '火炎'],
     		hand: ['グローブ', '鋼鉄針', '品位ある'],
@@ -70,14 +75,13 @@ tmp.createDummtData = function(){
     	    }
     	}
     );
-    // タイトル	ラノとコンヌースをつないだ
 
     mabi.inventory.addChild(
     	tmp.createEquipmentSet(
     	    {
     		name: '',
     		children: {
-    		    // title クリティカルヒットマスター
+    		    title: 'クリティカルヒットマスター',
     		    body: ['軽鎧', '原理の', null],
     		    accessory1: ['アクセサリ', 'ライト', null]
     		}
@@ -85,6 +89,13 @@ tmp.createDummtData = function(){
 
     mabi.inventory.addChild(tmp.createEquipment('軽鎧', null, 'ダークネス')); // 暗黒(14)
     mabi.inventory.addChild(tmp.createEquipment('アクセサリ', 'ユリ'));
+};
+
+tmp.run = function(){
+    console.log('処理開始');
+
+    mabi.enchants.load().success(tmp.onEnchantsLoaded);
+    tmp.addDummyEquipments();
 };
 
 tmp.onEnchantsLoaded = function(){
@@ -95,16 +106,14 @@ tmp.onEnchantsLoaded = function(){
 
 tmp.onEquipmentsLoaded = function(){
     console.log('Equipment ロード完了');
-    tmp.createDummtData();
 
-    mabi.equipmentSetView.setModel(tmp.set);
+    mabi.titles.load().success(tmp.onTitlesLoaded);
 };
 
-tmp.run = function(){
-    console.log('処理開始');
-
-    mabi.enchants.load().success(tmp.onEnchantsLoaded);
-    tmp.addDummyEquipments();
+tmp.onTitlesLoaded = function(){
+    console.log('Title ロード完了');
+    tmp.createDummtData();
+    mabi.equipmentSetView.setModel(tmp.set);
 };
 
 /**

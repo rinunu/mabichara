@@ -85,6 +85,10 @@ mabi.Element.prototype.child = function(slotOrIndex){
     return this.children_[i].element;
 };
 
+mabi.Element.prototype.children = function(){
+    return this.children_;
+};
+
 /**
  * この Element のもつ子供を列挙する
  */

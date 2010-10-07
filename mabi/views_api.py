@@ -19,6 +19,7 @@ import json
 
 from mabi.enchant_class import EnchantClass
 from mabi.equipment_class import EquipmentClass
+from mabi.title import Title
 
 # ----------------------------------------------------------------------
 # JSON
@@ -125,6 +126,13 @@ def to_equipment_map(source):
     obj['category'] = source.category
     return obj
 
+def to_title_map(source):
+    '''Equipment をマップに変換する
+    '''
+    
+    obj = to_element_map(source)
+    return obj
+
 # ----------------------------------------------------------------------
 # ビュー
 
@@ -186,6 +194,13 @@ def equipments_json(request):
     '''Equipment 一覧 JSON 取得'''
 
     result = query(request, EquipmentClass, to_equipment_map)
+    
+    return HttpResponse(result) # , 'application/json')
+
+def titles_json(request):
+    '''Title 一覧 JSON 取得'''
+
+    result = query(request, Title, to_title_map)
     
     return HttpResponse(result) # , 'application/json')
 

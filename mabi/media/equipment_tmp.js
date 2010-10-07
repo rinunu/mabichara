@@ -11,9 +11,11 @@ function initialize(){
 	    hoverClass: 'drophover'
 	});
 
-    mabi.inventory = new mabi.Inventory();
     mabi.enchants = new mabi.EnchantStore();
     mabi.equipments = new mabi.EquipmentStore();
+    mabi.titles = new mabi.TitleStore();
+
+    mabi.inventory = new mabi.Inventory();
 
     mabi.equipmentSetView = new mabi.EquipmentSetView($(".equipment_set"));
     mabi.optionView = new mabi.OptionsView();

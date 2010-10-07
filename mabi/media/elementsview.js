@@ -67,22 +67,16 @@ mabi.ElementsView.nextId_ = 0;
 (function(){
      var i;
 
-     var SUB_SLOTS = [
-	 {id: 'equipment', label: '装備'},
-	 {id: 'prefix', label: 'Prefix'},
-	 {id: 'suffix', label: 'Suffix'}
-     ];
-     
      var SLOTS = {
 	 title: {label: 'タイトル'},
-	 right_hand: {label: '右手', subSlots: SUB_SLOTS},
-	 left_hand: {label: '左手', subSlots: SUB_SLOTS},
-	 head: {label: '頭', subSlots: SUB_SLOTS},
-	 accessory1: {label: 'アクセサリー1', subSlots: SUB_SLOTS},
-	 accessory2: {label: 'アクセサリー2', subSlots: SUB_SLOTS},
-	 body: {label: '体', subSlots: SUB_SLOTS},
-	 hand: {label: '手', subSlots: SUB_SLOTS},
-	 foot: {label: '足', subSlots: SUB_SLOTS},
+	 right_hand: {label: '右手'},
+	 left_hand: {label: '左手'},
+	 head: {label: '頭'},
+	 accessory1: {label: 'アクセサリー1'},
+	 accessory2: {label: 'アクセサリー2'},
+	 body: {label: '体'},
+	 hand: {label: '手'},
+	 foot: {label: '足'},
 	 robe: {label: 'ローブ'}
      };
      for(i in SLOTS){
@@ -159,7 +153,7 @@ mabi.ElementsView.nextId_ = 0;
 })();
 
 mabi.ElementsView.prototype.onAddElements = function(s, e, elements){
-    this.addElement(elements[0].element, 0);
+    this.addElement(elements[0].element, 0, elements[0].slot);
     this.refreshElement(elements[0].element, 0, elements[0].slot);
 };
 
@@ -175,9 +169,16 @@ mabi.ElementsView.prototype.onRefreshElements = function(s, e, elements){
 mabi.ElementsView.prototype.createTable = function(){
     var this_ = this;
     this.model_.eachChild(
-	function(element, slotName){
+	function(element, slotId){
 	    this_.addElement(element, 0);
 	});
+};
+
+/**
+ * 要素を展開して表示すべきか調べる
+ */
+mabi.ElementsView.prototype.shouldExpand = function(element){
+    return element instanceof mabi.Equipment;
 };
 
 /**
@@ -196,7 +197,7 @@ mabi.ElementsView.prototype.addElement = function(element, columnIndex){
 	$td.attr('id', this.cellId(element, column));
 	$td.text('-');
 	$td.appendTo($tr);
-	if(column.colspan){
+	if(column.colspan && this.shouldExpand(element)){
 	    // これ以降 child element で処理をすすめる
 	    $td.attr('rowspan', 4); // todo
 	    element.eachChild(
@@ -231,7 +232,7 @@ mabi.ElementsView.prototype.refreshElement = function(element, columnIndex, slot
 	var column = this.columns_[i];
 	this.refreshCell(element, column, slotId);
 
-	if(column.colspan){
+	if(column.colspan && this.shouldExpand(element)){
 	    // これ以降 child element で処理をすすめる
 	    element.eachChild(
     		function(element, slotId){
