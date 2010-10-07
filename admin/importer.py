@@ -10,7 +10,7 @@ import title_importer
 from weapon_list_parser import WeaponListParser
 from weapon_parser import WeaponParser
 
-from mabi.enchant import Enchant
+from mabi.enchant_class import EnchantClass
 from mabi.title import Title
 from mabi.effect import Effect
 from mabi.equipment_class import EquipmentClass
@@ -74,7 +74,7 @@ class Importer:
     def _put_enchants(self, enchants):
         result = []
         for enchant in enchants:
-            model = Enchant.create_or_update(**enchant)
+            model = EnchantClass.create_or_update(**enchant)
             result.append(model)
         return result
 

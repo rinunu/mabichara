@@ -7,8 +7,8 @@ mabi.Track.setVar("no_report");
 </script>
 
 <a href="{% url admin.views.equipments %}">装備一覧</a>
-<a href="">タイトル一覧</a>
-<a href="">エンチャント一覧</a>
+<a href="{% url admin.views.titles %}">タイトル一覧</a>
+<a href="{% url admin.views.enchants %}">エンチャント一覧</a>
 
 <form action="{% url admin.views.setup %}" method="post">
   {% csrf_token %}

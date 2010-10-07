@@ -35,7 +35,22 @@ tmp.createEquipmentSet = function(json){
     return set;
 };
 
+/**
+ * テスト用の装備をテスト用 DB に登録する
+ */
+tmp.addEquipment = function(){
+    new mabi.Equipment(
+	{
+	    name: 'ウィングボウ(1級 105式)',
+	    effects: [
+		{param: 'attack_max', op: '+', min: 14},
+		{param: 'critical', op: '+', min: 71}]
+	});
+};
+
 tmp.createDummtData = function(){
+    tmp.addEquipment();
+
     tmp.set = tmp.createEquipmentSet(
 	{
 	    name: 'クリティカル特化装備セット',

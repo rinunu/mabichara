@@ -9,7 +9,7 @@ from google.appengine.ext import db
 
 import datastore_helper
     
-class Enchant(db.Model):
+class EnchantClass(db.Model):
     
     """エンチャントデータ
     """
@@ -144,15 +144,15 @@ class Enchant(db.Model):
         '''
         if max_ > 0:
             try:
-                prop = getattr(Enchant, status)
-                a = prop.__get__(self, Enchant)
+                prop = getattr(EnchantClass, status)
+                a = prop.__get__(self, EnchantClass)
                 prop.__set__(self, float(a) + max_)
             except AttributeError:
                 pass
         
         try:
-            prop = getattr(Enchant, 'effect_' + status)
-            a = prop.__get__(self, Enchant)
+            prop = getattr(EnchantClass, 'effect_' + status)
+            a = prop.__get__(self, EnchantClass)
             # TODO 現在プラス効果もマイナス効果もひとつのプロパティで持っている。 そのためプラスとマイナスの効果が混在していると問題になる
             # 現在はそのような場合はプラスの効果を優先する。
             if a != 1:
@@ -310,14 +310,14 @@ class Enchant(db.Model):
         if limit:
             limit = int(limit)
 
-        q = datastore_helper.DatastoreHelper(Enchant)
+        q = datastore_helper.DatastoreHelper(EnchantClass)
         q.order_by_gae(True)
 
         # Filter を作成する
         # なるべく GAE によって処理したいものを最初に作成する(なるべく絞り込めるもの)
 
         if name:
-            q.add_filter(datastore_helper.PrefixFilter(Enchant, 'names', name))
+            q.add_filter(datastore_helper.PrefixFilter(EnchantClass, 'names', name))
 
         # 効果用のフィルター作成
         if effects:
@@ -328,13 +328,13 @@ class Enchant(db.Model):
                 value = 1 if m.group(1) == '+' else 2
                 status = m.group(2)
                 key = 'effect_%s' % status # 先頭に effect をつけるため、不正な値でも、最悪存在しないプロパティへのアクセスですむ
-                q.add_filter(datastore_helper.Filter(Enchant, key, value))
+                q.add_filter(datastore_helper.Filter(EnchantClass, key, value))
 
         if root:
-            q.add_filter(datastore_helper.Filter(Enchant, 'root', root))
+            q.add_filter(datastore_helper.Filter(EnchantClass, 'root', root))
             
         if rank:
-            q.add_filter(datastore_helper.Filter(Enchant, 'rank', int(rank)))
+            q.add_filter(datastore_helper.Filter(EnchantClass, 'rank', int(rank)))
 
         if order:
             q.order_by_gae(cls._can_order_by_gae(q.filters, order))

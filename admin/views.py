@@ -18,6 +18,8 @@ from importer import Importer
 
 from admin.source import Source
 from mabi.equipment_class import EquipmentClass
+from mabi.enchant_class import EnchantClass
+from mabi.title import Title
 from mabi.upgrade_class import UpgradeClass
 from mabi.element import Element
 
@@ -42,33 +44,16 @@ def index(request):
 def import_data(request, key):
     """取り込み元の内容を取り込む"""
 
-    types = {
-        'enchant': {
-            'result_page': 'import_result.html'
-            },
-        'title': {
-            'result_page': 'titles.html'
-            },
-        }
-
     importer = Importer()
 
     source = Source.get(db.Key(key))
     result = importer.import_data(source)
-
-    context = {
-        'result': result
-        }
-
-    if source.type in ('weapon_list', 'weapon'):
-        return HttpResponseRedirect(reverse('admin.views.index'))
-    else:
-        return direct_to_template(request, types[source.type]['result_page'], context)
+    return HttpResponseRedirect(reverse('admin.views.index'))
 
 def delete_all(request):
     '''データを全て削除する'''
 
-    db.delete(Enchant.all(keys_only=True))
+    db.delete(EnchantClass.all(keys_only=True))
 
     context = {}
 
@@ -100,6 +85,22 @@ def equipments(request):
         'items': equipments
         }
     return direct_to_template(request, 'equipments.html', context)
+
+def enchants(request):
+    '''エンチャントをすべて表示する'''
+
+    context = {
+        'items': EnchantClass.all()
+        }
+    return direct_to_template(request, 'enchants_admin.html', context)
+
+def titles(request):
+    '''タイトルをすべて表示する'''
+
+    context = {
+        'items': Title.all()
+        }
+    return direct_to_template(request, 'titles.html', context)
 
 def login(request):
     """管理機能用のログイン画面を表示する"""

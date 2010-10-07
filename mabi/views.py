@@ -35,7 +35,7 @@ from django.http import Http404
 
 import json
 
-from mabi.enchant import Enchant
+from mabi.enchant_class import EnchantClass
 
 ######################################################################
 
@@ -60,7 +60,7 @@ def enchants(request):
     """
     
     context = {
-        'enchants': Enchant.all(),
+        'enchants': EnchantClass.all(),
         }
 
     return direct_to_template(request, 'enchants.html', context)
@@ -133,7 +133,7 @@ def enchant_json(request, id):
 
     callback = request.GET.get('callback')
 
-    a = Enchant.get_by_id(id)
+    a = EnchantClass.get_by_id(id)
 
     if not a:
         raise Http404
@@ -160,7 +160,7 @@ def enchants_json(request):
         if value:
             cond[name] = value
 
-    q = Enchant.find(order=order, limit=limit, **cond)
+    q = EnchantClass.find(order=order, limit=limit, **cond)
 
     return HttpResponse(create_feed(q, callback)) # , 'application/json')
 

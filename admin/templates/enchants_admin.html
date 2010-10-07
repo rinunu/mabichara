@@ -2,47 +2,47 @@
 
 {% block extra-head %}
 <script type="text/javascript">
-  /*var my = {};
-  $(document).ready(function(){
-    my.tl = $('#result').dataTable({"iDisplayLength": 1000});
-  });*/
+  var my = {};
+  $(function(){
+  $('table').dataTable({"iDisplayLength": 1000});
+  });
 </script>
 {% endblock %}
 
-
-
 {% block content %}
-<table id="result">
+<table>
   <thead>
     <tr>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
+      <th>ID</th>
+      <th>名前</th>
+      <th>種別</th>
+      <th>ランク</th>
+
+      <th>装備</th>
+      <th>装備(内部)</th>
+      <th>効果</th>
+      <th>効果(内部)</th>
+      <th>更新日</th>
     </tr>
   </thead>
 
+
   <tbody>
-    {% for e in result %}
+    {% for e in items %}
     <tr>
+      <td>{{ e.id }}</td>
       <td>{{ e.english_name }}<br />
 	{% for name in e.names %}
 	{{ name }}<br />
 	{% endfor %}
       </td>
-      <td>{{ e.id }}</td>
       <td>{{ e.root }}</td>
       <td>{{ e.rank }}</td>
       <td>{# e.equipment_text|default_if_none:"" #}</td>
       <td>{# e.equipment|default_if_none:"" #}</td>
       <td>{{ e.effects_text|linebreaksbr }}</td>
       <td>{{ e.effects|linebreaksbr }}</td>
-      <td>{{ e.updated_at }}</td>
+      <td>{{ e.updated_at|date:"m/d H:i" }}</td>
     </tr>
     {% endfor %}
   </tbody>

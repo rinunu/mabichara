@@ -1,27 +1,36 @@
 {% extends "base.html" %}
 
+{% block extra-head %}
+<script type="text/javascript">
+  var my = {};
+  $(function(){
+  $('table').dataTable({"iDisplayLength": 1000});
+  });
+</script>
+{% endblock %}
+
 {% block content %}
 <table>
   <thead>
     <tr>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
-      <th>a</th>
+      <th>ID</th>
+      <th>名前</th>
+      <th>効果</th>
+      <th>更新日</th>
     </tr>
   </thead>
 
   <tbody>
-    {% for e in result %}
+    {% for e in items %}
     <tr>
-      <td>{{ e.name }}</td>
       <td>{{ e.key.id_or_name }}</td>
+      <td>{{ e.name }}</td>
       <td>
 	{% for effect in e.effects %}
 	{{ effect }}<br>
 	{% endfor %}
       </td>
-      <td>{{ e.updated_at }}</td>
+      <td>{{ e.updated_at|date:"m/d H:i" }}</td>
     </tr>
     {% endfor %}
   </tbody>
