@@ -17,16 +17,44 @@ tmp.get = function(store, name){
 	       });
 
     if(!result){
-	throw 'error:' + name;	
+	throw 'error:' + name;
     }
     return result;
 };
 
 /**
+ * 武器に指定した改造を施す
+ */
+tmp.upgrade = function(equipment, i, name){
+    var upgrade = null;
+    $.each(equipment.base().upgrades(), function(i, v){
+	       if(v.name() == name){
+		   upgrade = v;
+		   return false;
+	       }
+	       return true;
+	   });
+    if(!upgrade){
+	throw 'error' + name;
+    }
+
+    equipment.setUpgrade(i, upgrade);
+};
+
+/**
  * 指定したエンチャントを貼った装備を作成する
  */
-tmp.createEquipment = function(equipmentName, prefixName, suffixName){
-    var equipment = tmp.get(mabi.equipments, equipmentName).create();
+tmp.createEquipment = function(equipmentInfo, prefixName, suffixName){
+    if(equipmentInfo instanceof Array){
+	var class_ = tmp.get(mabi.equipments, equipmentInfo[0]);
+	var equipment = class_.create();
+	$.each(equipmentInfo[1].split('＞'), function(i, v){
+		   tmp.upgrade(equipment, i, v);
+	       });
+    }else{
+	var equipment = tmp.get(mabi.equipments, equipmentInfo).create();
+    }
+
     if(prefixName){
 	equipment.enchant(tmp.get(mabi.enchants, prefixName).create());
     }
@@ -87,31 +115,79 @@ tmp.createDummtData = function(){
     		}
     	    }));
 
-    mabi.inventory.addChild(tmp.createEquipment('軽鎧', null, 'ダークネス')); // 暗黒(14)
+    mabi.inventory.addChild(tmp.createEquipment('軽鎧', null, 'ダークネス'));
     mabi.inventory.addChild(tmp.createEquipment('アクセサリ', 'ユリ'));
+
+    // ウィングボウ(1級105式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['ウィングボウ',
+	     'チップ強化1＞チップ強化2＞チップ強化3＞チップ強化3＞チップ強化3']));
+
+    // エルブンショートボウ(1級103式)
+    // エルブンショートボウ(S級103式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式強化＞チップ強化2＞弓の弦強化1＞弓の弦強化2＞弓の弦強化3']));
+
+    // エルブンショートボウ(S級127式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式強化＞チップ強化2＞チップ強化3＞チップ強化4＞チップ強化4']));
+
+    // エルブンショートボウ(S級125式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式強化＞弓の弦の交換＞弓の弦の交換＞弓の弦強化2＞弓の弦強化3']));
+
+    // エルブンショートボウ(S級92式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式改造＞照準器交換＞照準器交換＞照準器交換']));
+
+    // エルブンショートボウ(S級115式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式改造＞弓の弦の交換＞弓の弦の交換＞弓の弦強化2＞弓の弦強化3']));
+
+    // エルブンショートボウ(S級126式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式改造＞弓の弦の交換＞弓の弦の交換＞チップ強化4＞弓の弦強化3']));
+
+    // エルブンショートボウ(S級132式)
+    mabi.inventory.addChild(
+	tmp.createEquipment(
+	    ['エルブンショートボウ',
+	     'メレス式改造＞弓の弦の交換＞弓の弦の交換＞チップ強化4＞チップ強化4']));
 };
 
 tmp.run = function(){
     console.log('処理開始');
-
-    mabi.enchants.load().success(tmp.onEnchantsLoaded);
     tmp.addDummyEquipments();
+
+    mabi.equipments.load().success(
+	function(){
+	    console.log('loaded 1');
+	    var c = new util.ConcurrentCommand([]);
+	    c.add(mabi.enchants.load());
+	    c.add(mabi.titles.load());
+	    c.add(tmp.get(mabi.equipments, 'ウィングボウ').load());
+	    c.add(tmp.get(mabi.equipments, 'ハイランダーロングボウ').load());
+	    c.add(tmp.get(mabi.equipments, 'エルブンショートボウ').load());
+	    c.add(tmp.get(mabi.equipments, 'ショートボウ').load());
+	    c.success(tmp.onLoaded);
+	});
 };
 
-tmp.onEnchantsLoaded = function(){
-    console.log('Enchant ロード完了');
-
-    mabi.equipments.load().success(tmp.onEquipmentsLoaded);
-};
-
-tmp.onEquipmentsLoaded = function(){
-    console.log('Equipment ロード完了');
-
-    mabi.titles.load().success(tmp.onTitlesLoaded);
-};
-
-tmp.onTitlesLoaded = function(){
-    console.log('Title ロード完了');
+tmp.onLoaded = function(){
+    console.log('loaded 2');
     tmp.createDummtData();
     mabi.equipmentSetView.setModel(tmp.set);
 };

@@ -2,7 +2,8 @@
 mabi.Element = function(options){
     options = options || {};
 
-    this.id_ = mabi.Element.nextId_++;
+
+    this.id_ = options.id || mabi.Element.nextId_--;
 
     // [{slot:, element:}, ...]
     this.children_ = [];
@@ -109,7 +110,11 @@ mabi.Element.prototype.param = function(param, character, equipmentSet){
     this.eachEffect(
 	function(effect){
 	    if(effect.param() == param){
-		result += effect.min();
+		if(effect.op() == '-'){
+		    result -= effect.min();
+		}else{
+		    result += effect.min();
+		}
 	    }
 	});
     return result;
@@ -131,7 +136,11 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 // ----------------------------------------------------------------------
 // private
 
-mabi.Element.nextId_ = 0;
+/**
+ * ローカルで振る ID
+ * ローカルでは負の ID を割り当てる。
+ */
+mabi.Element.nextId_ = -1;
 
 /**
  */
@@ -143,18 +152,5 @@ mabi.Element.prototype.indexOf = function(slot){
 	}
     }
     return -1;
-};
-
-// ----------------------------------------------------------------------
-// 開発用
-
-mabi.Element.find = function(name){
-    for(var i = 0; i < this.elements.length; i++){
-	var a = this.elements[i];
-	if(a.name() == name){
-	    return a;
-	}
-    }
-    throw 'error';
 };
 

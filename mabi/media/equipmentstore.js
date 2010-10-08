@@ -2,7 +2,7 @@
  * Equipment データの管理を行う
  */
 mabi.EquipmentStore = function(){
-    mabi.Store.call(this, {url: '/equipments.json'});
+    mabi.Store.call(this, {resourceName: 'equipments'});
 };
 
 util.extend(mabi.EquipmentStore, mabi.Store);
@@ -10,12 +10,24 @@ util.extend(mabi.EquipmentStore, mabi.Store);
 // ----------------------------------------------------------------------
 // override
 
-mabi.EquipmentStore.prototype.toEntity = function(json){
-    var es = new mabi.EquipmentClass(
+mabi.EquipmentStore.prototype.createElement = function(dto){
+    var e = new mabi.EquipmentClass(
 	{
-	    name: json.name,
-	    effects: json.effects,
-	    ug: json.ug
+	    id: dto.id,
+	    name: dto.name,
+	    effects: dto.effects,
+	    ug: dto.ug
 	});
-    return es;
+    return e;
+};
+
+mabi.EquipmentStore.prototype.updateElement = function(e, dto){
+    // 性能が変化することはない。 更新時は情報が増えるのみ。
+
+    var upgrades = [];
+    $.each(dto.upgrades, function(i, v){
+	       upgrades.push(new mabi.UpgradeClass(v))
+	   });
+
+    e.set({upgrades: upgrades});
 };

@@ -6,7 +6,7 @@ mabi.InventoryView = function(model){
     this.$element_.dialog(
 	{
 	    autoOpen: true,
-	    width: 700,
+	    width: 500,
 	    height: 500,
 	    buttons: {'アイテムを削除': function(){}, 
 		      'アイテムを複製': function(){},

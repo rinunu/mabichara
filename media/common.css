@@ -224,8 +224,16 @@ th.float{
 .equipment_set{
 }
 
-.equipment_set .memo{
+.equipment_set span.name{
+    font-size: 15px;
     margin: 5px;
+    padding: 3px;
+}
+
+.equipment_set .description{
+    padding: 3px;
+    margin: 5px;
+    width: 350px;
 }
 
 .equipment_set table{

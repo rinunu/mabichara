@@ -112,7 +112,28 @@ util.extend(util.AsyncCommand, util.Command);
  * すべての Command が完了すると、この Command も完了する
  */
 util.ConcurrentCommand = function(commands){
+    var this_ = this;
+    this.commands_ = 0;
+    $.each(commands, function(i, v){
+	       this_.add(v);
+	   });
 };
 
 util.extend(util.ConcurrentCommand, util.Command);
+
+/**
+ * 完了待ちをする Command を追加する
+ */
+util.ConcurrentCommand.prototype.add = function(command){
+    var this_ = this;
+    this.commands_++;
+    command.success(function(){
+			this_.commands_--;
+			console.log('command success: ', this_.commands_);
+			if(this_.commands_ == 0){
+			    this_.onSuccess()
+			}
+		    });
+};
+
 

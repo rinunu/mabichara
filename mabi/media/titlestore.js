@@ -2,7 +2,7 @@
  * Title データの管理を行う
  */
 mabi.TitleStore = function(){
-    mabi.Store.call(this, {url: '/titles.json'});
+    mabi.Store.call(this, {resourceName: 'titles'});
 };
 
 util.extend(mabi.TitleStore, mabi.Store);
@@ -10,12 +10,13 @@ util.extend(mabi.TitleStore, mabi.Store);
 // ----------------------------------------------------------------------
 // override
 
-mabi.TitleStore.prototype.toEntity = function(json){
-    var es = new mabi.Title(
+mabi.TitleStore.prototype.createElement = function(dto){
+    var e = new mabi.Title(
 	{
-	    name: json.name,
-	    effects: json.effects
+	    id: dto.id,
+	    name: dto.name,
+	    effects: dto.effects
 	});
-    return es;
+    return e;
 };
 

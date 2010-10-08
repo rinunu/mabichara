@@ -2,7 +2,7 @@
  * Enchant データの管理を行う
  */
 mabi.EnchantStore = function(){
-    mabi.Store.call(this, {url: '/enchants.json'});
+    mabi.Store.call(this, {resourceName: 'enchants'});
 };
 
 util.extend(mabi.EnchantStore, mabi.Store);
@@ -10,14 +10,15 @@ util.extend(mabi.EnchantStore, mabi.Store);
 // ----------------------------------------------------------------------
 // override
 
-mabi.EnchantStore.prototype.toEntity = function(json){
-    var es = new mabi.EnchantClass(
+mabi.EnchantStore.prototype.createElement = function(dto){
+    var e = new mabi.EnchantClass(
 	{
-	    name: json.names[0],
-	    effects: json.effects,
-	    rank: json.rank,
-	    type: json.root == 'p' ? 'prefix' : 'suffix'
+	    id: dto.id,
+	    name: dto.names[0],
+	    effects: dto.effects,
+	    rank: dto.rank,
+	    type: dto.root == 'p' ? 'prefix' : 'suffix'
 	});
-    return es;
+    return e;
 };
 
