@@ -12,6 +12,8 @@ mabi.Store = function(options){
     console.assert(options);
     this.elements_ = [];
     this.resourceName_ = options.resourceName;
+
+    this.listLoaded_ = false;
 };
 
 /**
@@ -24,6 +26,7 @@ mabi.Store.prototype.initialize = function(){
  * 一覧を取得する
  */
 mabi.Store.prototype.each = function(fn){
+    console.assert(this.listLoaded_);
     $.each(this.elements_, fn);
 };
 
@@ -39,6 +42,10 @@ mabi.Store.prototype.add = function(element){
  * 処理は非同期に行われる
  */
 mabi.Store.prototype.load = function(){
+    if(this.listLoaded_){
+	return new util.TimerCommand();
+    }
+
     var this_ =  this;
     var cmd = mabi.ajax.load(
 	{
@@ -51,6 +58,7 @@ mabi.Store.prototype.load = function(){
 		    var dto = json.entry[i];
 		    this_.create_or_update(dto);
 		}
+		this_.listLoaded_ = true;
 	    }
 	});
     return cmd;
@@ -60,8 +68,9 @@ mabi.Store.prototype.load = function(){
  * 1 要素の詳細を読み込む
  */
 mabi.Store.prototype.loadDetail = function(id){
-    var this_ = this;
     id = id.id ? id.id() : id;
+
+    var this_ = this;
     var cmd = mabi.ajax.load(
 	{
 	    url: this.resourceName_ + '/' + id + '.json',

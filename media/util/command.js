@@ -3,22 +3,27 @@
  * コマンド(管理すべき処理)を表す
  * 
  * 管理とは以下のような扱いのことを言う
- * - 遅延して実行する
- * - 定期的に実行する
- * - 非同期実行
+ * - 同時実行を抑制する
+ * - 完了を待つ
+ * - 失敗時にリトライする
  * 
  * プロパティ
- * - type: コマンドの種別
- * 
- * options: {type}
+ * - id: コマンドの ID. 指定しない場合は自動で振られる。
+ * 同じ ID のコマンドを同時に実行することは出来ない。
  */
 util.Command = function(options){
     options = options || {};
-    this.type = options.type;
+    this.manager_ = util.Command;
+
+    this.id_ = options.id || 'cmd' + this.manager_.nextId_++;
 };
 
 // ----------------------------------------------------------------------
 // Command 使用側インタフェース
+
+util.Command.prototype.id = function(){
+    return this.id_;
+};
 
 /**
  * 実行可能か
@@ -29,11 +34,11 @@ util.Command.prototype.canExecute = function(){
 
 /**
  * 実行
- * 
- * 成功時は this.onSuccess, 失敗時は this.onError を呼び出すこと
- * 
  */
 util.Command.prototype.execute = function(){
+    console.log('command start: ' + this.id());
+    this.manager_.onExecute(this);
+    this.onExecute();
 };
 
 /**
@@ -61,16 +66,74 @@ util.Command.prototype.error = function(error){
 // ----------------------------------------------------------------------
 // Command 実装側インタフェース
 
+/**
+ * 処理を実行する
+ * 
+ * 成功時は this.onSuccess, 失敗時は this.onError を呼び出すこと
+ */
+util.Command.prototype.onExecute = function(){
+};
+
+/**
+ * 処理が正常に完了した場合に呼び出す必要がある
+ * 引数はすべて success のリスナに渡される
+ */
 util.Command.prototype.onSuccess = function(){
+    this.manager_.onSuccess(this);
     if(this.success_){
 	this.success_.apply(this, arguments);
     }
 };
 
+/**
+ * 処理が失敗した場合に呼び出す必要がある
+ * 引数はすべて success のリスナに渡される
+ */
 util.Command.prototype.onError = function(){
+    this.manager_.onError(this);
     if(this.error_){
 	this.error_.apply(this, arguments);
     }
+};
+
+// ----------------------------------------------------------------------
+// static
+
+util.Command.nextId_ = 1;
+
+/**
+ * 実行中の Command
+ */
+util.Command.commands_ = {};
+
+/**
+ * 指定した ID の Command を取得する
+ * 
+ * 実行中ではない場合は null を返す
+ */
+util.Command.find = function(id){
+    return this.commands_[id];
+};
+
+/**
+ */
+util.Command.onExecute = function(command){
+    console.assert(!this.commands_[command.id()]);
+    this.commands_[command.id()] = command;
+};
+
+/**
+ */
+util.Command.onSuccess = function(command){
+    console.assert(this.commands_[command.id()]);
+    delete this.commands_[command.id()];
+};
+
+/**
+ */
+util.Command.onError = function(command){
+    console.assert(this.commands_[command.id()]);
+    delete this.commands_[command.id()];
 };
 
 // ======================================================================
@@ -80,13 +143,13 @@ util.Command.prototype.onError = function(){
  * 同期実行 Command
  */
 util.SyncCommand = function(execute, options){
-    util.Command.call(this, options);
+    this.super_.constructor.call(this, options);
     this.execute_ = execute;
 };
 
 util.extend(util.SyncCommand, util.Command);
 
-util.SyncCommand.prototype.execute = function(){
+util.SyncCommand.prototype.onExecute = function(){
     this.execute_();
     this.onSuccess();
 };
@@ -97,8 +160,8 @@ util.SyncCommand.prototype.execute = function(){
  * 非同期実行 Command
  */
 util.AsyncCommand = function(execute, options){
-    util.Command.call(this, options);
-    this.execute = execute;
+    this.super_.constructor.call(this, options);
+    this.onExecute = execute;
 };
 
 util.extend(util.AsyncCommand, util.Command);
@@ -107,11 +170,12 @@ util.extend(util.AsyncCommand, util.Command);
 //
 
 /**
- * [未実装] 複数の Command を同時に実行する Command
+ * 複数の Command を同時に実行する Command
  * 
  * すべての Command が完了すると、この Command も完了する
  */
-util.ConcurrentCommand = function(commands){
+util.ConcurrentCommand = function(commands, options){
+    this.super_.constructor.call(this, options);
     var this_ = this;
     this.commands_ = 0;
     $.each(commands, function(i, v){
@@ -136,4 +200,29 @@ util.ConcurrentCommand.prototype.add = function(command){
 		    });
 };
 
+// ======================================================================
 
+/**
+ * 指定時間後に execute を実行する Command
+ * @param execute 実行する関数。 指定しない場合は何も実行せずに成功する。
+ * @param time タイムアウトまでの時間。 指定しない場合は即タイムアウトする。
+ */
+util.TimerCommand = function(execute, time, options){
+    this.super_.constructor.call(this, options);
+    this.execute_ = execute;
+    this.time_ = time || 1;
+    this.onExecute = execute;
+};
+
+util.TimerCommand.prototype.onExecute = function(){
+    var this_ = this;
+    setTimeout(function(){
+		   if(this_.execute_){
+		       this_.execute_();
+		   }else{
+		       this_.onSuccess();
+		   }
+	       }, this.time_);
+};
+
+util.extend(util.TimerCommand, util.Command);

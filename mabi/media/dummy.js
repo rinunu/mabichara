@@ -175,14 +175,15 @@ tmp.run = function(){
     mabi.equipments.load().success(
 	function(){
 	    console.log('loaded 1');
-	    var c = new util.ConcurrentCommand([]);
-	    c.add(mabi.enchants.load());
-	    c.add(mabi.titles.load());
-	    c.add(tmp.get(mabi.equipments, 'ウィングボウ').load());
-	    c.add(tmp.get(mabi.equipments, 'ハイランダーロングボウ').load());
-	    c.add(tmp.get(mabi.equipments, 'エルブンショートボウ').load());
-	    c.add(tmp.get(mabi.equipments, 'ショートボウ').load());
+	    var c = new util.ConcurrentCommand(
+		[mabi.enchants.load(),
+		 mabi.titles.load(),
+		 tmp.get(mabi.equipments, 'ウィングボウ').load(),
+		 tmp.get(mabi.equipments, 'ハイランダーロングボウ').load(),
+		 tmp.get(mabi.equipments, 'エルブンショートボウ').load(),
+		 tmp.get(mabi.equipments, 'ショートボウ').load()]);
 	    c.success(tmp.onLoaded);
+	    c.execute();
 	});
 };
 
