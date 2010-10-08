@@ -4,13 +4,14 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns(
     '',
+    (url(r'^simulator$', 'django.views.generic.simple.direct_to_template', {'template': 'simulator.html'}, name='simulator')),
+
     
 
     (url(r'^enchants$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants_ajax.html'}, name='enchants_ajax')),
     # (r'^enchants$', 'mabi.views.enchants'),
 
-    (url(r'^equipment$', 'django.views.generic.simple.direct_to_template', {'template': 'equipment.html'}, name='equipment')),
-
+    # 静的
     (url(r'^about$', 'django.views.generic.simple.direct_to_template', {'template': 'about.html'}, name='about')),
     (url(r'^twitter_bot$', 'django.views.generic.simple.direct_to_template', {'template': 'twitter_bot.html'}, name='twitter_bot')),
     (url(r'^api_doc$', 'django.views.generic.simple.direct_to_template', {'template': 'api_doc.html'}, name='api_doc')),

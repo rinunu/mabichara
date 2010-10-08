@@ -1,44 +1,44 @@
-{% extends "base.html" %}
-{% load media %}
-
-{% block title %}マビノギ お気に入り装備{% endblock %}
-
-{% block js %}
-{% include_media 'equipment_tmp.js' %}
-
-<script type="text/javascript">
-  $(function() {
-
-  initialize();
-
-  });
-</script>
-
-{% endblock %}
-
-{% block content %}
-
-<div class="tabs">
-  <ul>
-    <li><a href="#tabs_recommended">おすすめ装備セット</a></li>
-    <li><a href="#tabs_equipment">装備セット編集</a></li>
-    <li><a href="#tabs_character">キャラクター編集</a></li>
-  </ul>
-  <div id="tabs_recommended">
-    {% include "recommended.html" %}
+<div class="equipment_view">
+  <div class="tabs">
+    <ul>
+      <li><a href="#tabs-1">装備種別</a></li>
+      <li><a href="#tabs-2">性能補正</a></li>
+      <li><a href="#tabs-3">改造</a></li>
+    </ul>
+    <div id="tabs-1">
+      <span class="editable">クレイモア</span>
+    </div>
+    <div id="tabs-2">
+      <div>
+	<select>
+	  <option>なし</option>
+	  <option>ドロップ1級()</option>
+	  <option>ドロップ2級()</option>
+	  <option>ドロップ3級()</option>
+	  <option>ドロップ4級</option>
+	  <option>合成...</option>
+	  <option>その他...</option>
+	</select>
+      </div>
+      <div>
+	最小攻撃力<input type="text">
+	最大攻撃力<input type="text">
+      </div>
+    </div>
+    <div id="tabs-3">
+      おすすめ改造式
+      <a href="">wiki</a>
+    </div>
   </div>
-  <div id="tabs_equipment">
-    {# include "character_overview.html" #}
-    {% include "equipment_set.html" %}
-  </div>
-  <div id="tabs_character">
+
+  <div class="spec">
+    <ul>
+      <li>とても遅いスピード 2打の武器</li>
+      <li>攻撃 2~5</li>
+      <li>負傷率 0~0%</li>
+      <li>クリティカル 5%</li>
+      <li>バランス 40%</li>
+      <li>耐久力 10/10</li>
+    </ul>
   </div>
 </div>
-
-{% include "enchant.html" %}
-{% include "options.html" %}
-{% include "inventory.html" %}
-{% include "equipment_detail.html" %}
-
-{% endblock %}
-
