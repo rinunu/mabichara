@@ -13,3 +13,6 @@ mabi.EquipmentView = function(){
 	});
 };
 
+mabi.EquipmentView.prototype.edit = function(element){
+    this.$element_.dialog('open');
+};

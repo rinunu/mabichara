@@ -4,11 +4,16 @@ var util = {};
 
 /**
  * sub のプロトタイプチェーンに super_.prototype を入れる。
+ * 
+ * また、 sub の prototype に super_ を設定する。
+ * これにより sub の生成したオブジェクトは
+ * this.super_.superMethod の形で、 super_ のメソッドにアクセス出来る。
  */
 util.extend = function(sub, super_){
     function f(){};
     f.prototype = super_.prototype;
     sub.prototype = new f();
+    sub.prototype.constructor = sub;
     sub.prototype.super_ = super_.prototype;
 };
 

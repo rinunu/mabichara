@@ -1,6 +1,6 @@
 
-mabi.EnchantView = function(){
-    this.$element_ = $('.enchant_view');
+mabi.TitleView = function(){
+    this.$element_ = $('.title_view');
     this.$element_.dialog(
 	{
 	    autoOpen: false,
@@ -9,6 +9,6 @@ mabi.EnchantView = function(){
 };
 
 
-mabi.EnchantView.prototype.edit = function(element){
+mabi.TitleView.prototype.edit = function(element){
     this.$element_.dialog('open');
 };
