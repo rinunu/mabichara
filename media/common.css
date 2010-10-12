@@ -32,6 +32,10 @@ a{
 
 .css_right { float: right; }
 
+table{
+  table-layout: fixed;
+}
+
 /* ---------------------------------------------------------------------- */
 /* table */
 
@@ -126,6 +130,7 @@ td li{
     display: block;
 }
 
+
 /* ---------------------------------------------------------------------- */
 /* common */
 
@@ -159,6 +164,42 @@ span.element{
     color: #555;
     font-style: italic;
 }
+
+/**
+ * 注意書き
+ */
+div.notice{
+    margin: 5px;
+    padding: 5px;
+    background-color: #fff0f0;
+    color: #f11;
+}
+
+/**
+ * 1効果
+ */
+.li.effect{
+    margin-right: 5px;
+}
+
+/**
+ * プラス効果
+ */
+.plus{
+    color: blue;
+}
+
+/**
+ * マイナス効果
+ */
+.minus{
+    color: red;
+}
+
+table.selectable tr:hover{
+    background-color: #fee;
+}
+
 
 /* ---------------------------------------------------------------------- */
 /* 装備画面 全体構成 */
@@ -240,11 +281,43 @@ th.float{
 }
 
 /* ---------------------------------------------------------------------- */
+/* 改造表 */
+
+table.upgrades td li,
+table.sequence td li{
+    list-style-type: none;
+    display: inline;
+    margin-right: 3px;
+}
+
+table.upgrades .ug,
+table.sequence .ug{
+    width: 50px;
+}
+
+table.upgrades .name,
+table.sequence .name{
+    width: 130px;
+}
+table.upgrades .proficiency,
+table.sequence .proficiency{
+    width: 40px;
+}
+table.upgrades .effects,
+table.sequence .effects{
+    width: 300px;
+}
+table.upgrades .cost,
+table.sequence .cost{
+    width: 50px;
+}
+
+/* ---------------------------------------------------------------------- */
 /* equipment_view - 個別装備画面 */
 
 .equipment_view .tabs{
     float: left;
-    width: 300px;
+    width: 700px;
 }
 
 .equipment_view .spec{

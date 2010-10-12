@@ -23,8 +23,14 @@ function initialize(){
     mabi.optionView = new mabi.OptionsView();
     mabi.inventoryView = new mabi.InventoryView(mabi.inventory);
     mabi.equipmentView = new mabi.EquipmentView();
-    mabi.enchantView = new mabi.EnchantView();
 
+    for(var i in mabi){
+	if(mabi[i].initialize){
+	    mabi[i].initialize();
+	}
+    }
+
+    mabi.equipmentView.edit();
     tmp.run();
 }
 

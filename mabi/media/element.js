@@ -1,4 +1,9 @@
-
+/**
+ * event
+ * - addChild
+ * - addEffect
+ * - update
+ */
 mabi.Element = function(options){
     options = options || {};
 

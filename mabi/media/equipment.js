@@ -25,6 +25,13 @@ mabi.EquipmentClass.prototype.load = function(){
 };
 
 /**
+ * 装備の詳細が読み込まれているか調べる
+ */
+mabi.EquipmentClass.prototype.loaded = function(){
+    return this.upgrades_ ? true : false;
+};
+
+/**
  * Upgrade 情報を取得する
  */
 mabi.EquipmentClass.prototype.upgrades = function(options){
@@ -50,11 +57,6 @@ mabi.NoEnchantedEquipment = function(base){
 
 util.extend(mabi.NoEnchantedEquipment, mabi.Element);
 
-/**
- * N 回目の Upgrade を設定する
- * 
- * upgrade は Upgrade, UpgradeClass でなければならない
- */
 mabi.NoEnchantedEquipment.prototype.setUpgrade = function(i, upgrade){
     if(upgrade instanceof mabi.Upgrade){
     }else if(upgrade instanceof mabi.UpgradeClass){
@@ -87,10 +89,12 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
 // Equipment
 
 mabi.Equipment = function(base){
-    console.assert(base instanceof mabi.EquipmentClass);
     mabi.Element.call(this);
 
-    this.addChild(new mabi.NoEnchantedEquipment(base), 'equipment');
+    if(base){
+	console.assert(base instanceof mabi.EquipmentClass);
+	this.addChild(new mabi.NoEnchantedEquipment(base), 'equipment');
+    }
 };
 
 util.extend(mabi.Equipment, mabi.Element);
@@ -110,7 +114,13 @@ mabi.Equipment.prototype.enchant = function(enchant){
     this.addChild(enchant, enchant.type());
 };
 
+/**
+ * N 回目の Upgrade を設定する
+ * 
+ * @param upgrade Upgrade か UpgradeClass でなければならない。
+ * null を指定した場合は、その回数の改造を取り消す
+ */
 mabi.Equipment.prototype.setUpgrade = function(i, upgrade){
+    console.assert(this.child('equipment'));
     this.child('equipment').setUpgrade(i, upgrade);
 };
-

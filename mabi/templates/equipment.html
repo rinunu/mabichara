@@ -4,9 +4,26 @@
       <li><a href="#tabs-1">装備種別</a></li>
       <li><a href="#tabs-2">性能補正</a></li>
       <li><a href="#tabs-3">改造</a></li>
+      <li><a href="#tabs-4">エンチャント</a></li>
     </ul>
     <div id="tabs-1">
-      <span class="editable">クレイモア</span>
+      <select class="slot">
+	<option>部位</option>
+      </select>
+      <select class="category">
+	<option>カテゴリ</option>
+      </select>
+      <select class="equipment">
+      </select>
+      <div class="notice">
+	現在以下の装備のみ使用できます
+	<ul>
+	  <li>ウィングボウ</li>
+	  <li>ショートボウ</li>
+	  <li>エルブンショートボウ</li>
+	  <li>ハイランダーロングボウ</li>
+	</ul>
+      </div>
     </div>
     <div id="tabs-2">
       <div>
@@ -24,14 +41,76 @@
 	最小攻撃力<input type="text">
 	最大攻撃力<input type="text">
       </div>
+      <div class="notice">
+	現在装備補正は設定できません
+      </div>
     </div>
     <div id="tabs-3">
-      おすすめ改造式
-      <a href="">wiki</a>
+      <table class="sequence selectable">
+	<tr>
+	  <th class="ug">回数</th>
+	  <th class="name">改造</th>
+	  <th class="proficiency">熟練</th>
+	  <th class="effects">内容</th>
+	  <th class="cost">金額</th>
+	</tr>
+	<tbody>
+	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+	</tbody>
+      </table>
+
+      <button>全改造表示</button>
+      <table class="upgrades selectable">
+	<thead>
+	  <tr>
+	    <th class="ug">UG数</th>
+	    <th class="name">改造</th>
+	    <th class="proficiency">熟練</th>
+	    <th class="effects">内容</th>
+	    <th class="cost">金額</th>
+	  </tr>
+	</thead>
+	<tbody>
+	</tbody>
+      </table>
+      <div class="notice">
+	<p>
+	改造内容はそのうち日本語表示になります。
+	</p>
+	<p>
+	  おすすめ改造式・・どうしようかな・・
+	</p>
+      </div>
+    </div>
+    <div id="tabs-4">
+      <h3>Prefix(接頭)</h3>
+      <div class="prefix">
+	{% include "enchant.html" %}
+      </div>
+      <h3>Suffix(接尾)</h3>
+      <div class="suffix">
+	{% include "enchant.html" %}
+      </div>
+
+      <div class="notice">
+	<p>
+	  本来貼れないものも含め、すべてのエンチャントが表示されています。
+	  このサイトは検索機能などは提供せず、
+	  http://fruitmilk.xii.jp/enchant/search.cgi などに誘導する予定です。
+	</p>
+      </div>
     </div>
   </div>
 
   <div class="spec">
+    <div class="notice">
+      この部分はマビで装備にカーソルを当てた時の表示を真似たい。
+      画像の表示と、エンチャント効果の表示。
+    </div>
     <ul>
       <li>とても遅いスピード 2打の武器</li>
       <li>攻撃 2~5</li>
@@ -41,4 +120,5 @@
       <li>耐久力 10/10</li>
     </ul>
   </div>
+  <a href="">wiki</a>
 </div>

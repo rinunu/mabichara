@@ -43,7 +43,7 @@ mabi.Store.prototype.add = function(element){
  */
 mabi.Store.prototype.load = function(){
     if(this.listLoaded_){
-	return new util.TimerCommand();
+	return (new util.TimerCommand).execute();
     }
 
     var this_ =  this;
@@ -69,6 +69,12 @@ mabi.Store.prototype.load = function(){
  */
 mabi.Store.prototype.loadDetail = function(id){
     id = id.id ? id.id() : id;
+
+    var e = this.find(id);
+    if(e && e.loaded()){
+	console.log('loadDetail キャッシュを使用します');
+	return (new util.TimerCommand).execute();
+    };
 
     var this_ = this;
     var cmd = mabi.ajax.load(
@@ -107,11 +113,11 @@ mabi.Store.prototype.updateElement = function(element, dto){
  * 作成 or 更新したものを返す
  */
 mabi.Store.prototype.create_or_update = function(dto){
-    var e = this.find(dto.id)
+    var e = this.find(dto.id);
     if(e){
 	this.updateElement(e, dto);
     }else{
-	e = this.createElement(dto)
+	e = this.createElement(dto);
 	this.add(e);
     }
     return e;
@@ -128,6 +134,6 @@ mabi.Store.prototype.find = function(id){
 		   return false;
 	       }
 	       return true;
-	   })
+	   });
     return result;
 };

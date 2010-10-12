@@ -26,7 +26,7 @@ mabi.EquipmentStore.prototype.updateElement = function(e, dto){
 
     var upgrades = [];
     $.each(dto.upgrades, function(i, v){
-	       upgrades.push(new mabi.UpgradeClass(v))
+	       upgrades.push(new mabi.UpgradeClass(v));
 	   });
 
     e.set({upgrades: upgrades});

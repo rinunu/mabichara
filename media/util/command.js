@@ -39,6 +39,7 @@ util.Command.prototype.execute = function(){
     console.log('command start: ' + this.id());
     this.manager_.onExecute(this);
     this.onExecute();
+    return this;
 };
 
 /**
@@ -211,8 +212,9 @@ util.TimerCommand = function(execute, time, options){
     this.super_.constructor.call(this, options);
     this.execute_ = execute;
     this.time_ = time || 1;
-    this.onExecute = execute;
 };
+
+util.extend(util.TimerCommand, util.Command);
 
 util.TimerCommand.prototype.onExecute = function(){
     var this_ = this;
@@ -225,4 +227,4 @@ util.TimerCommand.prototype.onExecute = function(){
 	       }, this.time_);
 };
 
-util.extend(util.TimerCommand, util.Command);
+

@@ -49,3 +49,16 @@ mabi.Effect.prototype.clone = function(){
 	    max: this.max_
 	});
 };
+
+
+mabi.Effect.prototype.paramText = function(){
+    return this.param_;
+};
+
+/**
+ * TODO 効果がプラス効果かどうか調べる
+ */
+mabi.Effect.prototype.plus = function(){
+    return true;
+};
+
