@@ -102,6 +102,8 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
 		   });
     if(proficiency >= 1){
 	name += '(' + proficiency + '式)';
+    }else{
+	name += '(未改造)';
     }
     this.setName(name);
 };
