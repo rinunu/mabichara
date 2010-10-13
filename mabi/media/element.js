@@ -46,6 +46,22 @@ mabi.Element.prototype.parent = function(){
 };
 
 /**
+ * Element が別の Element の子供である場合に、その slot を取得する。
+ * @param child 指定した場合、その child の slot を取得する
+ */
+mabi.Element.prototype.slot = function(child){
+    if(child){
+	var i = this.indexOf(child);
+	console.assert(i != -1);
+	var node = this.children_[i];
+	return node.slot;
+    }{
+	console.assert(this.parent_);
+	return this.parent_.slot(this);
+    }
+};
+
+/**
  * 複数の親を持つことは出来ない
  */
 mabi.Element.prototype.setParent = function(parent){
@@ -78,6 +94,13 @@ mabi.Element.prototype.eachChild = function(fn){
     $.each(this.children_, function(i, v){
 	return fn(v.element, v.slot);
     });
+};
+
+/**
+ * この Element のもつ子供の数を返す
+ */
+mabi.Element.prototype.childrenLength = function(){
+    return this.children_.length;
 };
 
 /**
