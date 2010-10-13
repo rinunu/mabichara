@@ -25,9 +25,16 @@ mabi.EquipmentView = function(){
 
     // 性能表
     this.specView_ = new mabi.ElementsView($('table.equipment', this.$element_));
+    this.specView_.addColumn({id: 'type', label: '種別', value: 
+			      function(c){
+				  return c.element().slot();}});
     this.specView_.addColumn(mabi.ElementsView.COLUMNS.name);
     this.specView_.addColumn(mabi.ElementsView.COLUMNS.attack_max_ranged);
     this.specView_.addColumn(mabi.ElementsView.COLUMNS.critical_luck_will);
+    this.specView_.addElementType(mabi.ReferenceElement); // EquipmentClass
+    this.specView_.addElementType(mabi.Upgrade);
+    this.specView_.addElementType(mabi.Enchant);
+
     this.upgradeView_ = new mabi.UpgradeView($('table.upgrades', this.$element_));
 };
 

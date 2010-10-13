@@ -29,6 +29,10 @@ mabi.InventoryView = function(model){
     this.elementsView_.addColumn(mabi.ElementsView.COLUMNS.critical_luck_will);
     // this.elementsView_.addColumn(mabi.ElementsView.COLUMNS.critical_attack_max_ranged);
 
+    this.elementsView_.addElementType(mabi.Equipment);
+    this.elementsView_.addElementType(mabi.EquipmentSet);
+    this.elementsView_.addElementType(mabi.Title);
+
     this.elementsView_.setModel(model);
 };
 

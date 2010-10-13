@@ -25,6 +25,8 @@ mabi.ElementsView = function($table, options){
 
     this.columns_ = [];
 
+    this.elementTypes_ = [];
+
     $table.delegate('.editable', 'click', util.bind(this, this.onClick));
 };
 
@@ -35,22 +37,6 @@ mabi.ElementsView.prototype.setModel = function(model){
 
     this.createTable();
     this.refreshValues();
-};
-
-/**
- * 表示する列を追加する
- * 
- * @param options {
- * id: 
- * label: 
- * render: カラムのセルの描画を行う function(optional).
- * value: Element から表示する値を取得する function.
- *   function(contextualElement)
- * colspan: 
- * }
- */
-mabi.ElementsView.prototype.addColumn = function(options){
-    this.columns_.push(options);
 };
 
 mabi.ElementsView.prototype.showColumn = function(options){
@@ -98,7 +84,7 @@ mabi.ElementsView.prototype.createTable = function(){
     var this_ = this;
     this.model_.eachChild(
 	function(element, slotId){
-	    this_.addElement(element, 0);
+	    this_.addElement(element, true);
 	});
 };
 
@@ -106,7 +92,15 @@ mabi.ElementsView.prototype.createTable = function(){
  * 要素を展開して表示すべきか調べる
  */
 mabi.ElementsView.prototype.shouldExpand = function(element){
-    return element instanceof mabi.Equipment;
+    var result = true;
+    $.each(this.elementTypes_, function(i, v){
+	       if(element instanceof v.type){
+		   result = false;
+		   return false;
+	       }
+	       return true;
+	   });
+    return result;
 };
 
 /**
@@ -114,26 +108,45 @@ mabi.ElementsView.prototype.shouldExpand = function(element){
  * 
  * @param 追加するカラムの最初のインデックス
  */
-mabi.ElementsView.prototype.addElement = function(element, columnIndex){
+mabi.ElementsView.prototype.addElement = function(element, first){
     var this_ = this;
+
+    this.addRow(element, first);
+    if(this.shouldExpand(element)){
+	element.eachChild(
+    	    function(element, slotId){
+    		this_.addElement(element, false);
+    	    });
+    }
+};
+
+/**
+ * 1行追加する
+ * 
+ * @param Element を構成する行のうち、最初の行を追加する際に true とする。
+ */
+mabi.ElementsView.prototype.addRow = function(element, first){
     var $tbody = $('tbody', this.$table_);
     var $tr = $('<tr/>').appendTo($tbody);
-    $tr.data(element);
-
-    for(var i = columnIndex; i < this.columns_.length; i++){
+    $tr.data('element', element);
+    for(var i = 0; i < this.columns_.length; i++){
 	var column = this.columns_[i];
-	var $td = $('<td/>');
-	$td.attr('id', this.cellId(element, column));
-	$td.text('-');
-	$td.appendTo($tr);
-	if(column.colspan && this.shouldExpand(element)){
-	    // これ以降の Column は child element の情報を表示する
-	    $td.attr('rowspan', 4); // todo
-	    element.eachChild(
-    		function(element, slotId){
-    		    this_.addElement(element, i + 1);
-    		});
-	    break;
+	var $td = null;
+	if(column.colspan){
+	    if(first){
+		$td = $('<td/>');
+		$td.attr('rowspan', element.childrenLength() + 1);
+	    }
+	}else{
+	    if(!this.shouldExpand(element)){ // 展開可能要素は値を表示しない
+		$td = $('<td/>');
+	    }
+	}
+
+	if($td){
+	    $td.attr('id', this.cellId(element, column));
+	    $td.text('-');
+	    $td.appendTo($tr);
 	}
     }
 };
@@ -152,49 +165,57 @@ mabi.ElementsView.prototype.removeElement = function(element){
 mabi.ElementsView.prototype.refreshValues = function(){
     var this_ = this;
     this.model_.eachChild(
-	function(element, slotId){
-	    this_.refreshElement(element, 0, slotId);
-	});
+    	function(element){
+    	    this_.refreshElement(element);
+    	});
 };
 
 /**
- * 1 Element 分の表示を更新する
+ * Element 1つ分の表示を更新する
  */
-mabi.ElementsView.prototype.refreshElement = function(element, columnIndex, slotId){
+mabi.ElementsView.prototype.refreshElement = function(element){
     console.assert(element instanceof mabi.Element);
-    console.assert(typeof columnIndex == 'number');
     var this_ = this;
 
-    for(var i = columnIndex; i < this.columns_.length; i++){
-	var column = this.columns_[i];
-	this.refreshCell(element, column, slotId);
+    this.refreshRow(element);
+    if(this.shouldExpand(element)){
+	element.eachChild(
+    	    function(element, slotId){
+    		this_.refreshElement(element);
+    	    });
+    }
+};
 
-	if(column.colspan && this.shouldExpand(element)){
-	    // これ以降 child element で処理をすすめる
-	    element.eachChild(
-    		function(element, slotId){
-    		    this_.refreshElement(element, i + 1, slotId);
-    		});
-	    break;
-	}
+mabi.ElementsView.prototype.refreshRow = function(element){
+    console.assert(element instanceof mabi.Element);
+    for(var i = 0; i < this.columns_.length; i++){
+	var column = this.columns_[i];
+	this.refreshCell(element, column);
     }
 };
 
 /**
  * セルの値を更新する
  * 
- * セルに紐づいている Element が変更になった or 値が変わった際に使用する
+ * セルに紐づいている Element の内容が変わった際に使用する
  */
-mabi.ElementsView.prototype.refreshCell = function(element, column, slotId){
+mabi.ElementsView.prototype.refreshCell = function(element, column){
     console.assert(element instanceof mabi.Element);
     console.assert(column);
-    var c = new mabi.ContextualElement(element, null, this.model_);
 
     var $td = this.td(element, column);
+    if($td.length == 0){
+	// その値を表示するセルがない場合もあるため
+	// 例えば エンチャントの slot を表示するセルはない場合もある
+	return;
+    }
+
+    var c = new mabi.ContextualElement(element, null, this.model_);
+
     if(column.render){
 	column.render($td, c);
     }else{
-	var value = column.value(c, slotId);
+	var value = column.value(c);
 	if(value === null){
 	    value = '-';
 	}
@@ -203,7 +224,6 @@ mabi.ElementsView.prototype.refreshCell = function(element, column, slotId){
     if(column.class_){
 	$td.addClass(column.class_);
     }
-    $td.data('element', element);
 };
 
 /**
@@ -222,10 +242,11 @@ mabi.ElementsView.prototype.rowClass = function(element){
 
 /**
  * 特定のセル(td)を取得する
+ * 
+ * 存在しない場合は空を返す
  */
 mabi.ElementsView.prototype.td = function(element, column){
     var $td = $('#' + this.cellId(element, column));
-    console.assert($td);
     return $td;
 };
 
@@ -240,7 +261,7 @@ mabi.ElementsView.prototype.type = function(element){
  * DOM 要素に紐づいた Element を取得する
  */
 mabi.ElementsView.prototype.element = function(child){
-    var $dom = $(child).closest('td');
+    var $dom = $(child).closest('tr');
     if($dom.length == 0){
         return null;
     }
@@ -250,13 +271,39 @@ mabi.ElementsView.prototype.element = function(child){
 // ----------------------------------------------------------------------
 // 設定
 
+/**
+ * 表示する列を追加する
+ * 
+ * @param options {
+ * id: 
+ * label: 
+ * render: カラムのセルの描画を行う function(optional).
+ * value: Element から表示する値を取得する function.
+ *   function(contextualElement)
+ * colspan: 
+ * }
+ */
+mabi.ElementsView.prototype.addColumn = function(options){
+    this.columns_.push(options);
+};
+
+/**
+ * Element のタイプごとの設定を追加する
+ * 
+ * @param type: Element のサブクラスのいずれか
+ * @param options {
+ * }
+ * 現在追加の設定は持たない。
+ * ただし、この設定が行われた Element のみ、画面に表示する。
+ */
+mabi.ElementsView.prototype.addElementType = function(type, options){
+    options = options || {};
+    options.type = type;
+    this.elementTypes_.push(options);
+};
+
 (function(){
      var i;
-
-     // Element のタイプに情報を付加する
-     mabi.Equipment.elementsView = {
-	 shouldExpand: true
-     };
 
      var SLOTS = {
 	 title: {label: 'タイトル'},
@@ -304,8 +351,9 @@ mabi.ElementsView.prototype.element = function(child){
 	 slot:{
 	     label: '部位',
 	     colspan: true,
-	     value: function(c, slotId){
-		 return SLOTS[slotId].label;
+	     value: function(c){
+		 var slot = c.element().slot();
+		 return SLOTS[slot].label;
 	     }
 	 },
 	 name:{

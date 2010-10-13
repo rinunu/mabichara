@@ -15,6 +15,10 @@ mabi.EquipmentSetView = function($view){
     this.elementsView_.addColumn(mabi.ElementsView.COLUMNS.name);
     this.elementsView_.addColumn(mabi.ElementsView.COLUMNS.attack_max_ranged);
     this.elementsView_.addColumn(mabi.ElementsView.COLUMNS.critical_luck_will);
+
+    this.elementsView_.addElementType(mabi.Enchant);
+    this.elementsView_.addElementType(mabi.NoEnchantedEquipment);
+    this.elementsView_.addElementType(mabi.Title);
 };
 
 mabi.EquipmentSetView.prototype.setModel = function(model){
