@@ -2,6 +2,9 @@
 mabi.EnchantView = function($element, type){
     this.$element_ = $element;
     this.type_ = type;
+
+    ('select', this.$element_).change(
+	util.bind(this, this.onSelect));
 };
 
 mabi.EnchantView.prototype.initialize = function(){
@@ -9,11 +12,23 @@ mabi.EnchantView.prototype.initialize = function(){
 };
 
 /**
- * todo prefix? suffix?
  */
-mabi.EnchantView.prototype.edit = function(){
+mabi.EnchantView.prototype.edit = function(equipment){
+    this.equipment_ = equipment;
     mabi.enchants.load().success(
 	util.bind(this, this.onListLoad));
+};
+
+// ----------------------------------------------------------------------
+// event
+
+/**
+ * Enchant の変更時
+ */
+mabi.EnchantView.prototype.onSelect = function(event){
+    var id = $(event.target).val();
+    var enchant = mabi.enchants.find(id).create();
+    this.equipment_.enchant(enchant);
 };
 
 mabi.EnchantView.prototype.onListLoad = function(){

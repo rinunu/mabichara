@@ -15,7 +15,9 @@ mabi.Element = function(options){
 
     this.effects_ = [];
 
-    this.name_ = options.name;
+    this.name_ = options.name || '';
+
+    this.parent_ = null;
 
     var effects = options.effects || [];
     for(var i = 0; i < effects.length; i++){
@@ -24,7 +26,8 @@ mabi.Element = function(options){
 };
 
 // ----------------------------------------------------------------------
-// property
+// 基本 property
+// 本オブジェクトの挙動を変更する場合、これらの property を override すること。
 
 mabi.Element.prototype.id = function(){
     return this.id_;
@@ -38,6 +41,45 @@ mabi.Element.prototype.setName = function(name){
     this.name_ = name;
 };
 
+mabi.Element.prototype.parent = function(){
+    return this.parent_;
+};
+
+/**
+ * 複数の親を持つことは出来ない
+ */
+mabi.Element.prototype.setParent = function(parent){
+    console.assert(!this.parent_);
+    this.parent_ = parent;
+};
+
+/**
+ * 指定した slot or index の子要素を取得する
+ * 
+ * 存在しない場合は null を返す。
+ */
+mabi.Element.prototype.child = function(slotOrIndex){
+    var i;
+    if(typeof slotOrIndex == 'number'){
+	i = slotOrIndex;
+    }else{
+	i = this.indexOf(slotOrIndex);
+    }
+    if(i == -1){
+	return null;
+    }
+    return this.children_[i].element;
+};
+
+/**
+ * この Element のもつ子供を列挙する
+ */
+mabi.Element.prototype.eachChild = function(fn){
+    $.each(this.children_, function(i, v){
+	return fn(v.element, v.slot);
+    });
+};
+
 /**
  * 子供を追加する
  * 
@@ -46,10 +88,27 @@ mabi.Element.prototype.setName = function(name){
  * @param slot 追加位置。 省略可能。
  */
 mabi.Element.prototype.addChild = function(child, slot){
-    // TODO 上書き処理
-    this.children_.push({slot: slot, element: child});
+    if(slot){
+	var old = this.child(slot);
+	if(old){
+	    this.removeChild(old);
+	}
+    }
 
+    this.children_.push({slot: slot, element: child});
+    child.setParent(this);
     util.Event.trigger(this, 'addChild', [{element: child, slot: slot}]);
+};
+
+/**
+ * 子供を削除する
+ */
+mabi.Element.prototype.removeChild = function(child){
+    var i = this.indexOf(child);
+    console.assert(i != -1);
+    var node = this.children_[i];
+    this.children_.splice(i, 1);
+    util.Event.trigger(this, 'removeChild', [{element: node.element, slot: node.slot}]);
 };
 
 /**
@@ -73,37 +132,11 @@ mabi.Element.prototype.eachEffect = function(fn){
     }
 };
 
-/**
- * 指定した slot or index の子要素を取得する
- * 
- * 存在しない場合は null を返す。
- */
-mabi.Element.prototype.child = function(slotOrIndex){
-    var i;
-    if(typeof slotOrIndex == 'number'){
-	i = slotOrIndex;
-    }else{
-	i = this.indexOf(slotOrIndex);
-    }
-    if(i == -1){
-	return null;
-    }
-    return this.children_[i].element;
-};
+// mabi.Element.prototype.children = function(){
+//     return this.children_;
+// };
 
-mabi.Element.prototype.children = function(){
-    return this.children_;
-};
-
-/**
- * この Element のもつ子供を列挙する
- */
-mabi.Element.prototype.eachChild = function(fn){
-    for(var i = 0; i < this.children_.length; i++){
-	var c = this.children_[i];
-	fn(c.element, c.slot);
-    }
-};
+// ----------------------------------------------------------------------
 
 /**
  * 指定したパラメータの値を取得する
@@ -148,14 +181,25 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 mabi.Element.nextId_ = -1;
 
 /**
+ * 指定した slot or child のインデックスを取得する
  */
-mabi.Element.prototype.indexOf = function(slot){
-    for(var i = 0; i < this.children_.length; i++){
-	var child = this.children_[i];
-	if(child.slot == slot){
-	    return i;
-	}
+mabi.Element.prototype.indexOf = function(slot_or_child){
+    if(slot_or_child instanceof mabi.Element){
+	var condChild = slot_or_child;
+    }else{
+	var condSlot = slot_or_child;
     }
-    return -1;
+
+    var result = -1;
+    var i = 0;
+    this.eachChild(function(child, slot){
+		       if(slot == condSlot || child == condChild){
+			   result = i;
+			   return false;
+		       }
+		       i++;
+		       return true;
+		   });
+    return result;
 };
 

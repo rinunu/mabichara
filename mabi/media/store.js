@@ -31,6 +31,23 @@ mabi.Store.prototype.each = function(fn){
 };
 
 /**
+ * ローカルに存在するなら取得する
+ */
+mabi.Store.prototype.find = function(id){
+    id = id.id ? id.id() : id;
+
+    var result = null;
+    $.each(this.elements_, function(i, element){
+	       if(element.id() == id){
+		   result = element;
+		   return false;
+	       }
+	       return true;
+	   });
+    return result;
+};
+
+/**
  * 
  */
 mabi.Store.prototype.add = function(element){
@@ -123,17 +140,3 @@ mabi.Store.prototype.create_or_update = function(dto){
     return e;
 };
     
-/**
- * ローカルに存在するなら取得する
- */
-mabi.Store.prototype.find = function(id){
-    var result = null;
-    $.each(this.elements_, function(i, element){
-	       if(element.id() == id){
-		   result = element;
-		   return false;
-	       }
-	       return true;
-	   });
-    return result;
-};

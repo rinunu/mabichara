@@ -22,6 +22,13 @@ mabi.EquipmentView = function(){
 	    var equipmentClass = mabi.equipments.find(id);
 	    this_.onChangeEquipment(equipmentClass);
 	});
+
+    // 性能表
+    this.specView_ = new mabi.ElementsView($('table.equipment', this.$element_));
+    this.specView_.addColumn(mabi.ElementsView.COLUMNS.name);
+    this.specView_.addColumn(mabi.ElementsView.COLUMNS.attack_max_ranged);
+    this.specView_.addColumn(mabi.ElementsView.COLUMNS.critical_luck_will);
+    this.upgradeView_ = new mabi.UpgradeView($('table.upgrades', this.$element_));
 };
 
 mabi.EquipmentView.prototype.initialize = function(){
@@ -32,6 +39,7 @@ mabi.EquipmentView.prototype.initialize = function(){
 
     this.prefixView_.initialize();
     this.suffixView_.initialize();
+    this.upgradeView_.initialize();
 };
 
 mabi.EquipmentView.prototype.edit = function(element){
@@ -39,13 +47,13 @@ mabi.EquipmentView.prototype.edit = function(element){
 
     // todo clone する
     // this.element_ = element;
-    console.log(element);
-    this.onChangeEquipment(element ? element.base() : element);
+    this.equipment_ = new mabi.Equipment();
+    // this.onChangeEquipment(element);
     
     mabi.equipments.load().
 	success(util.bind(this, this.onLoadList));
-    this.prefixView_.edit();
-    this.suffixView_.edit();
+    this.prefixView_.edit(this.equipment_);
+    this.suffixView_.edit(this.equipment_);
 };
 
 // ----------------------------------------------------------------------
@@ -56,13 +64,9 @@ mabi.EquipmentView.prototype.edit = function(element){
  */
 mabi.EquipmentView.prototype.onChangeEquipment = function(equipmentBase){
     if(equipmentBase){
-	this.equipment_ = equipmentBase.create();
-	util.Event.bind(this.equipment_, this, {addChild: util.bind(this, this.onUpdateElement)});
-	this.onUpdateElement();
-
-	// todo 読み込み中にする
-	var cmd = mabi.equipments.loadDetail(equipmentBase);
-	cmd.success(util.bind(this, this.updateUpgrades));
+	this.equipment_.setBase(equipmentBase);
+	this.upgradeView_.edit(this.equipment_);
+	this.specView_.setModel(this.equipment_);
     }
 };
 
@@ -91,35 +95,13 @@ mabi.EquipmentView.prototype.onLoadList = function(){
 // private
 
 /**
- * 改造表を更新する
+ * DOM 要素に紐づいた Element を取得する
  */
-mabi.EquipmentView.prototype.updateUpgrades = function(){
-    var $list = $('table.upgrades tbody', this.$element_);
-    $list.empty();
-    var this_ = this;
-    $.each(this.equipment_.base().upgrades(), function(i, upgrade){
-	       var $tr = $('<tr/>').appendTo($list);
-	       $('<td class="ug"/>').text(upgrade.ug().join('~')).appendTo($tr);
-	       $('<td class="name"/>').text(upgrade.name()).appendTo($tr);
-	       $('<td class="proficiency"/>').text(upgrade.proficiency()).appendTo($tr);
-	       this_.appendEffectHtml(upgrade, $('<td class="effects"/>').appendTo($tr));
-	       $('<td class="cost"/>').text(upgrade.cost()).appendTo($tr);
-	   });
+mabi.EquipmentView.prototype.element = function(child){
+    var $dom = $(child).closest('tr');
+    console.assert($dom.length != 0);
+    return $dom.data('element');
 };
 
-/**
- * Effect の内容を人間用の文字列に変換する
- */
-mabi.EquipmentView.prototype.appendEffectHtml = function(upgrade, $parent){
-    $parent = $('<ul/>').appendTo($parent);
-    upgrade.eachEffect(
-	function(e){
-	    $('<li/>').text(e.paramText() + e.op() + e.min()).
-		addClass(e.plus() ? 'plus' : 'minus').
-		appendTo($parent);
-	});
-};
 
-// ----------------------------------------------------------------------
-// 
 

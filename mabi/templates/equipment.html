@@ -46,24 +46,19 @@
       </div>
     </div>
     <div id="tabs-3">
-      <table class="sequence selectable">
-	<tr>
-	  <th class="ug">回数</th>
-	  <th class="name">改造</th>
-	  <th class="proficiency">熟練</th>
-	  <th class="effects">内容</th>
-	  <th class="cost">金額</th>
-	</tr>
-	<tbody>
-	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
-	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
-	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
-	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
-	  <tr><td>1</td><td></td><td></td><td></td><td></td></tr>
-	</tbody>
-      </table>
-
-      <button>全改造表示</button>
+      <div class="notice">
+	<p>
+	  改造を行なう画面です。
+	</p>
+	<p>
+	  改造内容はそのうち日本語表示になります。
+	</p>
+	<p>
+	  使用できる改造以外はグレーアウトします。
+	  おすすめ改造式・・どうしようかな・・
+	  Wiki の表形式は比較しやすいので、あれを表示しようかな
+	</p>
+      </div>
       <table class="upgrades selectable">
 	<thead>
 	  <tr>
@@ -77,14 +72,6 @@
 	<tbody>
 	</tbody>
       </table>
-      <div class="notice">
-	<p>
-	改造内容はそのうち日本語表示になります。
-	</p>
-	<p>
-	  おすすめ改造式・・どうしようかな・・
-	</p>
-      </div>
     </div>
     <div id="tabs-4">
       <h3>Prefix(接頭)</h3>
@@ -108,17 +95,33 @@
 
   <div class="spec">
     <div class="notice">
-      この部分はマビで装備にカーソルを当てた時の表示を真似たい。
-      画像の表示と、エンチャント効果の表示。
+      装備画像の表示したい。
     </div>
     <ul>
       <li>とても遅いスピード 2打の武器</li>
-      <li>攻撃 2~5</li>
-      <li>負傷率 0~0%</li>
-      <li>クリティカル 5%</li>
-      <li>バランス 40%</li>
-      <li>耐久力 10/10</li>
     </ul>
+    <div class="notice">
+      作成した装備の効果を性能を表示します。
+    </div>
+    <table class="equipment">
+      <thead>
+	<tr>
+	  <th>名前</th>
+	  <th>最大</th>
+	  <th>クリ</th>
+	</tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+	<tr>
+	  <td>合計</td>
+	  <td></td>
+	  <td></td>
+	</tr>
+      </tfoot>
+    </table>
+
   </div>
   <a href="">wiki</a>
 </div>

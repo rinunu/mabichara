@@ -51,12 +51,32 @@ mabi.EquipmentClass.prototype.set = function(options){
 
 mabi.NoEnchantedEquipment = function(base){
     mabi.Element.call(this);
-    this.addChild(base, 'equipment');
-    this.updateName();
+    if(base){
+	this.setBase(base);
+    }
 };
 
 util.extend(mabi.NoEnchantedEquipment, mabi.Element);
 
+/**
+ * EquipmentClass を取得する
+ */
+mabi.NoEnchantedEquipment.prototype.base = function(base){
+    return this.child('equipment').base();
+};
+
+mabi.NoEnchantedEquipment.prototype.setBase = function(base){
+    var baseElement = new mabi.ReferenceElement(base);
+    this.addChild(baseElement, 'equipment');
+    this.updateName();
+};
+
+/**
+ * N 回目の Upgrade を設定する
+ * 
+ * @param upgrade Upgrade か UpgradeClass でなければならない。
+ * null を指定した場合は、その回数の改造を取り消す
+ */
 mabi.NoEnchantedEquipment.prototype.setUpgrade = function(i, upgrade){
     if(upgrade instanceof mabi.Upgrade){
     }else if(upgrade instanceof mabi.UpgradeClass){
@@ -76,7 +96,7 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
     var proficiency = 0;
     this.eachChild(function(c, slot){
 		       if(slot.indexOf('upgrade') == 0){
-			   proficiency += c.proficiency()
+			   proficiency += c.proficiency();
 		       }
 		   });
     if(proficiency >= 1){
@@ -91,20 +111,15 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
 mabi.Equipment = function(base){
     mabi.Element.call(this);
 
+    var noEnchant = new mabi.NoEnchantedEquipment;
+    this.addChild(noEnchant, 'equipment');
+
     if(base){
-	console.assert(base instanceof mabi.EquipmentClass);
-	this.addChild(new mabi.NoEnchantedEquipment(base), 'equipment');
+	this.setBase(base);
     }
 };
 
 util.extend(mabi.Equipment, mabi.Element);
-
-/**
- * EquipmentClass を取得する
- */
-mabi.Equipment.prototype.base = function(){
-    return this.child('equipment').child('equipment');
-};
 
 /**
  * エンチャントを追加する
@@ -114,13 +129,13 @@ mabi.Equipment.prototype.enchant = function(enchant){
     this.addChild(enchant, enchant.type());
 };
 
-/**
- * N 回目の Upgrade を設定する
- * 
- * @param upgrade Upgrade か UpgradeClass でなければならない。
- * null を指定した場合は、その回数の改造を取り消す
- */
-mabi.Equipment.prototype.setUpgrade = function(i, upgrade){
-    console.assert(this.child('equipment'));
-    this.child('equipment').setUpgrade(i, upgrade);
-};
+// 委譲メソッドを作成する
+(function(){
+     $.each(['base', 'setBase', 'setUpgrade'],
+	    function(i, name){
+		mabi.Equipment.prototype[name] = function(){
+		    var a = this.child('equipment');
+		    return a[name].apply(a, arguments);
+		};
+	    });
+})();

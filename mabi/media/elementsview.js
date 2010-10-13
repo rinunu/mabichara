@@ -4,13 +4,17 @@
  * 
  * 
  * 機能
- * - ソート(部位、)
- * - Element の編集
- * - 折りたたみ表示(render の切り替え？)
+ * - todo ソート(部位、)
+ * - Element 選択時に通知する
+ * - todo 折りたたみ表示(render の切り替え？)
  * 
  * @param model: 表示する Element を子供にもつ Element.
- * この model の1つの子どもが1行として表示される。
+ * 基本的に、この model の1つの子どもが1行として表示される。
  * 
+ * 
+ * table の構造
+ * - tr = todo {data: 表示している Element}
+ *   - td: {id: 表示している Element の id を元に決定, data: 表示している Element}
  */
 mabi.ElementsView = function($table, options){
     options = options || {};
@@ -79,6 +83,7 @@ mabi.ElementsView.prototype.onAddElements = function(s, e, elements){
 };
 
 mabi.ElementsView.prototype.onRemoveElements = function(s, e, elements){
+    this.removeElement(elements[0].element);
 };
 
 mabi.ElementsView.prototype.onRefreshElements = function(s, e, elements){
@@ -121,7 +126,33 @@ mabi.ElementsView.prototype.addElement = function(element, columnIndex){
 	$td.text('-');
 	$td.appendTo($tr);
 	if(column.colspan && this.shouldExpand(element)){
-	    // これ以降 child element で処理をすすめる
+	    // これ以降の Column は child element の情報を表示する
+	    $td.attr('rowspan', 4); // todo
+	    element.eachChild(
+    		function(element, slotId){
+    		    this_.addElement(element, i + 1);
+    		});
+	    break;
+	}
+    }
+};
+
+/**
+ * 1 Element 分の行を削除する
+ */
+mabi.ElementsView.prototype.removeElement = function(element){
+    var this_ = this;
+    var $tbody = $('tbody', this.$table_);
+    var $tr = $('<tr/>').appendTo($tbody);
+
+    for(var i = columnIndex; i < this.columns_.length; i++){
+	var column = this.columns_[i];
+	var $td = $('<td/>');
+	$td.attr('id', this.cellId(element, column));
+	$td.text('-');
+	$td.appendTo($tr);
+	if(column.colspan && this.shouldExpand(element)){
+	    // これ以降の Column は child element の情報を表示する
 	    $td.attr('rowspan', 4); // todo
 	    element.eachChild(
     		function(element, slotId){
