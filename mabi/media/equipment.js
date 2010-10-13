@@ -74,6 +74,7 @@ mabi.NoEnchantedEquipment.prototype.setBase = function(base){
 /**
  * N 回目の Upgrade を設定する
  * 
+ * @param i 回数。 0〜N
  * @param upgrade Upgrade か UpgradeClass でなければならない。
  * null を指定した場合は、その回数の改造を取り消す
  */

@@ -6,8 +6,10 @@
 mabi.UpgradeView = function($element){
     this.$element_ = $element;
 
-    this.$element_.delegate('tbody.selectable', 'click', 
+    this.$element_.delegate('tbody tr', 'click', 
 			    util.bind(this, this.onSelectUpgrade));
+
+    this.ug_ = 0;
 };
 
 mabi.UpgradeView.prototype.initialize = function(){
@@ -23,7 +25,6 @@ mabi.UpgradeView.prototype.edit = function(equipment){
     cmd.success(util.bind(this, this.updateUpgrades));
 };
 
-
 // ----------------------------------------------------------------------
 // event
 
@@ -31,12 +32,18 @@ mabi.UpgradeView.prototype.edit = function(equipment){
  * 改造選択時
  */
 mabi.UpgradeView.prototype.onSelectUpgrade = function(event){
-    // 改造を作成する
-    var upgrade = this.element($(event.target)).create();
-    console.log(upgrade);
+    var base = this.element($(event.target));
 
-    // 改造を追加する
-    // アクティブな改造を次へ進める
+    var upgrade = base.create();
+
+    if(true){
+	// 改造を追加する
+	this.equipment_.setUpgrade(this.ug_, upgrade);
+	this.ug_++;
+	// アクティブな改造を次へ進める
+    }else{
+	// todo 追加できない場合
+    }
 };
 
 // ----------------------------------------------------------------------
@@ -71,4 +78,12 @@ mabi.UpgradeView.prototype.appendEffectHtml = function(upgrade, $parent){
 		addClass(e.plus() ? 'plus' : 'minus').
 		appendTo($parent);
 	});
+};
+
+/**
+ * DOM 要素に紐づいた Element を取得する
+ */
+mabi.UpgradeView.prototype.element = function(child){
+    var $dom = $(child).closest('tr');
+    return $dom.data('element');
 };

@@ -118,6 +118,7 @@ mabi.ElementsView.prototype.addElement = function(element, columnIndex){
     var this_ = this;
     var $tbody = $('tbody', this.$table_);
     var $tr = $('<tr/>').appendTo($tbody);
+    $tr.data(element);
 
     for(var i = columnIndex; i < this.columns_.length; i++){
 	var column = this.columns_[i];
@@ -143,24 +144,6 @@ mabi.ElementsView.prototype.addElement = function(element, columnIndex){
 mabi.ElementsView.prototype.removeElement = function(element){
     var this_ = this;
     var $tbody = $('tbody', this.$table_);
-    var $tr = $('<tr/>').appendTo($tbody);
-
-    for(var i = columnIndex; i < this.columns_.length; i++){
-	var column = this.columns_[i];
-	var $td = $('<td/>');
-	$td.attr('id', this.cellId(element, column));
-	$td.text('-');
-	$td.appendTo($tr);
-	if(column.colspan && this.shouldExpand(element)){
-	    // これ以降の Column は child element の情報を表示する
-	    $td.attr('rowspan', 4); // todo
-	    element.eachChild(
-    		function(element, slotId){
-    		    this_.addElement(element, i + 1);
-    		});
-	    break;
-	}
-    }
 };
 
 /**
@@ -228,6 +211,13 @@ mabi.ElementsView.prototype.refreshCell = function(element, column, slotId){
  */
 mabi.ElementsView.prototype.cellId = function(element, column){
     return '' + this.id_ + '_' + element.id() + '_' + column.id;
+};
+
+/**
+ * 指定した内容を表示する行の class を取得する
+ */
+mabi.ElementsView.prototype.rowClass = function(element){
+    return '' + this.id_ + '_' + element.id();
 };
 
 /**
