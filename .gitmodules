@@ -1,0 +1,3 @@
+[submodule "media/util"]
+	path = media/util
+	url = http://github.com/rinunu/jsutil.git
