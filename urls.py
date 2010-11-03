@@ -7,6 +7,9 @@ urlpatterns = patterns(
     (r'^$', 'django.views.generic.simple.direct_to_template',
      {'template': 'main.html'}),
 
+    (r'^spec$', 'django.views.generic.simple.direct_to_template',
+     {'template': 'SpecRunner.html'}),
+
     (r'^admin/', include('admin.urls')),
     (r'', include('mabi.urls')),
 )

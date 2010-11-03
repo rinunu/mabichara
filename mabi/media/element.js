@@ -162,6 +162,19 @@ mabi.Element.prototype.eachEffect = function(fn){
 // ----------------------------------------------------------------------
 
 /**
+ * 指定したパラメータの値を設定する
+ * 
+ * このメソッドは addEffect のラッパーである
+ */
+mabi.Element.prototype.setParam = function(param, value){
+    this.addEffect(new mabi.Effect(
+		       {
+			   param: param,
+			   min: value
+		       }));
+};
+
+/**
  * 指定したパラメータの値を取得する
  * 
  * 値は Character や EquipmentSet によって変化するため、それらも引数で指定する。

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load media %}
+
+{% block js %}
+  <link rel="stylesheet" type="text/css" href="/static/jasmine-1.0.1/jasmine.css">
+  <script type="text/javascript" src="/static/jasmine-1.0.1/jasmine.js"></script>
+  <script type="text/javascript" src="/static/jasmine-1.0.1/jasmine-html.js"></script>
+
+  {% include_media 'damagemain.js' %}
+  {% include_media 'spec.js' %}
+{% endblock %}
+
+
+{% block content %}
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+</script>
+{% endblock %}
+
