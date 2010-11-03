@@ -36,6 +36,10 @@ table{
   table-layout: fixed;
 }
 
+.delete{
+    text-decoration: line-through;
+}
+
 /* ---------------------------------------------------------------------- */
 /* table */
 
