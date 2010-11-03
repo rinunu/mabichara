@@ -30,3 +30,5 @@ handlers:
 - url: /.*
   script: djangoappengine/main/main.py
 
+builtins:
+- datastore_admin: on
