@@ -6,7 +6,7 @@ urlpatterns = patterns(
     '',
     (url(r'^simulator$', 'django.views.generic.simple.direct_to_template', {'template': 'simulator.html'}, name='simulator')),
 
-    
+    (url(r'^damage$', 'django.views.generic.simple.direct_to_template', {'template': 'damage.html'}, name='damage')),
 
     (url(r'^enchants$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants_ajax.html'}, name='enchants_ajax')),
     # (r'^enchants$', 'mabi.views.enchants'),

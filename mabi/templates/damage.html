@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load media %}
+
+{% block title %}マビノギ ダメージ計算{% endblock %}
+
+{% block js %}
+{% include_media 'damage_main.js' %}
+{% include_media 'damage.css' %}
+
+<script type="text/javascript">
+  $(function() {
+
+  mabi.initialize();
+
+  });
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<span class="menu ui-widget-header ui-corner-all">
+  <button id="aa">キャラクターの追加</button>
+  <button id="aaa">プリセットキャラクターの追加</button>
+  <button id="bb">表示設定</button>
+  <button id="help">ヘルプ</button>
+</span>
+
+<form class="ui-widget-content">
+  <div>
+    <label>名前
+      <input type="text"></input>
+    </label>
+  </div>
+
+  <div>
+    <label>Str
+      <input type="text" class="str"></input>
+    </label>
+    <label>Dex
+      <input type="text" class="dex"></input>
+    </label>
+    <label>Int
+      <input type="text" class="int"></input>
+    </label>
+  </div>
+
+  <label>タイトル
+    <select>
+      <option>その他</option>
+      <option>マジックマスター</option>
+      <option>ボルト魔法マスター</option>
+    </select>
+  </label>
+
+  <label>武器
+    <select>
+      <option>両手剣</option>
+      <option>二刀流</option>
+      <option>弓</option>
+      <option>ライトニングワンド</option>
+      <option>クリスタルライトニングワンド(111式)</option>
+    </select>
+  </label>
+  <label>ES最大補正
+    <input type="text" class=""></input>
+  </label>
+
+  <div>
+    <input type="checkbox" id="icebolt" /><label for="icebolt">アイスボルト強化</label>
+    <input type="checkbox" id="firebolt" /><label for="firebolt">ファイアボルト強化</label>
+  </div>
+  <div class="notice">
+    スキルはランク1として計算します
+  </div>
+  <div>
+    <button>表に追加</button>
+  </div>
+
+</form>
+
+
+<table class="damage ui-widget-content">
+</table>
+
+<div class="notice">
+  TODO ここにグラフを表示します
+</div>
+
+<div>
+  参考サイト
+  <ul>
+    <li><a href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4"></a></li>
+    <li><a href="http://aumiya.jugem.jp/?eid=173"></a></li>
+  </ul>
+</div> 
+
+
+
+{% endblock %}
+
