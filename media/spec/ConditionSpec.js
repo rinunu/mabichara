@@ -4,7 +4,7 @@ describe("Condition", function() {
 
 	     beforeEach(function() {
 			    character = new mabi.Character();
-			    condition = new mabi.Condition(character);
+			    condition = new mabi.Condition({character: character});
 			});
 
 	     it('Character に設定したパラメータを取得できる', function() {

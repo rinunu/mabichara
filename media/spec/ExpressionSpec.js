@@ -6,7 +6,7 @@ describe("Expression", function() {
 
 	     beforeEach(function() {
 			    character = new mabi.Character();
-			    condition = new mabi.Condition(character);
+			    condition = new mabi.Condition({character: character});
 			});
 
 	     it('計算を実行できる', function() {
