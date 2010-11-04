@@ -54,9 +54,10 @@ mabi.DamageTable.prototype.appendHeader = function(){
  * table に 1行追加する
  */
 mabi.DamageTable.prototype.appendRow = function(condition){
+    console.assert(condition instanceof mabi.Condition);
     var $tr = $('<tr />');
     $('<td />').append($('<button />').text('削除').button()).appendTo($tr);
-    $('<td />').text(condition.name).appendTo($tr);
+    $('<td />').text(condition.name()).appendTo($tr);
 
     $.each(this.columns_, function(i, v){
 	       $('<td />').text('0').appendTo($tr);

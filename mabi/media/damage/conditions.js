@@ -7,6 +7,7 @@ mabi.Conditions = function(){
 };
 
 mabi.Conditions.prototype.push = function(item){
+    console.assert(item instanceof mabi.Condition);
     this.items_.push(item);
 };
 

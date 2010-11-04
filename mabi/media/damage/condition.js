@@ -8,7 +8,7 @@
  * 3. SimpleTitle
  */
 mabi.Condition = function(options){
-    this.super_.constructor.call(this);
+    this.super_.constructor.call(this, options);
 
     this.character_ = options.character;
     this.weapon_ = options.weapon;
