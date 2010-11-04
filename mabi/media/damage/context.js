@@ -1,7 +1,6 @@
 
 /**
  * Expression を計算するための文脈を表す
- * 以下のプロパティを持つ
  */
 mabi.Context = function(options){
     this.condition_ = options.condition;
