@@ -132,6 +132,24 @@ dam.addBuiltInItems = function(){
 		[{param: 'damage_max', min: 2400}]
 	    ]
 	}));
+    dam.skills.push(
+	new mabi.SimpleSkillClass(
+	{
+	    name: 'アイススピア',
+	    flags: ['ice', 'charge_bonus'],
+	    ranks: [
+		[{param: 'damage_max', min: 240}]
+	    ]
+	}));
+    dam.skills.push(
+	new mabi.SimpleSkillClass(
+	{
+	    name: 'サンダー',
+	    flags: ['lightning'],
+	    ranks: [
+		[{param: 'damage_max', min: 400}]
+	    ]
+	}));
 };
 
 /**

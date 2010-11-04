@@ -3,13 +3,17 @@
  */
 
 /**
- * 魔法攻撃ダメージ計算式
+ * 基本的な魔法攻撃ダメージ計算式
  * 
  * @param skill 攻撃に使用する SimpleSkill
  * @param charge 攻撃時のチャージ数
+ * @param options {
+ *   critical: 
+ * }
  */
-mabi.MagicDamage = function(skill, charge){
+mabi.MagicDamage = function(skill, charge, options){
     console.assert(skill instanceof mabi.SimpleSkill);
+    options = options || {};
 
     this.super_.constructor.call(
 	this, 
@@ -45,7 +49,7 @@ mabi.MagicDamage = function(skill, charge){
 	    var enchantBonus = 0;
 
 	    // todo クリティカルボーナス
-	    var criticalBouns = 0;
+	    var criticalBouns = options.critical ? 1.5 : 0;
 
 	    // 特別改造魔法ダメージボーナス
 	    var specialUpgradeBonus = condition.param('s_upgrade');
@@ -60,6 +64,43 @@ mabi.MagicDamage = function(skill, charge){
 	});
 };
 util.extend(mabi.MagicDamage, mabi.Expression);
+
+
+
+// ----------------------------------------------------------------------
+
+/**
+ * サンダー型魔法のダメージ計算式
+ * @param skill サンダースキル
+ * @param options {
+ *   charge: 攻撃時のチャージ数
+ *   critical: 
+ * }
+ */
+mabi.ThunderDamage = function(skill, options){
+    console.assert(skill instanceof mabi.SimpleSkill);
+    // 最後の落雷はダメージが2倍(1~4チャージでは1.5倍)
+
+    var one = new mabi.MagicDamage(skill, 1, options);
+    var charge = options.charge;
+    this.super_.constructor.call(
+	this, 
+	function(c){
+	    var total = 0;
+	    for(var i = 0; i < charge; i++){
+		var damage = one.value(c);
+		if(i == 4){
+		    damage *= 2;
+		}else if(i == charge - 1){
+		    damage *= 1.5;
+		}
+		total += damage;
+	    }
+	    return total;
+	});
+};
+
+util.extend(mabi.ThunderDamage, mabi.Expression);
 
 // ----------------------------------------------------------------------
 
