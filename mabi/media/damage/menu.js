@@ -10,11 +10,11 @@ mabi.Menu = function($element){
 
     $('.generator', this.$element_).click(
 	function(){
-	    dam.generatorView.show();
+	    dam.generatorView.show(dam.context);
 	});
 
     $('.graph', this.$element_).click(
 	function(){
-	    dam.graphView.show();
+	    dam.graphView.show(dam.context);
 	});
 };

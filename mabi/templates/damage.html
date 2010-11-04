@@ -8,11 +8,8 @@
 {% include_media 'damage.css' %}
 
 <script type="text/javascript">
-  $(function() {
-
-  dam.initialize();
-
-  });
+  google.load('visualization', '1', {'packages':['corechart']});
+  google.setOnLoadCallback(dam.initialize);
 </script>
 
 {% endblock %}

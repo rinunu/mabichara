@@ -32,6 +32,14 @@ dam.createContext = function(){
 	   function(i, v){
 	       context.addColumn(v);
 	   });
+
+    var mob = new mabi.Element(
+	{
+	    effects:[
+		{param: 'protection', min: 0.1}
+	    ]});
+    context.setMob(mob);
+
     return context;
 };
 

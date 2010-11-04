@@ -8,6 +8,7 @@
 mabi.Context = function(options){
     this.columns_ = [];
     this.conditions_ = options.conditions;
+    this.mob_ = null;
 };
 
 /**
@@ -34,4 +35,15 @@ mabi.Context.prototype.columns = function(){
  */
 mabi.Context.prototype.conditions = function(){
     return this.conditions_;
+};
+
+/**
+ * Mob を取得する
+ */
+mabi.Context.prototype.mob = function(){
+    return this.mob_;
+};
+
+mabi.Context.prototype.setMob = function(mob){
+    this.mob_ = mob;
 };

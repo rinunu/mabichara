@@ -14,3 +14,7 @@ mabi.Conditions.prototype.push = function(item){
 mabi.Conditions.prototype.each = function(fn){
     $.each(this.items_, fn);
 };
+
+mabi.Conditions.prototype.length = function(){
+    return this.items_.length;
+};
