@@ -121,9 +121,9 @@ dam.initializeView = function(){
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.conditions);
     dam.menu = new mabi.Menu($('.menu'));
 
-    for(var i in mabi){
-	if(mabi[i].initialize){
-	    mabi[i].initialize();
+    for(var i in dam){
+	if(dam[i].initialize){
+	    dam[i].initialize();
 	}
     }
 
