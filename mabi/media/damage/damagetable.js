@@ -70,16 +70,16 @@ mabi.DamageTable.prototype.appendRow = function(condition){
  * 1セル描画する
  */
 mabi.DamageTable.prototype.renderCell = function(row, colum, $td){
-    var enemy = new mabi.Element(
+    var mob = new mabi.Element(
 	{
 	    effects:[
 		{param: 'protection', min: 0.1}
 	    ]});
 
-    var context = new mabi.Context({
-				       condition: row, 
-				       enemy: enemy
-				   });
+    var context = {
+	condition: row, 
+	mob: mob
+    };
     var value = Math.floor(colum.expression.value(context));
     $td.text(value);
 };

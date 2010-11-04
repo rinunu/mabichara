@@ -5,7 +5,7 @@ describe("各種計算式", function() {
 	     var expression;
 	     var context;
 	     var title;
-	     var enemy;
+	     var mob;
 
 	     var MAGIC_MASTER;
 			    
@@ -38,7 +38,7 @@ describe("各種計算式", function() {
 					 character.setParam('fused_bolt_magic_damage', 0.15); // ボルト魔法の合体1
 					 title = MAGIC_MASTER;
 					 
-					 enemy = new mabi.Element(
+					 mob = new mabi.Element(
 					     {
 						 effects:[
 						     {param: 'protection', min: 0.1}
@@ -55,9 +55,10 @@ describe("各種計算式", function() {
 				     });
 				 expression = new mabi.MagicDamage(ICEBOLT, 1);
 				 
-				 context = new mabi.Context({
-								condition: condition,
-								enemy: enemy});
+				 context = {
+				     condition: condition,
+				     mob: mob
+				 };
 				 expect(Math.floor(expression.value(context))).toEqual(181);
 			     });
 			  
@@ -71,9 +72,10 @@ describe("各種計算式", function() {
 				     });
 				 expression = new mabi.MagicDamage(FIREBALL, 5);
 				 
-				 context = new mabi.Context({
-								condition: condition,
-								enemy: enemy});
+				 context = {
+				     condition: condition,
+				     mob: mob
+				 };
 				 expect(Math.floor(expression.value(context))).toEqual(3410);
 			     });
 			  
@@ -87,9 +89,9 @@ describe("各種計算式", function() {
 				     });
 				 expression = new mabi.MagicDamage(FIREBALL, 5);
 				 
-				 context = new mabi.Context({
-								condition: condition,
-								enemy: enemy});
+				 context = {
+				     condition: condition,
+				     mob: mob};
 				 expect(Math.floor(expression.value(context))).toEqual(3424);
 			     });
 			  
@@ -102,9 +104,9 @@ describe("各種計算式", function() {
 					 title: title
 				     });
 				 expression = new mabi.FusedBoltMagicDamage(FIREBOLT, LIGHTNING_BOLT, 5);
-				 context = new mabi.Context({
-								condition: condition,
-								enemy: enemy});
+				 context = {
+				     condition: condition,
+				     mob: mob};
 				 expect(Math.floor(expression.value(context))).toEqual(1864);
 			     });
 		      });
@@ -113,7 +115,7 @@ describe("各種計算式", function() {
 			  beforeEach(function(){
 					 character = new mabi.Character();
 					 character.setParam('int', 600);
-					 enemy = new mabi.Element(
+					 mob = new mabi.Element(
 					     {
 						 effects:[
 						     {param: 'protection', min: 0}
@@ -129,9 +131,10 @@ describe("各種計算式", function() {
 						      title: MAGIC_MASTER
 						  });
 					      expression = new mabi.MagicDamage(FIREBALL, 5, {critical: true});
-					      context = new mabi.Context({
-									     condition: condition,
-									     enemy: enemy});
+					      context = {
+						  condition: condition,
+						  mob: mob
+					      };
 					      expect(Math.floor(expression.value(context))).toEqual(9009);
 					  });
 				       it('クリティカル IS', function() {
@@ -143,9 +146,10 @@ describe("各種計算式", function() {
 						       title: MAGIC_MASTER
 						   });
 					       expression = new mabi.MagicDamage(ICE_SPEAR, 5, {critical: true});
-					       context = new mabi.Context({
-									      condition: condition,
-									      enemy: enemy});
+					       context = {
+						   condition: condition,
+						   mob: mob
+					       };
 					       expect(Math.floor(expression.value(context))).toEqual(5630);
 					   });
 
@@ -158,9 +162,10 @@ describe("各種計算式", function() {
 						       title: MAGIC_MASTER
 						   });
 					       expression = new mabi.ThunderDamage(THUNDER, {charge: 5, critical: true});
-					       context = new mabi.Context({
-									      condition: condition,
-									      enemy: enemy});
+					       context = {
+						   condition: condition,
+						   mob: mob
+					       };
 					       expect(Math.floor(expression.value(context))).toEqual(8893);
 					   });
 				   });

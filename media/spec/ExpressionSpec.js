@@ -16,8 +16,8 @@ describe("Expression", function() {
 
 	     it('Context を元に計算を実行できる', function() {
 		    character.setParam('int', 1);
-		    context = new mabi.Context({condition: condition, enemy: {}});
-		    expression = new mabi.Expression(function(c){return c.condition().param('int') + 100;});
+		    context = {condition: condition, mob: {}};
+		    expression = new mabi.Expression(function(c){return c.condition.param('int') + 100;});
 		    expect(expression.value(context)).toEqual(101);
 		});
 	 });

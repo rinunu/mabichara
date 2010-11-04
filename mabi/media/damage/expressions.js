@@ -18,8 +18,8 @@ mabi.MagicDamage = function(skill, charge, options){
     this.super_.constructor.call(
 	this, 
 	function(c){
-	    var condition = c.condition();
-	    var enemy = c.enemy();
+	    var condition = c.condition;
+	    var mob = c.mob;
 	    var magicAttack = 0.05 * condition.param('int');
 	    var weapon = condition.weapon();
 
@@ -56,7 +56,7 @@ mabi.MagicDamage = function(skill, charge, options){
 
 	    var damage = ((skill.param('damage_max') * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
 	    damage *= (1 + criticalBouns);
-	    damage *= (1 - enemy.param('protection'));
+	    damage *= (1 - mob.param('protection'));
 	    damage += specialUpgradeBonus;
 	    damage *= a * b * 1.1;
 	    
@@ -121,8 +121,8 @@ mabi.FusedBoltMagicDamage = function(skill0, skill1, charge){
     this.super_.constructor.call(
 	this, 
 	function(c){
-	    var condition = c.condition();
-	    var enemy = c.enemy();
+	    var condition = c.condition;
+	    var mob = c.mob;
 
 	    var damage = 0;
 	    $.each(expressions, function(i, v){damage += v.value(c);});
