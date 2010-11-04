@@ -18,6 +18,8 @@ dam.initializeView = function(){
     $(":button").button();
     $(":checkbox").button();
 
+    dam.help = new mabi.Help($('div.help'));
+
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.conditions);
     var ib = dam.skills.get('アイスボルト').create(1);
     var fb = dam.skills.get('ファイアボルト').create(1);

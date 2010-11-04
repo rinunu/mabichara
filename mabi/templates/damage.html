@@ -20,11 +20,11 @@
 {% block content %}
 
 <span class="menu ui-widget-header ui-corner-all">
-  <button id="aa">キャラクターの追加</button>
-  <button id="aaa">キャラクターの自動生成</button>
-  <button id="bb">表示設定</button>
-  <button id="aaa">グラフの表示</button>
-  <button id="help">ヘルプ</button>
+  <button class="">キャラクターの追加</button>
+  <button class="">キャラクターの自動生成</button>
+  <button class="">表示設定</button>
+  <button class="">グラフの表示</button>
+  <button class="help">ヘルプ</button>
 </span>
 
 <form class="ui-widget-content">
@@ -78,19 +78,24 @@
 <table class="damage ui-widget-content">
 </table>
 
-<div>
-  参考サイト
+<div class="help" title="ヘルプ">
+  <h3>使い方</h3>
+  <div class="notice">ここに説明を書く予定！</div>
+
+  <h3>まだ出来ないこと</h3>
   <ul>
-    <li><a href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4"></a></li>
-    <li><a href="http://aumiya.jugem.jp/?eid=173"></a></li>
+    <li>スキルはランク1の数値を使用して計算しています</li>
+    <li>ダメージ補正エンチャントはまだ対応してません</li>
+    <li>トリニティスタッフはまだ対応してません</li>
+    <li>ヘボナセットはまだ対応してません</li>
+    <li>パッシブディフェンスはまだ対応してません(式わからないです＞＜)</li>
   </ul>
-  <div class="notice">
-    <p>スキルはランク1として計算します</p>
-    <p>ダメージ補正エンチャントは未対応です</p>
-    <p>トリニティスタッフは未対応です</p>
-    <p>ヘボナセットは未対応です</p>
-    <p>パッシブディフェンスは未対応です</p>
-  </div>
+
+  <h3>参考にしたサイト</h3>
+  <ul>
+    <li><a target="_blank" href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4">Mabinogi Wiki* スキル/魔法</a></li>
+    <li><a target="_blank" href="http://aumiya.jugem.jp/?eid=173">蒼乃銀杏～あおのぎんなん～ 各種魔法ダメージG12とG13を比較してみた。</a></li>
+  </ul>
 
 </div> 
 
