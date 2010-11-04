@@ -8,7 +8,7 @@
  * @param skill 攻撃に使用する SimpleSkill
  * @param charge 攻撃時のチャージ数
  */
-mabi.MagicExpression = function(skill, charge){
+mabi.MagicDamage = function(skill, charge){
     console.assert(skill instanceof mabi.SimpleSkill);
 
     this.super_.constructor.call(
@@ -59,7 +59,7 @@ mabi.MagicExpression = function(skill, charge){
 	    return damage;
 	});
 };
-util.extend(mabi.MagicExpression, mabi.Expression);
+util.extend(mabi.MagicDamage, mabi.Expression);
 
 // ----------------------------------------------------------------------
 
@@ -74,8 +74,8 @@ mabi.FusedBoltMagicDamage = function(skill0, skill1, charge){
     console.assert(skill0 instanceof mabi.SimpleSkill);
     console.assert(skill1 instanceof mabi.SimpleSkill);
 
-    var expressions = [new mabi.MagicExpression(skill0, charge),
-			new mabi.MagicExpression(skill1, charge)];
+    var expressions = [new mabi.MagicDamage(skill0, charge),
+			new mabi.MagicDamage(skill1, charge)];
 
     this.super_.constructor.call(
 	this, 

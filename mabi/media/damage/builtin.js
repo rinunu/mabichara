@@ -3,55 +3,88 @@
  */
 
 /**
+ * 武器の名前を生成する
+ */
+dam.name = function(name, proficiency, special){
+    var options = [];
+    if(proficiency) options.push(proficiency + '式');
+    if(special) options.push(special);
+
+    if(options.length >= 1){
+	name += '(';
+	name += options.join(' ');
+	name += ')';
+    }
+    return name;
+};
+
+/**
  * デフォルトの Weapon/Title/Skill を追加する
  */
 dam.addBuiltInItems = function(){
-    var seed = [
+    var wands = [
 	{
 	    name: 'アイスワンド',
 	    flags: ['ice'],
-	    effects: [
-	    ]
-	},
-	{
-	    name: 'クラウンアイスワンド(150式)',
-	    flags: ['ice'],
-	    effects: [
-		{param: 'weapon_magic_damage', min: 0.22}
-	    ]
-	},
-	{
-	    name: 'フェニックスファイアワンド(245式)',
-	    flags: ['fire'],
-	    effects: [
-		{param: 'weapon_magic_damage', min: -0.06}
-	    ]
-	},
-	{
-	    name: 'フェニックスファイアワンド(245式,S3)',
-	    flags: ['fire'],
-	    effects: [
-		{param: 'weapon_magic_damage', min: -0.06},
-		{param: 's_upgrade', min: 9}
-	    ]
-	},
-	{
-	    name: 'ファイアワンド(S3)',
-	    flags: ['fire'],
-	    effects: [
-		{param: 's_upgrade', min: 9}
+	    upgrades: [{}
 	    ]
 	},
 	{
 	    name: 'ファイアワンド',
 	    flags: ['fire'],
-	    effects: [
-	    ]
-	}];
-    $.each(seed, function(i, v){
-	       dam.weapons.push(
-		   new mabi.SimpleWeapon(v));
-	   });
+	    upgrades: [{}]
+	},
+	{
+	    name: 'ライトニングワンド',
+	    flags: ['lightning'],
+	    upgrades: [{}]
+	},
+	{
+	    name: 'クラウンアイスワンド',
+	    flags: ['ice'],
+	    upgrades: [
+		{},
+		{
+		    proficiency: 150,
+		    effects: [
+			{param: 'weapon_magic_damage', min: 0.22}
+		    ]}]
+	},
+	{
+	    name: 'フェニックスファイアワンド',
+	    flags: ['fire'],
+	    upgrades: [
+		{},
+		{
+		    proficiency: 245,
+		    effects: [
+			{param: 'weapon_magic_damage', min: -0.06}
+		    ]}]
+	}
+    ];
+
+    var specials = [
+	{},
+	{name: 'S3', effects: [{param: 's_upgrade', min: 9}]}
+    ];
+
+    dam.combination([['wand', wands], ['special', specials]], function(map){
+			var wand = map['wand'];
+			var special = map['special'];
+			$.each(wand.upgrades, function(i, upgrade){
+				   var totalEffects = [];
+				   $.each([upgrade.effects, special.effects], function(i, effects){
+					      if(effects) totalEffects = totalEffects.concat(effects);
+					  });
+				   dam.weapons.push(new mabi.SimpleWeapon(
+							{
+							    name: dam.name(wand.name, upgrade.proficiency, special.name),
+							    flags: wand.flags,
+							    effects: totalEffects
+							}));
+			       });
+		    });
+    
 
     dam.titles.push(
 	new mabi.SimpleWeapon(
@@ -188,8 +221,18 @@ dam.addCombinationConditions = function(seed, template, nameFn){
  * デフォルトの Condition を追加する
  */
 dam.addBuiltInConditions = function(){
-    var ints = ['int', [200, 400, 600]];
-    var weapons = ['weapon', ['アイスワンド', 'ファイアワンド', 'ファイアワンド(S3)', 'クラウンアイスワンド(150式)']];
+    var ints = ['int', [200, 600]];
+    var weapons = ['weapon', [
+		       'アイスワンド', 
+		       'クラウンアイスワンド(150式)',
+		       'クラウンアイスワンド(150式 S3)',
+		       'ファイアワンド', 
+		       'ファイアワンド(S3)', 
+		       'フェニックスファイアワンド(245式)', 
+		       'フェニックスファイアワンド(245式 S3)',
+		       'ライトニングワンド',
+		       'ライトニングワンド(S3)'
+		   ]];
     var seed = [ints, weapons];
     var template = {
     	weapon: 'ファイアワンド(S3)',

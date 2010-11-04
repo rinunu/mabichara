@@ -30,7 +30,7 @@ describe("各種計算式", function() {
 			    weapon: dam.weapons.get('クラウンアイスワンド(150式)'),
 			    title: dam.titles.get('マジックマスター')
 			});
-		    expression = new mabi.MagicExpression(dam.skills.get('アイスボルト').create(1), 1);
+		    expression = new mabi.MagicDamage(dam.skills.get('アイスボルト').create(1), 1);
 
 		    context = new mabi.Context({
 					       condition: condition,
@@ -47,7 +47,7 @@ describe("各種計算式", function() {
 			    weapon: dam.weapons.get('フェニックスファイアワンド(245式)'),
 			    title: dam.titles.get('マジックマスター')
 			});
-		    expression = new mabi.MagicExpression(dam.skills.get('ファイアボール').create(1), 5);
+		    expression = new mabi.MagicDamage(dam.skills.get('ファイアボール').create(1), 5);
 
 		    context = new mabi.Context({
 					       condition: condition,
@@ -61,10 +61,10 @@ describe("各種計算式", function() {
 		    condition = new mabi.Condition(
 			{
 			    character: character,
-			    weapon: dam.weapons.get('フェニックスファイアワンド(245式,S3)'),
+			    weapon: dam.weapons.get('フェニックスファイアワンド(245式 S3)'),
 			    title: dam.titles.get('マジックマスター')
 			});
-		    expression = new mabi.MagicExpression(dam.skills.get('ファイアボール').create(1), 5);
+		    expression = new mabi.MagicDamage(dam.skills.get('ファイアボール').create(1), 5);
 
 		    context = new mabi.Context({
 					       condition: condition,

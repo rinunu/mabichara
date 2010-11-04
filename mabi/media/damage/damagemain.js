@@ -22,15 +22,17 @@ dam.initializeView = function(){
     var ib = dam.skills.get('アイスボルト').create(1);
     var fb = dam.skills.get('ファイアボルト').create(1);
     var lb = dam.skills.get('ライトニングボルト').create(1);
-    $.each([{name: 'IB', expression: new mabi.MagicExpression(ib, 1)},
-	    {name: 'FB(1C)', expression: new mabi.MagicExpression(fb, 1)},
-	    {name: 'FB(5C)', expression: new mabi.MagicExpression(fb, 5)},
-	    {name: 'LB', expression: new mabi.MagicExpression(lb, 1)},
+    var fbl = dam.skills.get('ファイアボール').create(1);
+    $.each([{name: 'IB', expression: new mabi.MagicDamage(ib, 1)},
+	    {name: 'FB(1C)', expression: new mabi.MagicDamage(fb, 1)},
+	    {name: 'FB(5C)', expression: new mabi.MagicDamage(fb, 5)},
+	    {name: 'LB', expression: new mabi.MagicDamage(lb, 1)},
 	    {name: 'IB+FB(1C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 1)},
 	    {name: 'IB+FB(5C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 5)},
 	    {name: 'IB+LB', expression: new mabi.FusedBoltMagicDamage(ib, lb, 1)},
 	    {name: 'FB+LB(1C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 1)},
-	    {name: 'FB+LB(5C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 5)}
+	    {name: 'FB+LB(5C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 5)},
+	    {name: 'FBL', expression: new mabi.MagicDamage(fbl, 5)}
 	   ],
 	   function(i, v){
 	       dam.damageTable.addColumn(v);
