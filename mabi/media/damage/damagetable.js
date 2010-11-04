@@ -38,7 +38,7 @@ mabi.DamageTable.prototype.appendHeader = function(){
 
     var $tr = $('<tr />').appendTo($thead);
     $('<th />').attr('rowspan', 2).appendTo($tr);
-    $('<th />').text('名前').attr('rowspan', 2).appendTo($tr);
+    $('<th />').text('キャラクター').attr('rowspan', 2).appendTo($tr);
     $('<th />').text('ダメージ').attr('colspan', this.columns_.length).appendTo($tr);
 
     $tr = $('<tr />').appendTo($thead);
@@ -74,7 +74,7 @@ mabi.DamageTable.prototype.renderCell = function(row, colum, $td){
     var enemy = new mabi.Element(
 	{
 	    effects:[
-		{param: 'protection', min: 0.3}
+		{param: 'protection', min: 0.1}
 	    ]});
 
     var context = new mabi.Context({

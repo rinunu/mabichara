@@ -23,6 +23,8 @@ dam.initializeView = function(){
     var fb = dam.skills.get('ファイアボルト').create(1);
     var lb = dam.skills.get('ライトニングボルト').create(1);
     var fbl = dam.skills.get('ファイアボール').create(1);
+    var th = dam.skills.get('サンダー').create(1);
+    var is = dam.skills.get('アイススピア').create(1);
     $.each([{name: 'IB', expression: new mabi.MagicDamage(ib, 1)},
 	    {name: 'FB(1C)', expression: new mabi.MagicDamage(fb, 1)},
 	    {name: 'FB(5C)', expression: new mabi.MagicDamage(fb, 5)},
@@ -32,7 +34,9 @@ dam.initializeView = function(){
 	    {name: 'IB+LB', expression: new mabi.FusedBoltMagicDamage(ib, lb, 1)},
 	    {name: 'FB+LB(1C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 1)},
 	    {name: 'FB+LB(5C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 5)},
-	    {name: 'FBL', expression: new mabi.MagicDamage(fbl, 5)}
+	    {name: 'FBL', expression: new mabi.MagicDamage(fbl, 5)},
+	    {name: 'IS(5C)', expression: new mabi.MagicDamage(is, 5)},
+	    {name: 'TH(5C)', expression: new mabi.ThunderDamage(th, {charge: 5})}
 	   ],
 	   function(i, v){
 	       dam.damageTable.addColumn(v);
