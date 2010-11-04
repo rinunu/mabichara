@@ -3,10 +3,9 @@ var mabi = mabi || {};
 /**
  * ダメージ表を表示するビュー
  */
-mabi.DamageTable = function($table, conditions){
+mabi.DamageTable = function($table, context){
     this.$table_ = $table;
-    this.conditions_ = conditions;
-    this.columns_ = [];
+    this.context_ = context;
 };
 
 mabi.DamageTable.prototype.initialize = function(){
@@ -14,19 +13,10 @@ mabi.DamageTable.prototype.initialize = function(){
 
     this.appendHeader();
 
-    this.conditions_.each(function(i, v){
-	       this_.appendRow(v);
-	   });
-};
-
-/**
- * @param options {
- *   name: 名前,
- *   expression: Expression
- * }
- */
-mabi.DamageTable.prototype.addColumn = function(options){
-    this.columns_.push(options);
+    this.context_.conditions().each(
+	function(i, v){
+	    this_.appendRow(v);
+	});
 };
 
 /**
@@ -35,13 +25,15 @@ mabi.DamageTable.prototype.addColumn = function(options){
 mabi.DamageTable.prototype.appendHeader = function(){
     var $thead = $('thead', this.$table_);
 
+    var columns = this.context_.columns();
+
     var $tr = $('<tr />').appendTo($thead);
     $('<th />').attr('rowspan', 2).appendTo($tr);
     $('<th />').text('キャラクター').attr('rowspan', 2).appendTo($tr);
-    $('<th />').text('ダメージ').attr('colspan', this.columns_.length).appendTo($tr);
+    $('<th />').text('ダメージ').attr('colspan', columns.length).appendTo($tr);
 
     $tr = $('<tr />').appendTo($thead);
-    $.each(this.columns_, function(i, v){
+    $.each(columns, function(i, v){
 	       $('<th />').text(v.name).appendTo($tr);
 	   });
 
@@ -52,12 +44,13 @@ mabi.DamageTable.prototype.appendHeader = function(){
  */
 mabi.DamageTable.prototype.appendRow = function(condition){
     var this_ = this;
+    var columns = this.context_.columns();
     console.assert(condition instanceof mabi.Condition);
     var $tr = $('<tr />');
     $('<td />').append($('<input type="checkbox" />')).appendTo($tr);
     $('<td />').text(condition.name()).appendTo($tr);
 
-    $.each(this.columns_, function(i, column){
+    $.each(columns, function(i, column){
 	       var $td = $('<td />').appendTo($tr);
 	       this_.renderCell(condition, column, $td);
 	   });
