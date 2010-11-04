@@ -12,4 +12,9 @@ mabi.Menu = function($element){
 	function(){
 	    dam.generatorView.show();
 	});
+
+    $('.graph', this.$element_).click(
+	function(){
+	    dam.graphView.show();
+	});
 };

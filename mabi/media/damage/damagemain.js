@@ -16,6 +16,7 @@ dam.initializeView = function(){
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
     dam.conditonView = new mabi.ConditionView($('form.condition-view'));
+    dam.graphView = new mabi.GraphView($('.graph-view'));
 
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.conditions);
     var ib = dam.skills.get('アイスボルト').create(1);
