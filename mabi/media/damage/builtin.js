@@ -6,26 +6,27 @@
  * デフォルトの Weapon/Title/Skill を追加する
  */
 dam.addBuiltInItems = function(){
-    dam.weapons.push(
-	new mabi.SimpleWeapon(
+    var seed = [
+	{
+	    name: 'アイスワンド',
+	    flags: ['ice'],
+	    effects: [
+	    ]
+	},
 	{
 	    name: 'クラウンアイスワンド(150式)',
 	    flags: ['ice'],
 	    effects: [
 		{param: 'weapon_magic_damage', min: 0.22}
 	    ]
-	})),
-    dam.weapons.push(
-	new mabi.SimpleWeapon(
+	},
 	{
 	    name: 'フェニックスファイアワンド(245式)',
 	    flags: ['fire'],
 	    effects: [
 		{param: 'weapon_magic_damage', min: -0.06}
 	    ]
-	}));
-    dam.weapons.push(
-	new mabi.SimpleWeapon(
+	},
 	{
 	    name: 'フェニックスファイアワンド(245式,S3)',
 	    flags: ['fire'],
@@ -33,16 +34,24 @@ dam.addBuiltInItems = function(){
 		{param: 'weapon_magic_damage', min: -0.06},
 		{param: 's_upgrade', min: 9}
 	    ]
-	}));
-    dam.weapons.push(
-	new mabi.SimpleWeapon(
+	},
 	{
 	    name: 'ファイアワンド(S3)',
 	    flags: ['fire'],
 	    effects: [
 		{param: 's_upgrade', min: 9}
 	    ]
-	}));
+	},
+	{
+	    name: 'ファイアワンド',
+	    flags: ['fire'],
+	    effects: [
+	    ]
+	}];
+    $.each(seed, function(i, v){
+	       dam.weapons.push(
+		   new mabi.SimpleWeapon(v));
+	   });
 
     dam.titles.push(
 	new mabi.SimpleWeapon(
@@ -179,8 +188,9 @@ dam.addCombinationConditions = function(seed, template, nameFn){
  * デフォルトの Condition を追加する
  */
 dam.addBuiltInConditions = function(){
-    var seed = [['int', [100, 200, 300, 400, 500, 600]], 
-	      ['weapon', ['ファイアワンド(S3)', 'クラウンアイスワンド(150式)']]];
+    var ints = ['int', [200, 400, 600]];
+    var weapons = ['weapon', ['アイスワンド', 'ファイアワンド', 'ファイアワンド(S3)', 'クラウンアイスワンド(150式)']];
+    var seed = [ints, weapons];
     var template = {
     	weapon: 'ファイアワンド(S3)',
     	character: {
