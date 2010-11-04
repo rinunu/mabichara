@@ -1,8 +1,3 @@
-/**
- * ダメージ計算固有の変数用名前空間
- */
-var dam = {};
-
 dam.initializeModel = function(){
     dam.conditions = new mabi.Conditions;
     dam.weapons = new mabi.Elements;
@@ -15,10 +10,12 @@ dam.initializeModel = function(){
 
 dam.initializeView = function(){
     $(".tabs").tabs();
-    $(":button").button();
-    $(":checkbox").button();
+    // $(":button").button();
+    // $(":checkbox").button();
 
     dam.help = new mabi.Help($('div.help'));
+    dam.generatorView = new mabi.GeneratorView($('div.generator'));
+    dam.conditonView = new mabi.ConditionView($('form.condition-view'));
 
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.conditions);
     var ib = dam.skills.get('アイスボルト').create(1);
@@ -51,8 +48,6 @@ dam.initializeView = function(){
 	    dam[i].initialize();
 	}
     }
-
-    $('form').dialog();
 };
 
 dam.initialize = function(){

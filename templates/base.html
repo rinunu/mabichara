@@ -3,6 +3,7 @@
   <head>
     <title>{% block title %}{% endblock %} - site name</title>
 
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" media="all" /> 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
@@ -26,14 +27,25 @@
 	})();
       </script>
 
+      <script type="text/javascript">
+	$(document).ready(function(){
+	$('#switcher').themeswitcher();
+	});
+      </script>
+
   </head>
 
-  <body>
+  <body class="">
     {% block header %}
       <div id="header">
         <div class="menu">
           <a href="/">トップ</a>
+
+	  <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/">
+	  </script>
+	  <div id="switcher"></div>
         </div>
+
       </div>
     {% endblock %}
       

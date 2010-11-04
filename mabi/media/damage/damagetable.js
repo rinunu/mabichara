@@ -14,7 +14,6 @@ mabi.DamageTable.prototype.initialize = function(){
 
     this.appendHeader();
 
-    $('<tbody />').appendTo(this.$table_);
     this.conditions_.each(function(i, v){
 	       this_.appendRow(v);
 	   });
@@ -34,7 +33,7 @@ mabi.DamageTable.prototype.addColumn = function(options){
  * table の ヘッダーを生成する
  */
 mabi.DamageTable.prototype.appendHeader = function(){
-    var $thead = $('<thead />').appendTo(this.$table_);
+    var $thead = $('thead', this.$table_);
 
     var $tr = $('<tr />').appendTo($thead);
     $('<th />').attr('rowspan', 2).appendTo($tr);
@@ -55,7 +54,7 @@ mabi.DamageTable.prototype.appendRow = function(condition){
     var this_ = this;
     console.assert(condition instanceof mabi.Condition);
     var $tr = $('<tr />');
-    $('<td />').append($('<button />').text('削除').button()).appendTo($tr);
+    $('<td />').append($('<input type="checkbox" />')).appendTo($tr);
     $('<td />').text(condition.name()).appendTo($tr);
 
     $.each(this.columns_, function(i, column){

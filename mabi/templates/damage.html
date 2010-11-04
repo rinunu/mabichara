@@ -19,83 +19,44 @@
 
 {% block content %}
 
-<span class="menu ui-widget-header ui-corner-all">
-  <button class="">キャラクターの追加</button>
-  <button class="">キャラクターの自動生成</button>
+<h1>マビノギ ダメージ シミュレータ</h1>
+
+<span class="menu ui-widget ui-widget-header ui-corner-all">
+  <button class="generator">キャラクターの追加</button>
   <button class="">表示設定</button>
   <button class="">グラフの表示</button>
   <button class="help">ヘルプ</button>
 </span>
 
-<form class="ui-widget-content">
-  <div>
-    <label>名前
-      <input type="text"></input>
-    </label>
-  </div>
 
-  <div>
-    <label>Str
-      <input type="text" class="str"></input>
-    </label>
-    <label>Dex
-      <input type="text" class="dex"></input>
-    </label>
-    <label>Int
-      <input type="text" class="int"></input>
-    </label>
-  </div>
-
-  <label>タイトル
-    <select>
-      <option>その他</option>
-      <option>マジックマスター</option>
-      <option>ボルト魔法マスター</option>
-    </select>
-  </label>
-
-  <label>武器
-    <select>
-      <option>両手剣</option>
-      <option>二刀流</option>
-      <option>弓</option>
-      <option>ライトニングワンド</option>
-      <option>クリスタルライトニングワンド(111式)</option>
-    </select>
-  </label>
-
-  <div>
-    <input type="checkbox" id="icebolt" /><label for="icebolt">アイスボルト強化</label>
-    <input type="checkbox" id="firebolt" /><label for="firebolt">ファイアボルト強化</label>
-  </div>
-  <div>
-    <button>表に追加</button>
-  </div>
-
-</form>
-
-
-<table class="damage ui-widget-content">
+<table class="damage ui-widget ui-widget-content">
+  <thead class="ui-widget-header"></thead>
+  <tbody class="ui-widget-content"></tbody>
 </table>
 
-<div class="help" title="ヘルプ">
-  <h3>使い方</h3>
-  <div class="notice">ここに説明を書く予定！</div>
+{% include "condition.html" %}
+{% include "generator.html" %}
 
-  <h3>まだ出来ないこと</h3>
-  <ul>
-    <li>スキルはランク1の数値を使用して計算しています</li>
-    <li>ダメージ補正エンチャントはまだ対応してません</li>
-    <li>トリニティスタッフはまだ対応してません</li>
-    <li>ヘボナセットはまだ対応してません</li>
-    <li>パッシブディフェンスはまだ対応してません(式わからないです＞＜)</li>
-  </ul>
-
-  <h3>参考にしたサイト</h3>
-  <ul>
-    <li><a target="_blank" href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4">Mabinogi Wiki* スキル/魔法</a></li>
-    <li><a target="_blank" href="http://aumiya.jugem.jp/?eid=173">蒼乃銀杏～あおのぎんなん～ 各種魔法ダメージG12とG13を比較してみた。</a></li>
-  </ul>
+<div class="help ui-widget" title="ヘルプ">
+  <div class="">
+    <h3>使い方</h3>
+    <div class="notice">ここに説明を書く予定！</div>
+    
+    <h3>まだ出来ないこと</h3>
+    <ul>
+      <li>スキルはランク1の数値を使用して計算しています</li>
+      <li>ダメージ補正エンチャントはまだ対応してません</li>
+      <li>トリニティスタッフはまだ対応してません</li>
+      <li>ヘボナセットはまだ対応してません</li>
+      <li>パッシブディフェンスはまだ対応してません(式わからないです＞＜)</li>
+    </ul>
+    
+    <h3>参考にしたサイト</h3>
+    <ul>
+      <li><a target="_blank" href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4">Mabinogi Wiki* スキル/魔法</a></li>
+      <li><a target="_blank" href="http://aumiya.jugem.jp/?eid=173">蒼乃銀杏～あおのぎんなん～ 各種魔法ダメージG12とG13を比較してみた。</a></li>
+    </ul>
+  </div>
 
 </div> 
 

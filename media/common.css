@@ -6,17 +6,21 @@
 /* 全体構成 */
 
 #header {
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #a6c9e2;
+    /* margin-bottom: 20px; */
+    /* padding-bottom: 5px; */
+    /* border-bottom: 1px solid #a6c9e2; */
 }
 
 
 #footer {
-    margin-top: 20px;
-    padding-top: 5px;
-    border-top: 1px solid #a6c9e2;
-    clear: both;
+    /* margin-top: 20px; */
+    /* padding-top: 5px; */
+    /* border-top: 1px solid #a6c9e2; */
+    /* clear: both; */
+}
+
+h1{
+    font-size: 14px;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -27,39 +31,44 @@ body {
 }
 
 a{
-    color: rgb(0,0,204);
+    /* color: rgb(0,0,204); */
 }
 
-.css_right { float: right; }
+/* .css_right { float: right; } */
 
 table{
-  table-layout: fixed;
+  /* table-layout: fixed; */
+    
 }
 
-.delete{
-    text-decoration: line-through;
+/* .delete{ */
+/*     text-decoration: line-through; */
+/* } */
+
+label{
+    font-weight: bold;
 }
 
 /* ---------------------------------------------------------------------- */
 /* table */
 
 thead th {
-    cursor: pointer;
-    * cursor: hand;
+    /* cursor: pointer; */
+    /* * cursor: hand; */
 }
 
 table{
     /* table-layout: fixed; */
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
 }
 
 td, th{
-    font-size: 12px;
-    border: 1px solid #a6c9e2;
+    /* font-size: 12px; */
+    /* border: 1px solid #a6c9e2; */
 }
 
 .odd{
-    background-color: white;
+    /* background-color: white; */
 }
 
 /* -*- coding: utf-8 -*- */
