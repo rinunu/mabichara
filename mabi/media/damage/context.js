@@ -94,7 +94,7 @@ mabi.Context.prototype.update = function(){
  * 計算結果の入った DataTable を取得する
  */
 mabi.Context.prototype.table = function(){
-    if(!this.table_) this.update();
+    console.assert(this.table_);
     return this.table_;
 };
 

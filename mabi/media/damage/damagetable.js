@@ -6,18 +6,33 @@ var mabi = mabi || {};
 mabi.DamageTable = function($table, context){
     this.$table_ = $table;
     this.context_ = context;
+
+    util.Event.bind(this.context_, this, {update: this.tableUpdate});
 };
 
 mabi.DamageTable.prototype.initialize = function(){
     var this_ = this;
+    this.update();
+};
+
+// ----------------------------------------------------------------------
+// private
+
+/**
+ * 表示を更新する
+ */
+mabi.DamageTable.prototype.update = function(){
+    $('thead', this.$table_).empty();
+    $('tbody', this.$table_).empty();
 
     this.appendHeader();
 
     var table = this.context_.table();
     for(var i = 0; i < table.getNumberOfRows(); i++){
-	this_.appendRow(table, i);
+	this.appendRow(table, i);
     }
 };
+
 
 /**
  * table の ヘッダーを生成する
@@ -65,5 +80,11 @@ mabi.DamageTable.prototype.renderCell = function(table, row, colum, $td){
 
 
 // ----------------------------------------------------------------------
-// 設定
+// 
 
+/**
+ *
+ */
+mabi.DamageTable.prototype.tableUpdate = function(){
+    this.update();
+};

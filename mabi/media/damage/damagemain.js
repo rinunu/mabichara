@@ -14,6 +14,7 @@ dam.initializeView = function(){
 
     dam.context = new mabi.Context({conditions: dam.conditions});
     dam.setDefaultContext(dam.context);
+    dam.context.update();
 
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
