@@ -29,10 +29,11 @@ mabi.GraphView.prototype.updateChart = function(){
 
     if(!this.chart_){
 	this.chart_ = new google.visualization.LineChart($('div.chart')[0]);
+	// this.chart_ = new google.visualization.ColumnChart($('div.chart')[0]);
     }
     this.chart_.draw(data, {
-			 width: 1000,
-			 height: 600,
+			 // width: 900,
+			 height: 500,
 			 fontSize: 9
 		     });
 };
