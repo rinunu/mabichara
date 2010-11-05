@@ -13,9 +13,12 @@
 
 {% block content %}
 <script type="text/javascript">
-  dam.initializeModel();
-  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-  jasmine.getEnv().execute();
+  google.load('visualization', '1', {'packages':['corechart']});
+  google.setOnLoadCallback(function(){
+    dam.initializeModel();
+    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+    jasmine.getEnv().execute();
+  });
 </script>
 {% endblock %}
 
