@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load media %}
+
+{% block title %}マビノギ ダメージ計算{% endblock %}
+
+{% block js %}
+{% include_media 'damagemain.js' %}
+{% include_media 'damage.css' %}
+
+<script type="text/javascript">
+  google.load('visualization', '1', {'packages':['corechart']});
+  google.setOnLoadCallback(dam.initialize);
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>マビノギ ダメージ シミュレータ</h1>
+
+<span class="menu ui-widget ui-widget-header ui-corner-all">
+  <button class="generator">キャラクターの追加</button>
+  <button class="">表示設定</button>
+  <button class="chart">チャートの表示</button>
+  <button class="help">ヘルプ</button>
+</span>
+
+
+<table class="damage ui-widget ui-widget-content">
+  <thead class="ui-widget-header"></thead>
+  <tbody class="ui-widget-content"></tbody>
+</table>
+
+{% include "damage/condition.html" %}
+{% include "damage/generator.html" %}
+{% include "damage/chart_view.html" %}
+{% include "damage/help.html" %}
+
+
+
+{% endblock %}
+
