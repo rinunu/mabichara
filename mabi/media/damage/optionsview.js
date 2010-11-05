@@ -7,8 +7,8 @@ mabi.OptionsView = function($element){
     this.$element_.dialog(
 	{
 	    autoOpen: false,
-	    width: 1000,
-	    height: 700
+	    width: 500,
+	    height: 500
 	});
 };
 
