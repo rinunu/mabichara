@@ -8,7 +8,7 @@ mabi.ChartView = function($element){
 	{
 	    autoOpen: false,
 	    width: 1000,
-	    height: 700
+	    height: 600
 	});
 };
 
