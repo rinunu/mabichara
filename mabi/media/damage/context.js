@@ -60,9 +60,9 @@ mabi.Context.prototype.setMob = function(mob){
 //
 
 /**
- * 計算結果の入った DataTable を取得する
+ * table を更新し、update イベントを発生する
  */
-mabi.Context.prototype.table = function(){
+mabi.Context.prototype.update = function(){
     var this_ = this;
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'キャラクター');
@@ -83,6 +83,18 @@ mabi.Context.prototype.table = function(){
     		data.setValue(row, i + 1, value);
     	    });
     	});
-    return data;
+
+    this.table_ = data;
+
+    util.Event.trigger(this, 'update');
+};
+
+
+/**
+ * 計算結果の入った DataTable を取得する
+ */
+mabi.Context.prototype.table = function(){
+    if(!this.table_) this.update();
+    return this.table_;
 };
 
