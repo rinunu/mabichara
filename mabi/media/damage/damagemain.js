@@ -5,14 +5,13 @@ dam.initializeModel = function(){
     dam.skills = new mabi.Elements;
 
     dam.addBuiltInItems();
-    dam.addBuiltInConditions();
 };
 
 dam.initializeView = function(){
     $('button').button();
     $(".tabs").tabs();
 
-    dam.context = new mabi.Context({conditions: dam.conditions});
+    dam.context = new mabi.Context();
     dam.setDefaultContext(dam.context);
     dam.context.update();
 

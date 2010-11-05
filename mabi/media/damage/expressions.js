@@ -11,7 +11,7 @@
  *   critical: 
  * }
  */
-mabi.MagicDamage = function(skill, charge, options){
+mabi.MagicDamage = function(skill, options){
     console.assert(skill instanceof mabi.SimpleSkill);
     options = options || {};
 
@@ -29,7 +29,7 @@ mabi.MagicDamage = function(skill, charge, options){
 	    $.each(['ice', 'fire', 'lightning'], function(i, v){
 		       if(skill.is(v)){
 			   typeMasteryBonus = condition.param(v + '_magic_damage');
-			   if(skill.is('bolt') && weapon.is(v)){
+			   if(skill.is('bolt') && weapon && weapon.is(v)){
 			       wandBonus = wandBonuses[v];
 			   }
 		       }
@@ -38,7 +38,7 @@ mabi.MagicDamage = function(skill, charge, options){
 	    if(skill.is('bolt')){
 		boltMasteryBonus = condition.param('bolt_magic_damage');
 	    }
-	    var chargeBonus = skill.is('charge_bonus') ? charge : 1;
+	    var chargeBonus = skill.is('charge_bonus') ? options.charge : 1;
 	    var fullChargeBonus = chargeBonus == 5 ? 1.3 : 1;
 
 	    // todo 特殊ボーナス(ヘボナ・スタッフ)
@@ -61,7 +61,9 @@ mabi.MagicDamage = function(skill, charge, options){
 	    damage *= a * b * 1.1;
 	    
 	    return damage;
-	});
+	},
+	options.name
+    );
 };
 util.extend(mabi.MagicDamage, mabi.Expression);
 
@@ -81,7 +83,9 @@ mabi.ThunderDamage = function(skill, options){
     console.assert(skill instanceof mabi.SimpleSkill);
     // 最後の落雷はダメージが2倍(1~4チャージでは1.5倍)
 
-    var one = new mabi.MagicDamage(skill, 1, options);
+    var one = new mabi.MagicDamage(skill, {
+	charge: 1,
+	critical: options.critical});
     var charge = options.charge;
     this.super_.constructor.call(
 	this, 
@@ -97,7 +101,9 @@ mabi.ThunderDamage = function(skill, options){
 		total += damage;
 	    }
 	    return total;
-	});
+	},
+	options.name
+    );
 };
 
 util.extend(mabi.ThunderDamage, mabi.Expression);
@@ -111,15 +117,15 @@ util.extend(mabi.ThunderDamage, mabi.Expression);
  * @param skill1 攻撃に使用する SimpleSkill
  * @param charge 攻撃時のチャージ数
  */
-mabi.FusedBoltMagicDamage = function(skill0, skill1, charge){
+mabi.FusedBoltMagicDamage = function(skill0, skill1, options){
     console.assert(skill0 instanceof mabi.SimpleSkill);
     console.assert(skill1 instanceof mabi.SimpleSkill);
 
-    var expressions = [new mabi.MagicDamage(skill0, charge),
-			new mabi.MagicDamage(skill1, charge)];
+    var expressions = [new mabi.MagicDamage(skill0, options),
+		       new mabi.MagicDamage(skill1, options)];
 
     this.super_.constructor.call(
-	this, 
+	this,
 	function(c){
 	    var condition = c.condition;
 	    var mob = c.mob;
@@ -128,7 +134,9 @@ mabi.FusedBoltMagicDamage = function(skill0, skill1, charge){
 	    $.each(expressions, function(i, v){damage += v.value(c);});
 	    damage *= 1 + condition.param('fused_bolt_magic_damage');
 	    return damage;
-	});
+	},
+	options.name
+    );
 };
 
 util.extend(mabi.FusedBoltMagicDamage, mabi.Expression);

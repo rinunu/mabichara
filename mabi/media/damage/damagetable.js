@@ -48,9 +48,9 @@ mabi.DamageTable.prototype.appendHeader = function(){
     $('<th />').text('ダメージ').attr('colspan', columns.length).appendTo($tr);
 
     $tr = $('<tr />').appendTo($thead);
-    $.each(columns, function(i, v){
-	       $('<th class="damage"/>').text(v.name).appendTo($tr);
-	   });
+    this.context_.eachColumn(function(i, v){
+	$('<th class="damage"/>').text('todo').appendTo($tr);
+    });
 };
 
 /**

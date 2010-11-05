@@ -156,7 +156,7 @@ dam.addBuiltInItems = function(){
  * Character を作成する
  */
 dam.createCharacter = function(dto){
-    var c = new mabi.Character();
+    var c = new mabi.Character(dto);
 
     $.each(dto, function(k, v){
 	       c.setParam(k, v);
@@ -238,36 +238,11 @@ dam.addCombinationConditions = function(seed, template, nameFn){
 /**
  * デフォルトの Condition を追加する
  */
-dam.addBuiltInConditions = function(){
-    var ints = ['int', [200, 300, 400, 500, 600, 700, 800, 900]];
-    var weapons = ['weapon', [
-		       // 'アイスワンド', 
-		       // 'クラウンアイスワンド(150式)',
-		       // 'クラウンアイスワンド(150式 S3)',
-		       'ファイアワンド', 
-		       'ファイアワンド(S3)'
-		       // 'フェニックスファイアワンド(245式)', 
-		       // 'フェニックスファイアワンド(245式 S3)',
-		       // 'ライトニングワンド',
-		       // 'ライトニングワンド(S3)'
-		   ]];
-    var seed = [weapons, ints];
-    var template = {
-    	weapon: 'ファイアワンド(S3)',
-    	character: {
-    	    'int': 600,
-    	    ice_magic_damage: 0.15, // アイスマスタリ1
-    	    fire_magic_damage: 0.15, // ファイアマスタリ1
-    	    lightning_magic_damage: 0.15, // ライトニングマスタリ1
-    	    bolt_magic_damage: 0.15, // ボルトマスタリ1
-    	    fused_bolt_magic_damage: 0.15 // ボルト魔法
-	},
-    	title: 'マジックマスター'	    
-    };
-    dam.addCombinationConditions(seed, template, function(dto){
-				     return 'Int' + dto.character['int'] + ' ' + dto.weapon;
-				 });
-};
+// dam.addBuiltInConditions = function(){
+//     dam.addCombinationConditions(seed, template, function(dto){
+// 				     return 'Int' + dto.character['int'] + ' ' + dto.weapon;
+// 				 });
+// };
 
 dam.setDefaultContext = function(context){
     var ib = dam.skills.get('アイスボルト').create(1);
@@ -277,20 +252,51 @@ dam.setDefaultContext = function(context){
     var th = dam.skills.get('サンダー').create(1);
     var is = dam.skills.get('アイススピア').create(1);
     $.each([
-	{name: 'IB', expression: new mabi.MagicDamage(ib, 1)},
-	{name: 'FB(1C)', expression: new mabi.MagicDamage(fb, 1)},
-	{name: 'FB(5C)', expression: new mabi.MagicDamage(fb, 5)},
-	{name: 'LB', expression: new mabi.MagicDamage(lb, 1)},
-	{name: 'IB+FB(1C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 1)},
-	{name: 'IB+FB(5C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 5)},
-	{name: 'IB+LB', expression: new mabi.FusedBoltMagicDamage(ib, lb, 1)},
-	{name: 'FB+LB(1C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 1)},
-	{name: 'FB+LB(5C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 5)}
-	// {name: 'FBL', expression: new mabi.MagicDamage(fbl, 5)},
-	// {name: 'IS(5C)', expression: new mabi.MagicDamage(is, 5)},
-	// {name: 'TH(5C)', expression: new mabi.ThunderDamage(th, {charge: 5})}
+	[new mabi.MagicDamage(ib, {name: 'IB', charge: 1})],
+	[new mabi.MagicDamage(fb, {name: 'FB(1C)', charge: 1})],
+	[new mabi.MagicDamage(fb, {name: 'FB(5C)', charge: 5})],
+	[new mabi.MagicDamage(lb, {name: 'LB', charge: 1})],
+	[new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C)', charge: 1})],
+	[new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(5C)', charge: 5})],
+	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB', charge: 1})],
+	[new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(1C)', charge: 1})],
+	[new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(5C)', charge: 5})]
+	// [new mabi.MagicDamage(fbl, {name: 'FBL', charge: 5})],
+	// [new mabi.MagicDamage(is, {name: 'IS(5C)', charge: 5})],
+	// [new mabi.ThunderDamage(th, {name: 'TH(5C)', charge: 5})]
     ], function(i, v){
-	context.addColumn(v);
+	context.addExpression(v[0]);
+    });
+
+    var weapons = [
+	// 'アイスワンド', 
+	// 'クラウンアイスワンド(150式)',
+	// 'クラウンアイスワンド(150式 S3)',
+	'ファイアワンド', 
+	'ファイアワンド(S3)'
+	// 'フェニックスファイアワンド(245式)', 
+	// 'フェニックスファイアワンド(245式 S3)',
+	// 'ライトニングワンド',
+	// 'ライトニングワンド(S3)'
+    ];
+    $.each(weapons, function(i, v){
+	context.addEquipmentSet(dam.weapons.get(v));
+    });
+
+    var ints = ['int', [200, 300, 400, 500, 600, 700, 800, 900]];
+    var template = {
+    	'int': 600,
+    	ice_magic_damage: 0.15, // アイスマスタリ1
+    	fire_magic_damage: 0.15, // ファイアマスタリ1
+    	lightning_magic_damage: 0.15, // ライトニングマスタリ1
+    	bolt_magic_damage: 0.15, // ボルトマスタリ1
+    	fused_bolt_magic_damage: 0.15 // ボルト魔法
+    };
+    dam.combination([ints], function(map){
+	template.name = 'Int' + map['int'];
+	template['int'] = map['int'];
+	var character = dam.createCharacter(template);
+	context.addCharacter(character);
     });
 
     var mob = new mabi.Element({
@@ -298,4 +304,9 @@ dam.setDefaultContext = function(context){
 	    {param: 'protection', min: 0.1}
 	]});
     context.setMob(mob);
+
+    context.setRowFields([dam.fields.CHARACTER]);
+    // context.setRowFields([dam.fields.CHARACTER]);
+    // context.setColumnFields([dam.fields.EXPRESSION]);
+    context.setColumnFields([dam.fields.EXPRESSION, dam.fields.EQUIPMENT_SET]);
 };

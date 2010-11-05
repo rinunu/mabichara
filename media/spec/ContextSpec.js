@@ -4,31 +4,70 @@ describe('Context', function() {
     beforeEach(function() {
     });
 
-    function condition(int_){
+    function character(int_){
 	var character = new mabi.Character();
 	character.setParam('int', int_);
-	return new mabi.Condition({
-	    name: '',
-	    character: character
-	});
+	return character;
     }
+
+    it('eachColumn できる', function() {
+	context = new mabi.Context();
+	context.setRowFields([dam.fields.CHARACTER]);
+	context.setColumnFields([dam.fields.EXPRESSION]);
+
+	var cs = [character(0), character(1)];
+	context.addCharacter(cs[0]);
+	context.addCharacter(cs[1]);
+
+	var es = [new mabi.Expression(function(c){}),
+		  new mabi.Expression(function(c){})];
+	context.addExpression(es[0]);
+	context.addExpression(es[1]);
+
+	var columns = [];
+	context.eachColumn(function(i, v){columns.push([i, v]);})
+	expect(columns).toEqual([[0, [es[0]]], [1, [es[1]]]]);
+    });
+    
+    it('eachColumn 再帰できる', function() {
+	context = new mabi.Context();
+	context.setColumnFields([dam.fields.EXPRESSION, dam.fields.CHARACTER]);
+
+	var cs = [character(0), character(1)];
+	context.addCharacter(cs[0]);
+	context.addCharacter(cs[1]);
+
+	var es = [new mabi.Expression(function(c){}),
+		  new mabi.Expression(function(c){})];
+	context.addExpression(es[0]);
+	context.addExpression(es[1]);
+
+	var columns = [];
+	context.eachColumn(function(i, v){columns.push([i, v]);})
+	expect(columns).toEqual(
+	    [[0, [es[0], cs[0]]],
+	     [1, [es[0], cs[1]]],
+	     [2, [es[1], cs[0]]],
+	     [3, [es[1], cs[1]]]
+	    ]);
+    });
     
     it('update で DataTable を更新できる', function() {
-
 	context = new mabi.Context();
+	context.addCharacter(character(0));
+	context.addCharacter(character(1));
+	context.addCharacter(character(2));
 
-	var data = new mabi.Conditions;
-	data.push(condition(0));
-	data.push(condition(1));
-	data.push(condition(2));
-	context.setConditions(data);
-
-	context.addColumn({name: 'c0', expression: new mabi.Expression(function(c){
+	context.addExpression(new mabi.Expression(function(c){
 	    return c.condition.param('int') * 1;
-	})});
-	context.addColumn({name: 'c1', expression: new mabi.Expression(function(c){
+	}));
+	context.addExpression(new mabi.Expression(function(c){
 	    return c.condition.param('int') * 2;
-	})});
+	}));
+
+	context.setRowFields([dam.fields.CHARACTER]);
+	context.setColumnFields([dam.fields.EXPRESSION]);
+	context.update();
 	
 	var table = context.table();
 	expect(table.getValue(0, 1)).toEqual(0);
