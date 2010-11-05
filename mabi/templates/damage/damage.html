@@ -20,7 +20,7 @@
 
 <span class="menu ui-widget ui-widget-header">
   <button class="generator">キャラクターの追加</button>
-  <button class="">表示設定</button>
+  <button class="options">表示設定</button>
   <button class="chart">チャートの表示</button>
   <button class="help">ヘルプ</button>
 </span>
@@ -30,6 +30,7 @@
   <tbody class="ui-widget-content"></tbody>
 </table>
 
+{% include "damage/options.html" %}
 {% include "damage/condition.html" %}
 {% include "damage/generator.html" %}
 {% include "damage/chart_view.html" %}
