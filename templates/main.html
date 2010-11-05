@@ -1,23 +1,146 @@
 {% extends 'base.html' %}
-{% block title %}Welcome!{% endblock %}
+{% block title %}マビノギ いろいろ{% endblock %}
+{% block h1 %}{% endblock %}
 
 {% block content %}
-<h1>マビノギいろいろ</h1>
 
+<div class="main">
 
-<ul>
-<li><a href="{% url damage %}">ダメージ計算</a></li>
-<li>
-  <div class="delete">マビノギ エンチャント検索</div>
-  <div>
-    エンチャント検索は Noname 様の 
+  <p>
+    このサイトは <a href="http://twitter.com/rinunu">rinunu</a>
+    の作ったマビノギ関連のあれとかこれとかを適当に置いてるサイトです
+  </p>
+  
+  <h2>あれとかこれとか</h2>
+  <table>
+    <tr>
+      <td><a href="{% url damage %}">ダメージ計算</a></td>
+      <td>マビノギのダメージを計算します！ 計算するだけです</td>
+    </tr>
+    <tr>
+      <td><a href="{% url api_doc %}">エンチャント API</a></td>
+      <td>
+	JavaScript から使用できるエンチャントデータです
+      </td>
+    </tr>
+    <tr>
+      <td><a href="{% url twitter_bot %}">つぶやく RSS</a></td>
+      <td>マビノギ関連の RSS をツイッターでつぶやいてます</td>
+    </tr>
+  </table>
+  
+  <p>
+    ※ エンチャント検索は Noname 様の 
     <a href="http://fruitmilk.xii.jp/enchant/search.cgi">エンチャント検索っぽいそれ</a>
-    が素敵すぎます！
-  </div>
-</li>
-<li><a href="{% url api_doc %}">マビノギ API(試行錯誤中)</a></li>
-<li><a href="{% url twitter_bot %}">各種 Twitter BOT</a></li>
-</ul>
-
+    を使って幸せになれました(*´ω｀*)
+  </p>
+  
+  
+  <h2>その他</h2>
+  
+  <p>
+    Firefox3.6, Chrome7, Safari4, IE8 でそれっぽく動いてるみたいです。
+    ※ IE8 ではとっても遅いです(´；ω；｀)
+  </p>
+  
+  <p>
+    ソースは <a href="http://github.com/rinunu/mabichara">github</a> にあります。
+  </p>
+  
+  <p>
+    変な所等ありましたら教えていただけると喜びます(ノｗノ)
+  </p>
+  
+  <p>
+    連絡先:
+    <a href="http://twitter.com/rinunu">Twitter</a>
+  </p>
+  
+  <h3>参考にしたサイトさま</h3>
+  <table>
+    <tr>
+      <td><a target="_blank" href="http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4">Mabinogi Wiki* スキル/魔法</a></td>
+      <td>魔法ダメージの計算式</td>
+    </tr>  
+    <tr>
+      <td><a target="_blank" href="http://aumiya.jugem.jp/?eid=173">蒼乃銀杏～あおのぎんなん～ 各種魔法ダメージG12とG13を比較してみた。</a></td>
+      <td>魔法ダメージを参考にさせていただきました！ ※でも結果が合わないのです。。 なんで。。</td>
+    </tr>
+    <tr>
+      <td><a href="http://mabinogi.wikiwiki.jp/">Mabinogi Wiki*</a></td>
+      <td>各種データはここからの転載です。 いつもお世話になっております</td>
+    </tr>
+  </table>
+  
+  <h3>使用しているもの</h3>
+  <table>
+    <tr>
+      <th colspan="2">サーバ</th>
+    </tr>
+    
+    <tr>
+      <td><a href="http://code.google.com/intl/ja/appengine/">Google App Engine</a></td>
+      <td></td>
+    </tr>
+    
+    
+    <tr>
+      <th colspan="2">ライブラリ</th>
+    </tr>
+    <tr>
+      <td><a href="http://www.allbuttonspressed.com/projects/django-nonrel">Django-nonrel</a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.allbuttonspressed.com/projects/django-mediagenerator">django-mediagenerator</a></td>
+      <td>メディアバンドル</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a></td>
+      <td>Wiki スクレイピング</td>
+    </tr>
+    <tr>
+      <td><a href="http://sourceforge.net/projects/json-py/">json-py</a></td>
+      <td>JSON 生成</td>
+    </tr>
+    
+    <tr>
+      <td><a href="http://jquery.com/">jQuery</a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://code.google.com/intl/ja/apis/charttools/index.html">Google Chart Tools</a></td>
+      <td>チャート表示</td>
+    </tr>
+    
+    <tr>
+      <th colspan="2">素材</th>
+    </tr>
+    <tr>
+      <td><a href="http://mentalized.net/activity-indicators/">AJAX Activity indicators</a></td>
+      <td>処理中アニメーション</td>
+    </tr>
+    <tr>
+      <td><a href="http://hibana.rgr.jp/">ヒバナ</a></td>
+      <td>背景の紙模様</td>
+    </tr>
+    
+    <tr>
+      <th colspan="2">サービス</th>
+    </tr>
+    <tr>
+      <td><a href="http://dlvr.it/">dlvr.it</a></td>
+      <td>RSS to Twitter</td>
+    </tr>
+    
+    
+    <!-- <tr> -->
+    <!--   <td><a href="http://www.sprymedia.co.uk/article/DataTables">DataTables</a></td> -->
+    <!--   <td></td> -->
+    <!-- </tr> -->
+  </table>
+  
+  
+</div>
 {% endblock %}
 

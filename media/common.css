@@ -5,40 +5,77 @@
 /* ---------------------------------------------------------------------- */
 /* 全体構成 */
 
+*{
+    padding: 0;
+    margin: 0;
+}
+
 #header {
     /* margin-bottom: 20px; */
     /* padding-bottom: 5px; */
     /* border-bottom: 1px solid #a6c9e2; */
+    overflow: hidden;
 }
 
+#footer{
+    margin-top: 20px;
+    padding-top: 5px;
+    border-top: 1px solid #d7a98c; /* 赤白橡 */
+    background-color: #e9e4d4; /* 灰白色 */
+}
 
-#footer {
-    /* margin-top: 20px; */
-    /* padding-top: 5px; */
-    /* border-top: 1px solid #a6c9e2; */
-    /* clear: both; */
+.main.menu{
+    float: right;
+}
+
+#switcher{
+    margin: 5px;
+    float: right;
 }
 
 h1{
-    font-size: 14px;
+    padding-left: 5px;
+    font-size: 20px;
 }
-
-/* ---------------------------------------------------------------------- */
-/* 共通 */
 
 body {
     font-size: 12px;
+    background: url(images/B5.png) repeat;
 }
+
+/**
+ * 本文など
+ */
+.main {
+    border: solid 1px #ccf;
+    border-top: none;
+    margin: 0 20px;
+    padding: 20px;
+    background-color: #fff;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+}
+
+h2, h3{
+    margin-top: 20px;
+}
+
+.ui-widget-header{
+    background: #96514d; /* 小豆色 */
+    color: #fff;
+    border: none;
+}
+
+/* ---------------------------------------------------------------------- */
+/* 共通部品 */
 
 a{
-    /* color: rgb(0,0,204); */
+    color: inherit;
+    /* text-decoration: none; */
 }
 
-/* .css_right { float: right; } */
-
-table{
-  /* table-layout: fixed; */
-    
+ul{
+    list-style: none;
 }
 
 /* .delete{ */
@@ -49,109 +86,12 @@ label{
     font-weight: bold;
 }
 
-/* ---------------------------------------------------------------------- */
-/* table */
-
-thead th {
-    /* cursor: pointer; */
-    /* * cursor: hand; */
-}
-
-table{
-    /* table-layout: fixed; */
-    /* border-collapse: collapse; */
-}
-
-td, th{
-    /* font-size: 12px; */
-    /* border: 1px solid #a6c9e2; */
-}
-
-.odd{
-    /* background-color: white; */
-}
-
-/* -*- coding: utf-8 -*- */
-
-/* ---------------------------------------------------------------------- */
-
-.unimplemented{
-    color: red;
-}
-
-/* ---------------------------------------------------------------------- */
-
-/* ul.weapons li{ */
-/*     display: block; */
-/*     float: left; */
-/*     margin: 5px; */
-/*     padding: 1px; */
-/*     background-color: #C6E2FF; */
-/* } */
-
-/* ---------------------------------------------------------------------- */
-
-table.enchants{
-    width: 800px;
-}
-
-span.id{
-    color: #d3d3d3;
-}
-
-th.root{
-    width: 50px;
-}
-
-th.rank{
-    width: 55px;
-}
-
-th.name{
-    width: 150px;
-}
-
-th.equipment_text{
-    width: 100px;
-}
-
-th.effects_text{
-}
-
-th.attack_max, th.melee_attack_max, th.ranged_attack_max, th.critical, th.life_max,
-th.mana_max, th.stamina_max, th.defence, th.protection{
-    width: 60px;
-}
-
-/* UP 効果 */
-li.up{
-    color: blue;
-}
-
-/* DOWN 効果 */
-li.down{
-    color: red;
-}
-
-td ul{
-    margin: 0;
-    padding: 0;
-}
-
-td li{
-    list-style-type: none;
-    display: block;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* common */
-
 .editable{
     cursor: pointer;
     border: solid 1px #aa8;
     background-color: #ffe;
 }
+
 .editable:hover{
     background-color: #ffa;
 }
@@ -213,129 +153,36 @@ table.selectable tr:hover{
     background-color: #fee;
 }
 
-
 /* ---------------------------------------------------------------------- */
-/* 装備画面 全体構成 */
+/* table */
 
-.character{
-    margin: 10px;
+table{
+    /* table-layout: fixed; */
+    /* border-collapse: collapse; */
 }
 
-.equipment_set{
-    margin: 10px;
-    width: 600px;
+table{
 }
 
-/* ---------------------------------------------------------------------- */
-/* character */
-
-.character{
-    width: 320px;
+td, th{
+    border: 1px solid #f6bfbc; /* 虹色 */
+    padding: 1px 5px;
 }
 
-.character table{
-    border: solid 1px black;
-    margin: 3px;
+thead{
+    background-color: #f6bfbc; /* 虹色 */
 }
 
-.character table td, .character table th{
-    border: none;
+thead{
+    border: 1px solid #ccc;
 }
 
-.character .basic1{
-    float: left;
+tbody tr:nth-child(2n+1) {
 }
 
-.character .basic2, .character .attack, .character .defence{
-    width: 200px;
-    float: right;
+tbody tr:nth-child(2n) {
+    background: #fef4f4; /* 桜色さくらいろ */
 }
 
-.character .basic2 th, .character .attack th, .character .defence th{
-    width: 80px;
-}
-
-.character .ui-widget-content{
-  overflow: hidden;
-}
-
-/* ---------------------------------------------------------------------- */
-/* 性能表示用テーブル */
-
-th.slot{
-    width: 80px;
-}
-th.name{
-    width: 200px;
-}
-th.float{
-    width: 50px;
-}
-
-/* ---------------------------------------------------------------------- */
-/* equipment_set */
-
-.equipment_set{
-}
-
-.equipment_set span.name{
-    font-size: 15px;
-    margin: 5px;
-    padding: 3px;
-}
-
-.equipment_set .description{
-    padding: 3px;
-    margin: 5px;
-    width: 350px;
-}
-
-.equipment_set table{
-}
-
-/* ---------------------------------------------------------------------- */
-/* 改造表 */
-
-table.upgrades td li,
-table.sequence td li{
-    list-style-type: none;
-    display: inline;
-    margin-right: 3px;
-}
-
-table.upgrades .ug,
-table.sequence .ug{
-    width: 50px;
-}
-
-table.upgrades .name,
-table.sequence .name{
-    width: 130px;
-}
-table.upgrades .proficiency,
-table.sequence .proficiency{
-    width: 40px;
-}
-table.upgrades .effects,
-table.sequence .effects{
-    width: 300px;
-}
-table.upgrades .cost,
-table.sequence .cost{
-    width: 50px;
-}
-
-/* ---------------------------------------------------------------------- */
-/* equipment_view - 個別装備画面 */
-
-.equipment_view .tabs{
-    float: left;
-    width: 700px;
-}
-
-.equipment_view .spec{
-    border: solid 1px black;
-    float: left;
-    width: 220px;
-}
+/* -*- coding: utf-8 -*- */
 

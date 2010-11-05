@@ -3,6 +3,10 @@
 
 {% block title %}マビノギ ダメージ計算{% endblock %}
 
+{% block logo %}
+<img>
+{% endblock %}
+
 {% block js %}
 {% include_media 'damagemain.js' %}
 {% include_media 'damage.css' %}
@@ -16,26 +20,29 @@
 
 {% block content %}
 
-<h1>マビノギ ダメージ シミュレータ</h1>
+<ul class="app menu">
+  <li><a class="generator">キャラクターの追加</a>
+  <li><a class="options">表示設定</a>
+  <li><a class="chart">チャートの表示</a>
+  <li><a class="help">ヘルプ</a>
+</ul>
 
-<span class="menu ui-widget ui-widget-header">
-  <button class="generator">キャラクターの追加</button>
-  <button class="options">表示設定</button>
-  <button class="chart">チャートの表示</button>
-  <button class="help">ヘルプ</button>
-</span>
+<div class="main">
+  <table class="damage">
+    <thead class=""></thead>
+    <tbody class=""></tbody>
+  </table>
+  <div>
+    <button class="todo">削除</button>
+  </div>
+  
+  {% include "damage/options.html" %}
+  {% include "damage/condition.html" %}
+  {% include "damage/generator.html" %}
+  {% include "damage/chart_view.html" %}
+  {% include "damage/help.html" %}
 
-<table class="damage ui-widget ui-widget-content">
-  <thead class="ui-widget-header"></thead>
-  <tbody class="ui-widget-content"></tbody>
-</table>
-
-{% include "damage/options.html" %}
-{% include "damage/condition.html" %}
-{% include "damage/generator.html" %}
-{% include "damage/chart_view.html" %}
-{% include "damage/help.html" %}
-
+</div>
 
 
 {% endblock %}

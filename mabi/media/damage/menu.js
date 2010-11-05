@@ -1,7 +1,6 @@
 
 mabi.Menu = function($element){
     this.$element_ = $element;
-    $(':button', this.$element_).button();
 
     $('.help', this.$element_).click(
 	function(){

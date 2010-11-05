@@ -44,6 +44,7 @@ dam.createContext = function(){
 };
 
 dam.initializeView = function(){
+    $('button').button();
     dam.context = dam.createContext();
 
     dam.help = new mabi.Help($('div.help'));
