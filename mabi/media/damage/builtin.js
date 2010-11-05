@@ -239,19 +239,19 @@ dam.addCombinationConditions = function(seed, template, nameFn){
  * デフォルトの Condition を追加する
  */
 dam.addBuiltInConditions = function(){
-    var ints = ['int', [200, 600]];
+    var ints = ['int', [200, 300, 400, 500, 600, 700, 800, 900]];
     var weapons = ['weapon', [
-		       'アイスワンド', 
-		       'クラウンアイスワンド(150式)',
-		       'クラウンアイスワンド(150式 S3)',
+		       // 'アイスワンド', 
+		       // 'クラウンアイスワンド(150式)',
+		       // 'クラウンアイスワンド(150式 S3)',
 		       'ファイアワンド', 
-		       'ファイアワンド(S3)', 
-		       'フェニックスファイアワンド(245式)', 
-		       'フェニックスファイアワンド(245式 S3)',
-		       'ライトニングワンド',
-		       'ライトニングワンド(S3)'
+		       'ファイアワンド(S3)'
+		       // 'フェニックスファイアワンド(245式)', 
+		       // 'フェニックスファイアワンド(245式 S3)',
+		       // 'ライトニングワンド',
+		       // 'ライトニングワンド(S3)'
 		   ]];
-    var seed = [ints, weapons];
+    var seed = [weapons, ints];
     var template = {
     	weapon: 'ファイアワンド(S3)',
     	character: {
@@ -269,3 +269,33 @@ dam.addBuiltInConditions = function(){
 				 });
 };
 
+dam.setDefaultContext = function(context){
+    var ib = dam.skills.get('アイスボルト').create(1);
+    var fb = dam.skills.get('ファイアボルト').create(1);
+    var lb = dam.skills.get('ライトニングボルト').create(1);
+    var fbl = dam.skills.get('ファイアボール').create(1);
+    var th = dam.skills.get('サンダー').create(1);
+    var is = dam.skills.get('アイススピア').create(1);
+    $.each([
+	{name: 'IB', expression: new mabi.MagicDamage(ib, 1)},
+	{name: 'FB(1C)', expression: new mabi.MagicDamage(fb, 1)},
+	{name: 'FB(5C)', expression: new mabi.MagicDamage(fb, 5)},
+	{name: 'LB', expression: new mabi.MagicDamage(lb, 1)},
+	{name: 'IB+FB(1C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 1)},
+	{name: 'IB+FB(5C)', expression: new mabi.FusedBoltMagicDamage(ib, fb, 5)},
+	{name: 'IB+LB', expression: new mabi.FusedBoltMagicDamage(ib, lb, 1)},
+	{name: 'FB+LB(1C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 1)},
+	{name: 'FB+LB(5C)', expression: new mabi.FusedBoltMagicDamage(fb, lb, 5)}
+	// {name: 'FBL', expression: new mabi.MagicDamage(fbl, 5)},
+	// {name: 'IS(5C)', expression: new mabi.MagicDamage(is, 5)},
+	// {name: 'TH(5C)', expression: new mabi.ThunderDamage(th, {charge: 5})}
+    ], function(i, v){
+	context.addColumn(v);
+    });
+
+    var mob = new mabi.Element({
+	effects:[
+	    {param: 'protection', min: 0.1}
+	]});
+    context.setMob(mob);
+};
