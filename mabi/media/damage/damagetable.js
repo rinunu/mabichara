@@ -13,10 +13,10 @@ mabi.DamageTable.prototype.initialize = function(){
 
     this.appendHeader();
 
-    this.context_.conditions().each(
-	function(i, v){
-	    this_.appendRow(v);
-	});
+    var table = this.context_.table();
+    for(var i = 0; i < table.getNumberOfRows(); i++){
+	this_.appendRow(table, i);
+    }
 };
 
 /**
@@ -36,24 +36,21 @@ mabi.DamageTable.prototype.appendHeader = function(){
     $.each(columns, function(i, v){
 	       $('<th class="damage"/>').text(v.name).appendTo($tr);
 	   });
-
 };
 
 /**
  * table に 1行追加する
  */
-mabi.DamageTable.prototype.appendRow = function(condition){
+mabi.DamageTable.prototype.appendRow = function(table, row){
     var this_ = this;
-    var columns = this.context_.columns();
-    console.assert(condition instanceof mabi.Condition);
     var $tr = $('<tr />');
     $('<td />').append($('<input type="checkbox" />')).appendTo($tr);
-    $('<td />').text(condition.name()).appendTo($tr);
-
-    $.each(columns, function(i, column){
-	       var $td = $('<td class="damage" />').appendTo($tr);
-	       this_.renderCell(condition, column, $td);
-	   });
+    for(var i = 0; i < table.getNumberOfColumns(); i++){
+	var $td = $('<td/>').appendTo($tr);
+	var columnType = table.getColumnType(i);
+	if(columnType == 'number') $td.addClass('damage');
+	this_.renderCell(table, row, i, $td);
+    }
 
     var $tbody = $('tbody', this.$table_);
     $tr.appendTo($tbody);
@@ -62,13 +59,8 @@ mabi.DamageTable.prototype.appendRow = function(condition){
 /**
  * 1セル描画する
  */
-mabi.DamageTable.prototype.renderCell = function(row, colum, $td){
-    var context = {
-	condition: row, 
-	mob: this.context_.mob()
-    };
-    var value = Math.floor(colum.expression.value(context));
-    $td.text(value);
+mabi.DamageTable.prototype.renderCell = function(table, row, colum, $td){
+    $td.text(table.getValue(row, colum));
 };
 
 

@@ -6,9 +6,17 @@
  * Context を共有するビューは同じデータを表示することとなる。
  */
 mabi.Context = function(options){
+    options = options || {};
     this.columns_ = [];
     this.conditions_ = options.conditions;
     this.mob_ = null;
+};
+
+/**
+ *
+ */
+mabi.Context.prototype.setConditions = function(conditions){
+    this.conditions_ = conditions;
 };
 
 /**
@@ -47,3 +55,34 @@ mabi.Context.prototype.mob = function(){
 mabi.Context.prototype.setMob = function(mob){
     this.mob_ = mob;
 };
+
+// ----------------------------------------------------------------------
+//
+
+/**
+ * 計算結果の入った DataTable を取得する
+ */
+mabi.Context.prototype.table = function(){
+    var this_ = this;
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'キャラクター');
+    $.each(this.columns_, function(i, column){
+    	data.addColumn('number', column.name);
+    });
+    
+    data.addRows(this.conditions_.length());
+    this.conditions_.each(
+    	function(row, condition){
+    	    data.setValue(row, 0, condition.name());
+    	    $.each(this_.columns_, function(i, column){
+    		var c = {
+    		    condition: condition,
+    		    mob: this_.mob_
+    		};
+    		var value = Math.floor(column.expression.value(c));
+    		data.setValue(row, i + 1, value);
+    	    });
+    	});
+    return data;
+};
+
