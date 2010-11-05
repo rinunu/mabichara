@@ -34,7 +34,7 @@ mabi.DamageTable.prototype.appendHeader = function(){
 
     $tr = $('<tr />').appendTo($thead);
     $.each(columns, function(i, v){
-	       $('<th />').text(v.name).appendTo($tr);
+	       $('<th class="damage"/>').text(v.name).appendTo($tr);
 	   });
 
 };
@@ -51,7 +51,7 @@ mabi.DamageTable.prototype.appendRow = function(condition){
     $('<td />').text(condition.name()).appendTo($tr);
 
     $.each(columns, function(i, column){
-	       var $td = $('<td />').appendTo($tr);
+	       var $td = $('<td class="damage" />').appendTo($tr);
 	       this_.renderCell(condition, column, $td);
 	   });
 

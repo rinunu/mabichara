@@ -1,6 +1,4 @@
 /* -*- coding: utf-8 -*- */
-/* Add your global CSS (i.e., code that is project-specific and not part of any app) here. */
-
 
 /* ---------------------------------------------------------------------- */
 /* 全体構成 */
@@ -8,6 +6,16 @@
 *{
     padding: 0;
     margin: 0;
+}
+
+body {
+    font-size: 12px;
+    background-color: #e9e4d4; /* 灰白色 */
+}
+
+#root{
+    background: url(images/B5.png) repeat;
+    padding-bottom: 20px;
 }
 
 #header {
@@ -18,10 +26,8 @@
 }
 
 #footer{
-    margin-top: 20px;
-    padding-top: 5px;
-    border-top: 1px solid #d7a98c; /* 赤白橡 */
-    background-color: #e9e4d4; /* 灰白色 */
+    padding: 5px;
+    border-top: 1px solid #716246;
 }
 
 .main.menu{
@@ -36,11 +42,6 @@
 h1{
     padding-left: 5px;
     font-size: 20px;
-}
-
-body {
-    font-size: 12px;
-    background: url(images/B5.png) repeat;
 }
 
 /**
@@ -184,5 +185,14 @@ tbody tr:nth-child(2n) {
     background: #fef4f4; /* 桜色さくらいろ */
 }
 
-/* -*- coding: utf-8 -*- */
+/* ---------------------------------------------------------------------- */
+
+#footer a{
+    border: solid 1px #716246;
+    background-color: #b88884;
+    /* color: #fff; */
+    text-decoration: none;
+    padding: 3px;
+}
+
 
