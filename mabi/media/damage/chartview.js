@@ -2,7 +2,7 @@
 /**
  * グラフを表示するビュー
  */
-mabi.GraphView = function($element){
+mabi.ChartView = function($element){
     this.$element_ = $element;
     this.$element_.dialog(
 	{
@@ -15,7 +15,7 @@ mabi.GraphView = function($element){
 /**
  * ビューを表示する
  */
-mabi.GraphView.prototype.show = function(context){
+mabi.ChartView.prototype.show = function(context){
     this.context_ = context;
     this.$element_.dialog('open');
     this.updateChart();
@@ -24,7 +24,7 @@ mabi.GraphView.prototype.show = function(context){
 /**
  * チャートの表示を更新する
  */
-mabi.GraphView.prototype.updateChart = function(){
+mabi.ChartView.prototype.updateChart = function(){
     var data = this.createDataTable();
 
     if(!this.chart_){
@@ -41,7 +41,7 @@ mabi.GraphView.prototype.updateChart = function(){
 /**
  * DataTable を生成する
  */
-mabi.GraphView.prototype.createDataTable = function(){
+mabi.ChartView.prototype.createDataTable = function(){
     var mob = this.context_.mob();
     var conditions = this.context_.conditions();
     var columns = this.context_.columns();

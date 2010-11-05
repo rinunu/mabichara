@@ -49,7 +49,7 @@ dam.initializeView = function(){
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
     dam.conditonView = new mabi.ConditionView($('form.condition-view'));
-    dam.graphView = new mabi.GraphView($('.graph-view'));
+    dam.chartView = new mabi.ChartView($('.chart-view'));
 
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.context);
 

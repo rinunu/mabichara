@@ -13,8 +13,8 @@ mabi.Menu = function($element){
 	    dam.generatorView.show(dam.context);
 	});
 
-    $('.graph', this.$element_).click(
+    $('.chart', this.$element_).click(
 	function(){
-	    dam.graphView.show(dam.context);
+	    dam.chartView.show(dam.context);
 	});
 };
