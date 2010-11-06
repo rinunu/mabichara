@@ -40,16 +40,19 @@ mabi.DamageTable.prototype.update = function(){
 mabi.DamageTable.prototype.appendHeader = function(){
     var $thead = $('thead', this.$table_);
 
-    var columns = this.context_.columns();
-
+    var columnFields = this.context_.columnFields();
     var $tr = $('<tr />').appendTo($thead);
-    $('<th />').attr('rowspan', 2).appendTo($tr);
-    $('<th />').text('キャラクター').attr('rowspan', 2).appendTo($tr);
-    $('<th />').text('ダメージ').attr('colspan', columns.length).appendTo($tr);
+    $('<th />').attr('rowspan', columnFields.length).appendTo($tr);
+    $('<th />').text('キャラクター').attr('rowspan', columnFields.length).appendTo($tr);
 
-    $tr = $('<tr />').appendTo($thead);
-    this.context_.eachColumn(function(i, v){
-	$('<th class="damage"/>').text('todo').appendTo($tr);
+    $trs = [$tr];
+    for(var i = 0; i < columnFields.length - 1; i++){
+	$trs.push($('<tr />').appendTo($thead));
+    }
+    this.context_.eachColumn(function(i, fields){
+	$.each(fields, function(i, field){
+	    $('<th class="damage"/>').text(field.name()).appendTo($trs[i]);
+	});
     });
 };
 

@@ -245,6 +245,7 @@ dam.addCombinationConditions = function(seed, template, nameFn){
 // };
 
 dam.setDefaultContext = function(context){
+    var critical = false;
     var ib = dam.skills.get('アイスボルト').create(1);
     var fb = dam.skills.get('ファイアボルト').create(1);
     var lb = dam.skills.get('ライトニングボルト').create(1);
@@ -252,18 +253,18 @@ dam.setDefaultContext = function(context){
     var th = dam.skills.get('サンダー').create(1);
     var is = dam.skills.get('アイススピア').create(1);
     $.each([
-	[new mabi.MagicDamage(ib, {name: 'IB', charge: 1})],
-	[new mabi.MagicDamage(fb, {name: 'FB(1C)', charge: 1})],
-	[new mabi.MagicDamage(fb, {name: 'FB(5C)', charge: 5})],
-	[new mabi.MagicDamage(lb, {name: 'LB', charge: 1})],
-	[new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C)', charge: 1})],
-	[new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(5C)', charge: 5})],
-	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB', charge: 1})],
-	[new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(1C)', charge: 1})],
-	[new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(5C)', charge: 5})]
-	// [new mabi.MagicDamage(fbl, {name: 'FBL', charge: 5})],
-	// [new mabi.MagicDamage(is, {name: 'IS(5C)', charge: 5})],
-	// [new mabi.ThunderDamage(th, {name: 'TH(5C)', charge: 5})]
+	// [new mabi.MagicDamage(ib, {name: 'IB', charge: 1, critical: critical})],
+	// [new mabi.MagicDamage(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
+	// [new mabi.MagicDamage(fb, {name: 'FB(5C)', charge: 5, critical: critical})],
+	// [new mabi.MagicDamage(lb, {name: 'LB', charge: 1, critical: critical})],
+	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C)', charge: 1, critical: critical})],
+	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(5C)', charge: 5, critical: critical})],
+	// [new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB', charge: 1, critical: critical})],
+	// [new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(1C)', charge: 1, critical: critical})],
+	// [new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(5C)', charge: 5, critical: critical})]
+	[new mabi.MagicDamage(fbl, {name: 'FBL', charge: 5, critical: critical})],
+	[new mabi.MagicDamage(is, {name: 'IS(5C)', charge: 5, critical: critical})],
+	[new mabi.ThunderDamage(th, {name: 'TH(5C)', charge: 5, critical: critical})]
     ], function(i, v){
 	context.addExpression(v[0]);
     });
@@ -271,19 +272,20 @@ dam.setDefaultContext = function(context){
     var weapons = [
 	// 'アイスワンド', 
 	// 'クラウンアイスワンド(150式)',
-	// 'クラウンアイスワンド(150式 S3)',
-	'ファイアワンド', 
-	'ファイアワンド(S3)'
+	'クラウンアイスワンド(150式 S3)',
+	// 'ファイアワンド', 
+	'ファイアワンド(S3)',
 	// 'フェニックスファイアワンド(245式)', 
 	// 'フェニックスファイアワンド(245式 S3)',
 	// 'ライトニングワンド',
-	// 'ライトニングワンド(S3)'
+	'ライトニングワンド(S3)'
     ];
     $.each(weapons, function(i, v){
 	context.addEquipmentSet(dam.weapons.get(v));
     });
 
     var ints = ['int', [200, 300, 400, 500, 600, 700, 800, 900]];
+    var lightnings = ['lightning', [0, 0.15]];
     var template = {
     	'int': 600,
     	ice_magic_damage: 0.15, // アイスマスタリ1
@@ -292,16 +294,17 @@ dam.setDefaultContext = function(context){
     	bolt_magic_damage: 0.15, // ボルトマスタリ1
     	fused_bolt_magic_damage: 0.15 // ボルト魔法
     };
-    dam.combination([ints], function(map){
+    dam.combination([lightnings, ints], function(map){
 	template.name = 'Int' + map['int'];
 	template['int'] = map['int'];
+	template['lightning_magic_damage'] = map['lightning'];
 	var character = dam.createCharacter(template);
 	context.addCharacter(character);
     });
 
     var mob = new mabi.Element({
 	effects:[
-	    {param: 'protection', min: 0.1}
+	    {param: 'protection', min: 0.3}
 	]});
     context.setMob(mob);
 

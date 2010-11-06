@@ -38,6 +38,13 @@ mabi.Context.prototype.setColumnFields = function(fields){
 };
 
 /**
+ * 列方向に表示するフィールドを取得する
+ */
+mabi.Context.prototype.columnFields = function(){
+    return this.columnFields_;
+};
+
+/**
  * 行方向に表示するフィールドを設定する
  */
 mabi.Context.prototype.setRowFields = function(fields){
@@ -81,42 +88,6 @@ mabi.Context.prototype.mob = function(){
 
 mabi.Context.prototype.setMob = function(mob){
     this.mob_ = mob;
-};
-
-// ----------------------------------------------------------------------
-// old
-
-/**
- *
- */
-mabi.Context.prototype.setConditions = function(conditions){
-    this.conditions_ = conditions;
-};
-
-/**
- * @param options {
- *   name: 名前,
- *   expression: Expression
- * }
- */
-mabi.Context.prototype.addColumn = function(options){
-    this.columns_.push(options);
-};
-
-/**
- * すべての Column を列挙する
- * 
- * 呼び出し元で内容を変更してはならない
- */
-mabi.Context.prototype.columns = function(){
-    return this.columns_;
-};
-
-/**
- * Conditions を取得する
- */
-mabi.Context.prototype.conditions = function(){
-    return this.conditions_;
 };
 
 // ----------------------------------------------------------------------
