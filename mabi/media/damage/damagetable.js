@@ -42,7 +42,6 @@ mabi.DamageTable.prototype.appendHeader = function(){
 
     var columnFields = this.context_.columnFields();
     var $tr = $('<tr />').appendTo($thead);
-    $('<th />').attr('rowspan', columnFields.length).appendTo($tr);
     $('<th />').text('キャラクター').attr('rowspan', columnFields.length).appendTo($tr);
 
     $trs = [$tr];
@@ -62,7 +61,6 @@ mabi.DamageTable.prototype.appendHeader = function(){
 mabi.DamageTable.prototype.appendRow = function(table, row){
     var this_ = this;
     var $tr = $('<tr />');
-    $('<td />').append($('<input type="checkbox" />')).appendTo($tr);
     for(var i = 0; i < table.getNumberOfColumns(); i++){
 	var $td = $('<td/>').appendTo($tr);
 	var columnType = table.getColumnType(i);

@@ -130,6 +130,16 @@ div.notice{
 }
 
 /**
+ * ガイド文
+ */
+div.guide{
+    margin: 5px;
+    padding: 5px;
+    background-color: #e6eae3;
+    color: #302833;
+}
+
+/**
  * 1効果
  */
 .li.effect{
