@@ -41,14 +41,11 @@ mabi.MagicDamage = function(skill, options){
 	    var chargeBonus = skill.is('charge_bonus') ? options.charge : 1;
 	    var fullChargeBonus = chargeBonus == 5 ? 1.3 : 1;
 
-	    // todo 特殊ボーナス(ヘボナ・スタッフ)
 	    var a = 1 + magicAttack / 100 + typeMasteryBonus + boltMasteryBonus;
 	    var b = 1 + condition.param('weapon_magic_damage') + condition.param('magic_damage');
 
 	    // todo ダメージエンチャントボーナス
 	    var enchantBonus = 0;
-
-	    // todo クリティカルボーナス
 	    var criticalBouns = options.critical ? 1.5 : 0;
 
 	    // 特別改造魔法ダメージボーナス
