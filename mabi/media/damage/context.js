@@ -75,19 +75,15 @@ mabi.Context.prototype.addEquipmentSet = function(data){
 /**
  * 
  */
-mabi.Context.prototype.addData = function(field, data){
-    this.data_[field.id].push(data);
+mabi.Context.prototype.addMob = function(data){
+    this.addData(dam.fields.MOB, data);
 };
 
 /**
- * Mob を取得する
+ * 
  */
-mabi.Context.prototype.mob = function(){
-    return this.mob_;
-};
-
-mabi.Context.prototype.setMob = function(mob){
-    this.mob_ = mob;
+mabi.Context.prototype.addData = function(field, data){
+    this.data_[field.id].push(data);
 };
 
 // ----------------------------------------------------------------------
@@ -143,7 +139,9 @@ mabi.Context.prototype.updateGetter = function(){
 	var a = map[field.id];
 	if(!a) return null;
 	var b = a[0] == 0 ? row : column;
-	return b[a[1]];
+	var result =  b[a[1]];
+	console.assert(result);
+	return result;
     }
 };
 
@@ -212,7 +210,7 @@ mabi.Context.prototype.calculate = function(row, column){
 	    title: this.title_,
 	    weapon: this.getter_(dam.fields.EQUIPMENT_SET, row, column)
 	}),
-	mob: this.mob_,
+	mob: this.getter_(dam.fields.MOB, row, column),
     };
     var expression = this.getter_(dam.fields.EXPRESSION, row, column)
     return expression.value(c);
