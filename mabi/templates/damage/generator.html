@@ -1,33 +1,164 @@
-<div class="generator" title="キャラクターの追加">
+<div class="generator" title="データの設定">
   <div class="guide">
-    ここでは指定した設定をもとに、一度に複数のキャラクターを追加することが出来ます。
+    <p>ここでは表に表示するデータを設定します</p>
+    <p>1つのデータはキャラクター・装備・MOB・攻撃種別の組み合わせと、その組み合わせ時のダメージから構成されます。とか何とか説明を書きます</p>
+    <p>が、まだこの画面はうごきません！</p>
   </div>
 
-  <form class="">
-    <h3>固定値</h3>
-    <div>
-      生成するキャラクターの固定部の設定を行ないます。
-    </div>
-    <div>
-      {% include "damage/condition.html" %}
+  <div class="tabs">
+    <ul>
+      <li><a href="#tabs1_character">キャラクター設定</a></li>
+      <li><a href="#tabs1_equipment">装備設定</a></li>
+      <li><a href="#tabs1_mob">MOB 設定</a></li>
+      <li><a href="#tabs_attack">攻撃種別設定</a></li>
+    </ul>
+    <div id="tabs1_character">
+      <div class="guide">
+	<p>ここではキャラクターを設定します
+      </div>
+
+      <div>
+	<label>Int
+	  <input type="text" class="int"></input>
+	</label>
+      </div>
+
+      <button>追加</button>
+
+      <div>
+	<select name="" multiple>
+	  <option value="">Int600</option>
+	  <option value="">Int500</option>
+	</select>
+      </div>
 
     </div>
 
-    <h3>可変値</h3>
-    <div>
-      生成するキャラクターの可変部の設定を行ないます。
+
+
+
+
+
+    <div id="tabs1_equipment">  
+      <div class="guide">
+	<p>ここでは装備を設定します
+      </div>
+
+      <label>タイトル
+	<select class="title">
+	  <option>その他</option>
+	  <option>マジックマスター</option>
+	  <option>ボルト魔法マスター</option>
+	</select>
+      </label>
+
+      <label>武器
+	<select class="weapon">
+	  <option>両手剣</option>
+	  <option>二刀流</option>
+	  <option>弓</option>
+	  <option>ライトニングワンド</option>
+	  <option>クリスタルライトニングワンド(111式)</option>
+	</select>
+      </label>
+
+      <div>
+	<label>フラグ</label>
+	<span class="flags">
+	  <input type="checkbox" id="icebolt" />
+	  <label for="icebolt">アイスボルト強化</label>
+	  <input type="checkbox" id="firebolt" />
+	  <label for="firebolt">ファイアボルト強化</label>
+	</span>
+      </div>
+
+      <button>追加</button>
+
+      <div>
+	<select name="" multiple>
+	  <option value="">追加された装備1</option>
+	  <option value="">追加された装備2</option>
+	</select>
+      </div>
+
     </div>
-    
-    <div class="var0">
-      可変値1
-      <select class="type"></select>
-      <span class="detail"></span>
+
+    <div id="tabs1_mob">  
+      <div class="guide">
+	<p>ここではMOB を設定します
+      </div>
+
+      <button>追加</button>
+
+      <div>
+	<select name="" multiple>
+	  <option value="">ガストさん</option>
+	  <option value="">グールさん</option>
+	</select>
+      </div>
+
     </div>
-    <div class="var1">
-      可変値2
-      <select class="type"></select>
-      <span class="detail"></span>
+
+
+
+    <div id="tabs_attack">
+      <div class="guide">
+	<p>ここでは攻撃種別を設定します
+      </div>
+
+      <div>
+	<label>スキル
+	  <select name="">
+	    <option value="">ファイアボルト</option>
+	    <option value="">アイスボルト</option>
+	    <option value="">ライトニングボルト</option>
+
+	    <option value="">ファイアボール</option>
+	    <option value="">アイススピア</option>
+	    <option value="">サンダー</option>
+
+	    <option value="todo">アイスボルト+ファイアボルト</option>
+	    <option value="todo">アイスボルト+ライトニングボルト</option>
+	    <option value="todo">ファイアボルト+ライトニングボルト</option>
+
+	    <option value="todo">スマッシュ</option>
+	    <option value="todo">アタック</option>
+	    <option value="todo">レンジアタック</option>
+	    <option value="todo">マグナムショット</option>
+	  </select>
+	</label>
+
+	<label>
+	  チャージ
+	  <select class="option">
+	    <option value="">1</option>
+	    <option value="">2</option>
+	    <option value="">3</option>
+	    <option value="">4</option>
+	    <option value="">5</option>
+	  </select>
+	</label>
+	<input type="checkbox" id="critical" />
+	<label for="critical">クリティカル</label>
+      </div>
+      
+      <button>追加</button>
+
+      <div>
+	<select name="" multiple>
+	  <option value="">ファイアボール</option>
+	  <option value="">サンダー(5チャージ)</option>
+	  <option value="">アイスボルト+ファイアボルト(5チャージ)</option>
+	</select>
+      </div>
+      
+
     </div>
-  </form>
+
+
+
+
+
+  </div>
 
 </div> 

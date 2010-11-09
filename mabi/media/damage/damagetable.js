@@ -41,8 +41,9 @@ mabi.DamageTable.prototype.appendHeader = function(){
     var $thead = $('thead', this.$table_);
 
     var columnFields = this.context_.columnFields();
+    var rowFields = this.context_.rowFields();
     var $tr = $('<tr />').appendTo($thead);
-    $('<th />').text('キャラクター').attr('rowspan', columnFields.length).appendTo($tr);
+    $('<th />').text('').attr('rowspan', columnFields.length).appendTo($tr);
 
     $trs = [$tr];
     for(var i = 0; i < columnFields.length - 1; i++){
@@ -78,7 +79,6 @@ mabi.DamageTable.prototype.appendRow = function(table, row){
 mabi.DamageTable.prototype.renderCell = function(table, row, colum, $td){
     $td.text(table.getValue(row, colum));
 };
-
 
 // ----------------------------------------------------------------------
 // 

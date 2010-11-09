@@ -52,6 +52,13 @@ mabi.Context.prototype.setRowFields = function(fields){
 };
 
 /**
+ * 行方向に表示するフィールドを取得する
+ */
+mabi.Context.prototype.rowFields = function(){
+    return this.rowFields_;
+};
+
+/**
  * 
  */
 mabi.Context.prototype.addExpression = function(data){
@@ -174,7 +181,7 @@ mabi.Context.prototype.eachRow = function(fn){
  * カラムもしくは row の名前を取得する
  */
 mabi.Context.prototype.name = function(values){
-    return $.map(values, function(v){return v.name()}).join(' ');
+    return $.map(values, function(v){return v.name()}).join(' | ');
 };
 
 
