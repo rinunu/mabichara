@@ -53,7 +53,7 @@ dam.addBuiltInItems = function(){
 		    effects: [
 			{param: 'weapon_magic_damage', min: 0.28}
 		    ]
-		},
+		}
 	    ]
 	},
 	{
@@ -273,16 +273,17 @@ dam.setDefaultContext = function(context){
 	// [new mabi.ThunderDamage(th, {name: 'TH(5C)', charge: 5, critical: critical})]
 
 	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C クリ)', charge: 1, critical: true})],
-	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB(クリ)', charge: 1, critical: true})],
+	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB(クリ)', charge: 1, critical: true})]
     ], function(i, v){
 	context.addExpression(v[0]);
     });
 
     var weapons = [
 	// 'アイスワンド', 
-	// 'クラウンアイスワンド(150式)',
+	'クラウンアイスワンド(150式)',
 	'クラウンアイスワンド(150式 S3)',
-	'クラウンアイスワンド(205式 S3)',
+	'クラウンアイスワンド(205式)',
+	'クラウンアイスワンド(205式 S3)'
 	// 'ファイアワンド', 
 	// 'ファイアワンド(S3)',
 	// 'フェニックスファイアワンド(245式)', 
