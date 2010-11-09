@@ -8,17 +8,22 @@
     margin: 0;
 }
 
-body {
+html, body {
+    height:100%;
     font-size: 12px;
-    background-color: #e9e4d4; /* 灰白色 */
 }
 
 #root{
     background: url(images/B5.png) repeat;
-    padding-bottom: 20px;
+    position: relative;
+    min-height: 100%;
 }
 
-#header {
+#content{
+    padding-bottom: 40px;
+}
+
+#header{
     /* margin-bottom: 20px; */
     /* padding-bottom: 5px; */
     /* border-bottom: 1px solid #a6c9e2; */
@@ -26,8 +31,15 @@ body {
 }
 
 #footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #e9e4d4;
+    /* border-top: 1px solid #716246; */
+}
+
+#footer div{
     padding: 5px;
-    border-top: 1px solid #716246;
 }
 
 .main.menu{
@@ -133,10 +145,11 @@ div.notice{
  * ガイド文
  */
 div.guide{
-    margin: 5px;
-    padding: 5px;
-    background-color: #e6eae3;
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
     color: #302833;
+    border: solid 1px #dcdcdc;
 }
 
 /**
