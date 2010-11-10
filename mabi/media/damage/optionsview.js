@@ -17,6 +17,12 @@ mabi.OptionsView = function($element){
     this.columns_ = [];
     this.rows_ = [];
 
+    $('select.source', this.$element_).data('source', util.bind(this, this.source));
+    $.each(['rows', 'columns'], function(i, v){
+	var $select = $('select.' + v, this_.$element_);
+	$select.data('source', function(){return this_[v + '_'];});
+    });
+
     $('.reset', $element).click(function(){
 	this_.columns_ = [];
 	this_.rows_ = [];
@@ -37,19 +43,10 @@ mabi.OptionsView = function($element){
 };
 
 mabi.OptionsView.prototype.show = function(context){
-    // todo 複数回実行
-    var this_ = this;
     this.context_ = context;
 
     this.columns_ = context.columnFields().slice(0);
     this.rows_ = context.rowFields().slice(0);
-
-    var $source = $('select.source', this.$element_).data('source', util.bind(this, this.source));
-
-    $.each(['rows', 'columns'], function(i, v){
-	var $select = $('select.' + v, this.$element_);
-	$select.data('source', function(){return this_[v + '_'];});
-    });
 
     this.updateUi();
 
