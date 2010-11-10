@@ -1,54 +1,41 @@
 
 <div class="options-view">
   <div class="guide">
-    <p> ここでは表の表示設定を行ないます。
-    <p> まだ動きません！
+    <p> ここでは表の表示設定を行ないます。</p>
   </div>
 
-  <div class="tabs">
-    <ul>
-      <li><a href="#tabs_recommended">基本設定</a></li>
-    </ul>
-    <div id="tabs_recommended">
+  <select class="source" multiple>
+    <option>キャラクター</option>
+    <option>装備</option>
+    <option>Mob</option>
+    <option>攻撃種別</option>
+  </select>
 
-      <select multiple>
-	<option>キャラクター</option>
-	<option>装備</option>
-	<option>Mob</option>
-	<option>攻撃種別</option>
-      </select>
-
-      <div>
-	<button>横軸へ追加</button>
-	<button>縦軸へ追加</button>
-      </div>
-
-      <div>
-
-	<select name=""  multiple>
-	  <option value="">キャラクター</option>
-	  <option value="">MOB</option>
-	  <option value=""></option>
-	  <option value=""></option>
-	  <option value=""></option>
-	</select>
-
-	<select name=""  multiple>
-	  <option value="">装備</option>
-	  <option value="">攻撃種別</option>
-	  <option value=""></option>
-	  <option value=""></option>
-	  <option value=""></option>
-	</select>
-      </div>
-    </div>
-
+  <div>
+    <button class="add-row">縦軸へ追加</button>
+    <button class="add-column">横軸へ追加</button>
   </div>
 
-    
+  <div>
+    <select class="rows" multiple>
+      <option value="">装備</option>
+      <option value="">攻撃種別</option>
+      <option value=""></option>
+      <option value=""></option>
+      <option value=""></option>
+    </select>
 
-    <aaa></aaa>
+    <select class="columns" multiple>
+      <option value="">キャラクター</option>
+      <option value="">MOB</option>
+      <option value=""></option>
+      <option value=""></option>
+      <option value=""></option>
+    </select>
+  </div>
 
-
+  <div>
+    <button class="reset">リセット</button>
+  </div>
   
 </div>

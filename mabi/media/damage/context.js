@@ -20,7 +20,7 @@ mabi.Context = function(options){
  * 列方向に表示するフィールドを設定する
  */
 mabi.Context.prototype.setColumnFields = function(fields){
-    this.columnFields_ = fields;
+    this.columnFields_ = fields.slice(0);
 };
 
 /**
@@ -34,7 +34,7 @@ mabi.Context.prototype.columnFields = function(){
  * 行方向に表示するフィールドを設定する
  */
 mabi.Context.prototype.setRowFields = function(fields){
-    this.rowFields_ = fields;
+    this.rowFields_ = fields.slice(0);
 };
 
 /**
@@ -211,17 +211,21 @@ mabi.Context.prototype.calculate = function(record){
 
 dam.fields = {};
 dam.fields.BODY = {
-    id: 'body'
+    id: 'body',
+    label: 'ステータス'
 };
 
 dam.fields.EXPRESSION = {
-    id: 'expression'
+    id: 'expression',
+    label: '攻撃種別'
 };
 
 dam.fields.MOB = {
-    id: 'mob'
+    id: 'mob',
+    label: 'MOB'
 };
 
 dam.fields.EQUIPMENT_SET = {
-    id: 'equipmentSet'
+    id: 'equipmentSet',
+    label: '装備'
 };
