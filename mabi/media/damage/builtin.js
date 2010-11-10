@@ -170,7 +170,7 @@ dam.addBuiltInSkills = function(){
 };
 
 /**
- * デフォルトの Weapon/Title/Skill を追加する
+ * 組み込みの Weapon/Title/Skill を追加する
  */
 dam.addBuiltInItems = function(){
     dam.addBuiltInWands();
