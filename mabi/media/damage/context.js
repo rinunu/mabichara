@@ -7,25 +7,11 @@
  */
 mabi.Context = function(options){
     options = options || {};
-    this.mob_ = null;
     this.columnFields_ = [];
     this.rowFields_ = [];
+    this.damageData_ = null;
 
-    // {フィールドID: [フィールド値, ...]}
-    this.data_ = {};
-    var this_ = this;
-    $.each(dam.fields, function(k, v){
-	this_.data_[v.id] = [];
-    });
-
-    // row, column から指定された field の値を取得する関数
-    this.getter_ = null;
-
-    this.characters_ = options.characters;
-    this.columns_ = [];
-
-
-    this.title_ = dam.titles.get('マジックマスター') // todo
+    this.table_ = null;
 };
 
 // ----------------------------------------------------------------------
@@ -61,36 +47,8 @@ mabi.Context.prototype.rowFields = function(){
 /**
  * 
  */
-mabi.Context.prototype.addExpression = function(data){
-    this.addData(dam.fields.EXPRESSION, data);
-};
-
-/**
- * 
- */
-mabi.Context.prototype.addBody = function(data){
-    this.addData(dam.fields.BODY, data);
-};
-
-/**
- * 
- */
-mabi.Context.prototype.addEquipmentSet = function(data){
-    this.addData(dam.fields.EQUIPMENT_SET, data);
-};
-
-/**
- * 
- */
-mabi.Context.prototype.addMob = function(data){
-    this.addData(dam.fields.MOB, data);
-};
-
-/**
- * 
- */
-mabi.Context.prototype.addData = function(field, data){
-    this.data_[field.id].push(data);
+mabi.Context.prototype.setDamageData = function(damageData){
+    this.damageData_ = damageData;
 };
 
 // ----------------------------------------------------------------------
@@ -101,32 +59,55 @@ mabi.Context.prototype.addData = function(field, data){
  */
 mabi.Context.prototype.update = function(){
     var this_ = this;
+    console.log('update');
 
     this.updateGetter();
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'キャラクター');
+    var getRowId = this.getRowId;
+    var getColumnId = this.getColumnId;
+    var getRowFields = this.getRowFields;
+    var getColumnFields = this.getColumnFields;
 
-    var columns = [];
-    this.eachColumn(function(i, v){columns.push(v);});
+    var records = this.damageData_.records();
 
-    var rows = [];
-    this.eachRow(function(i, v){rows.push(v);});
-
-    $.each(columns, function(i, column){
-    	data.addColumn('number', this_.name(column));
+    var rowArray = []; // [{id:, values: {Column ID: value, ...}}, ...]
+    var columnArray = []; // [{id:, []}]
+    var rowMap = {}; // Row への高速アクセス用{ID: Row}
+    var columnMap = {}; // Column への高速アクセス用{ID: Column}
+    $.each(records, function(i, record){
+	var value = Math.floor(this_.calculate(record));
+	var rowId = getRowId(record);
+	var columnId = getColumnId(record);
+	var row = rowMap[rowId];
+	if(!row){
+	    row = {id: rowId, values: {}, idFields: getRowFields(record)};
+	    rowMap[rowId] = row;
+	    rowArray.push(row);
+	}
+	row.values[columnId] = value;
+	if(!columnMap[columnId]){
+	    var column = {id: columnId, idFields: getColumnFields(record)};
+	    columnMap[columnId] = column;
+	    columnArray.push(column);
+	}
     });
-    
-    data.addRows(rows.length);
-    $.each(rows, function(i, row){
-    	data.setValue(i, 0, this_.name(row));
-    	$.each(columns, function(j, column){
-    	    var value = Math.floor(this_.calculate(row, column));
-    	    data.setValue(i, j + 1, value);
-    	});
+
+    // DataTable に変換
+    var table = new google.visualization.DataTable();
+    table.addColumn('string', 'キャラクター');
+    $.each(columnArray, function(iColumn, column){
+      	table.addColumn('number', this_.name(column));
+	table.setColumnProperty(iColumn + 1, 'idFields', column.idFields);
+    });
+    table.addRows(rowArray.length);
+    $.each(rowArray, function(iRow, row){
+	table.setValue(iRow, 0, 'todo');
+	table.setRowProperty(iRow, 'idFields', row.idFields);
+	$.each(columnArray, function(iColumn, column){
+	    table.setValue(iRow, iColumn + 1, row.values[column.id]);
+	});
     });
 
-    this.table_ = data;
-
+    this.table_ = table;
     util.Event.trigger(this, 'update');
 };
 
@@ -134,22 +115,31 @@ mabi.Context.prototype.update = function(){
  * row, column から Body, Mob 等を取り出す関数を作成する
  */
 mabi.Context.prototype.updateGetter = function(){
-    var map = {};
-    $.each(this.rowFields_, function(i, field){
-	map[field.id] = [0, i];
-    });
-    $.each(this.columnFields_, function(i, field){
-	map[field.id] = [1, i];
-    });
+    var rowFieldIds = [];
+    $.each(this.rowFields_, function(i, v){rowFieldIds.push(v.id)});
 
-    this.getter_ = function(field, row, column){
-	var a = map[field.id];
-	if(!a) return null;
-	var b = a[0] == 0 ? row : column;
-	var result =  b[a[1]];
-	console.assert(result);
-	return result;
+    var columnFieldIds = [];
+    $.each(this.columnFields_, function(i, v){columnFieldIds.push(v.id)});
+
+    function getId(record, fieldIds){
+	var ids = [];
+	for(var i = 0; i < fieldIds.length; i++){
+	    ids.push(record[fieldIds[i]].id());
+	}
+	return ids.join('_');
     }
+
+    function getFields(record, fieldIds){
+	var fields = [];
+	for(var i = 0; i < fieldIds.length; i++){
+	    fields.push(record[fieldIds[i]]);
+	}
+	return fields;
+    }
+    this.getRowId = function(record){ return getId(record, rowFieldIds); }
+    this.getColumnId = function(record){ return getId(record, columnFieldIds); }
+    this.getRowFields = function(record){ return getFields(record, rowFieldIds); }
+    this.getColumnFields = function(record){ return getFields(record, columnFieldIds); }
 };
 
 /**
@@ -158,13 +148,6 @@ mabi.Context.prototype.updateGetter = function(){
 mabi.Context.prototype.table = function(){
     console.assert(this.table_);
     return this.table_;
-};
-
-/**
- * すべてのカラムを列挙する
- */
-mabi.Context.prototype.eachColumn = function(fn){
-    this.each_(this.columnFields_, fn);
 };
 
 /**
@@ -210,15 +193,15 @@ mabi.Context.prototype.each_ = function(fields, fn){
 /**
  * セルの値を計算する
  */
-mabi.Context.prototype.calculate = function(row, column){
+mabi.Context.prototype.calculate = function(record){
     var character =  new mabi.Character;
-    character.setBody(this.getter_(dam.fields.BODY, row, column));
-    character.setEquipmentSet(this.getter_(dam.fields.EQUIPMENT_SET, row, column))
+    character.setBody(record.body);
+    character.setEquipmentSet(record.equipmentSet);
     var c = {
 	character: character,
-	mob: this.getter_(dam.fields.MOB, row, column),
+	mob: record.mob
     };
-    var expression = this.getter_(dam.fields.EXPRESSION, row, column)
+    var expression = record.expression;
     return expression.value(c);
 };
 

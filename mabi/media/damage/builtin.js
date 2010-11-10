@@ -178,33 +178,8 @@ dam.addBuiltInItems = function(){
     dam.addBuiltInSkills();
 };
 
-/**
- * 組み合わせを生成、各組み合わせごとに fn を呼び出す
- * 
- * fn の引数はマップである。
- * 
- * @param i seed のインデックス。 これ以降の seed について組み合わせを生成する
- * @param map 現在の組み合わせ結果
- */
-dam.combination = function(seed, fn, i, map){
-    i = i === undefined ? 0 : i;
-    map = map || {};
-    var param = seed[i][0];
-    var values = seed[i][1];
-    if(i == seed.length - 1){
-	$.each(values, function(j, value){
-		   map[param] = value;
-		   fn(map);
-	       });
-    }else{
-	$.each(values, function(j, value){
-		   map[param] = value;
-		   dam.combination(seed, fn, i + 1, map);
-	       });
-    }
-};
-
 dam.setDefaultContext = function(context){
+    var data = new mabi.CombinationDamageData;
 
     // Expression
     var critical = false;
@@ -219,7 +194,7 @@ dam.setDefaultContext = function(context){
 	// [new mabi.MagicDamage(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
 	// [new mabi.MagicDamage(fb, {name: 'FB(5C)', charge: 5, critical: critical})],
 	// [new mabi.MagicDamage(lb, {name: 'LB', charge: 1, critical: critical})],
-	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C)', charge: 1, critical: critical})],
+	[new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C)', charge: 1, critical: critical})],
 	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(5C)', charge: 5, critical: critical})],
 	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB', charge: 1, critical: critical})],
 	// [new mabi.FusedBoltMagicDamage(fb, lb, {name: 'FB+LB(1C)', charge: 1, critical: critical})],
@@ -231,7 +206,7 @@ dam.setDefaultContext = function(context){
 	// [new mabi.FusedBoltMagicDamage(ib, fb, {name: 'IB+FB(1C クリ)', charge: 1, critical: true})],
 	[new mabi.FusedBoltMagicDamage(ib, lb, {name: 'IB+LB(クリ)', charge: 1, critical: true})]
     ], function(i, v){
-	context.addExpression(v[0]);
+	data.addExpression(v[0]);
     });
 
     // EquipmentSet
@@ -250,13 +225,14 @@ dam.setDefaultContext = function(context){
     ];
     $.each(weapons, function(i, v){
 	var equipmentSet = new mabi.EquipmentSet();
+	equipmentSet.setName(v);
 	equipmentSet.setRightHand(dam.weapons.get(v));
 	equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
-	context.addEquipmentSet(equipmentSet);
+	data.addEquipmentSet(equipmentSet);
     });
 
     // Character
-    var ints = ['int', [700]];
+    var ints = ['int', [600, 700]];
     var abbreviations = {
 	'int': 'Int',
 	lightning_magic_damage: 'L',
@@ -292,7 +268,7 @@ dam.setDefaultContext = function(context){
 	body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
 	body.setSkill(dam.skills.BOLT_COMPOSER, 1);
 
-	context.addBody(body);
+	data.addBody(body);
     });
 
     // MOB
@@ -314,9 +290,10 @@ dam.setDefaultContext = function(context){
 		     {param: 'defense', min: v[2]},
 		     {param: 'protection', min: v[3]}
 		 ]});
-	     context.addMob(mob);
+	     data.addMob(mob);
 	 });
 
+    context.setDamageData(data);
     context.setRowFields([dam.fields.BODY, dam.fields.MOB]);
     // context.setRowFields([dam.fields.BODY]);
     // context.setColumnFields([dam.fields.EXPRESSION]);

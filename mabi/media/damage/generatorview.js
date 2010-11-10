@@ -9,7 +9,9 @@ mabi.GeneratorView = function($element){
 	    autoOpen: false,
 	    width: 800,
 	    height: 500,
-	    buttons: {"設定する": function() {}}
+	    buttons: {"設定する": function() {
+		dam.context.update();
+	    }}
 	});
 
     // $(':checkbox', this.$element_).button();

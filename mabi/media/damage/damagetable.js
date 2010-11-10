@@ -22,6 +22,7 @@ mabi.DamageTable.prototype.initialize = function(){
  * 表示を更新する
  */
 mabi.DamageTable.prototype.update = function(){
+    console.log('update');
     $('thead', this.$table_).empty();
     $('tbody', this.$table_).empty();
 
@@ -31,6 +32,8 @@ mabi.DamageTable.prototype.update = function(){
     for(var i = 0; i < table.getNumberOfRows(); i++){
 	this.appendRow(table, i);
     }
+
+    console.log('updated');
 };
 
 
@@ -42,18 +45,27 @@ mabi.DamageTable.prototype.appendHeader = function(){
 
     var columnFields = this.context_.columnFields();
     var rowFields = this.context_.rowFields();
-    var $tr = $('<tr />').appendTo($thead);
-    $('<th />').text('').attr('rowspan', columnFields.length).appendTo($tr);
 
-    $trs = [$tr];
-    for(var i = 0; i < columnFields.length - 1; i++){
-	$trs.push($('<tr />').appendTo($thead));
-    }
-    this.context_.eachColumn(function(i, fields){
-	$.each(fields, function(i, field){
-	    $('<th class="damage"/>').text(field.name()).appendTo($trs[i]);
-	});
+    var $trs = [];
+
+    // 1行目の tr
+    var $tr = $('<tr />').appendTo($thead);
+    $.each(rowFields, function(i, v){
+	$('<th />').text('').attr('rowspan', columnFields.length).appendTo($tr);
     });
+    $trs.push($tr);
+
+    // 2行目以降 tr
+    $.each(columnFields, function(i, v){
+	$trs.push($('<tr />').appendTo($thead));
+    });
+    
+    var table = this.context_.table();
+    for(i = 1; i < table.getNumberOfColumns(); i++){
+	$.each(table.getColumnProperty(i, 'idFields'), function(i, field){
+    	    $('<th class="damage"/>').text(field.name()).appendTo($trs[i]);
+    	});
+    }
 };
 
 /**
@@ -62,7 +74,12 @@ mabi.DamageTable.prototype.appendHeader = function(){
 mabi.DamageTable.prototype.appendRow = function(table, row){
     var this_ = this;
     var $tr = $('<tr />');
-    for(var i = 0; i < table.getNumberOfColumns(); i++){
+    
+    $.each(table.getRowProperty(row, 'idFields'), function(i, v){
+	var $td = $('<td/>').text(v.name()).appendTo($tr);
+    });
+
+    for(var i = 1; i < table.getNumberOfColumns(); i++){
 	var $td = $('<td/>').appendTo($tr);
 	var columnType = table.getColumnType(i);
 	if(columnType == 'number') $td.addClass('damage');
