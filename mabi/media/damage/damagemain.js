@@ -1,5 +1,4 @@
 dam.initializeModel = function(){
-    dam.conditions = new mabi.Conditions;
     dam.weapons = new mabi.Elements;
     dam.titles = new mabi.Elements;
     dam.skills = new mabi.Elements;
@@ -17,7 +16,6 @@ dam.initializeView = function(){
 
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
-    dam.conditonView = new mabi.ConditionView($('form.condition-view'));
     dam.chartView = new mabi.ChartView($('.chart-view'));
     dam.optionsView = new mabi.OptionsView($('.options-view'));
 

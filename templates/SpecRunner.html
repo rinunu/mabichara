@@ -1,17 +1,24 @@
-{% extends "base.html" %}
-{% load media %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
 
-{% block js %}
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
   <link rel="stylesheet" type="text/css" href="/static/jasmine-1.0.1/jasmine.css">
   <script type="text/javascript" src="/static/jasmine-1.0.1/jasmine.js"></script>
   <script type="text/javascript" src="/static/jasmine-1.0.1/jasmine-html.js"></script>
 
-  {% include_media 'damagemain.js' %}
-  {% include_media 'spec.js' %}
-{% endblock %}
+{% load media %}
+{% include_media 'damagemain.js' %}
+{% include_media 'spec.js' %}
 
+</head>
+<body>
 
-{% block content %}
 <script type="text/javascript">
   google.load('visualization', '1', {'packages':['corechart']});
   google.setOnLoadCallback(function(){
@@ -20,5 +27,8 @@
     jasmine.getEnv().execute();
   });
 </script>
-{% endblock %}
+
+</body>
+</html>
+
 

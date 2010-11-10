@@ -195,6 +195,7 @@ mabi.Element.prototype.param = function(param, character, equipmentSet){
 };
 
 // ----------------------------------------------------------------------
+// utility
 
 /**
  * source から Effect をコピーする
@@ -205,6 +206,22 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 	function(effect){
 	    this_.addEffect(effect);
 	});
+};
+
+/**
+ * Child への getter, setter を作成する
+ */
+mabi.Element.accessors = function(class_, names){
+    $.each(names, function(i, name){
+	var setter = 'set' + name.charAt(0).toUpperCase() + name.substr(1);
+	class_.prototype[setter] = function(child){
+	    return this.addChild(child, name);
+	};
+	    
+	class_.prototype[name] = function(){
+	    return this.child(name);
+	};
+    });
 };
 
 // ----------------------------------------------------------------------

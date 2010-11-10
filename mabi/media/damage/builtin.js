@@ -18,28 +18,21 @@ dam.name = function(name, proficiency, special){
     return name;
 };
 
-/**
- * デフォルトの Weapon/Title/Skill を追加する
- */
-dam.addBuiltInItems = function(){
+dam.addBuiltInWands = function(){
     var wands = [
 	{
 	    name: 'アイスワンド',
 	    flags: ['ice'],
-	    upgrades: [{}
-	    ]
-	},
-	{
+	    upgrades: [{}]
+	}, {
 	    name: 'ファイアワンド',
 	    flags: ['fire'],
 	    upgrades: [{}]
-	},
-	{
+	}, {
 	    name: 'ライトニングワンド',
 	    flags: ['lightning'],
 	    upgrades: [{}]
-	},
-	{
+	}, {
 	    name: 'クラウンアイスワンド',
 	    flags: ['ice'],
 	    upgrades: [
@@ -55,8 +48,7 @@ dam.addBuiltInItems = function(){
 		    ]
 		}
 	    ]
-	},
-	{
+	}, {
 	    name: 'フェニックスファイアワンド',
 	    flags: ['fire'],
 	    upgrades: [
@@ -75,99 +67,115 @@ dam.addBuiltInItems = function(){
     ];
 
     dam.combination([['wand', wands], ['special', specials]], function(map){
-			var wand = map['wand'];
-			var special = map['special'];
-			$.each(wand.upgrades, function(i, upgrade){
-				   var totalEffects = [];
-				   $.each([upgrade.effects, special.effects], function(i, effects){
-					      if(effects) totalEffects = totalEffects.concat(effects);
-					  });
-				   dam.weapons.push(new mabi.SimpleWeapon(
-							{
-							    name: dam.name(wand.name, upgrade.proficiency, special.name),
-							    flags: wand.flags,
-							    effects: totalEffects
-							}));
-			       });
-		    });
-    
+	var wand = map['wand'];
+	var special = map['special'];
+	$.each(wand.upgrades, function(i, upgrade){
+	    var totalEffects = [];
+	    $.each([upgrade.effects, special.effects], function(i, effects){
+		if(effects) totalEffects = totalEffects.concat(effects);
+	    });
+	    dam.weapons.push(new mabi.SimpleWeapon(
+		{
+		    name: dam.name(wand.name, upgrade.proficiency, special.name),
+		    flags: wand.flags,
+		    effects: totalEffects
+		}));
+	});
+    });
+};
 
-    dam.titles.push(
-	new mabi.SimpleWeapon(
-	{
-	    name: 'マジックマスター',
-	    effects: [
-		{param: 'magic_damage', min: 0.05}
-	    ]
-	}
-	));
+dam.addBuiltInTitles = function(){
+    var src = [
+	['マジックマスター', 'MAGIC_MASTER', [{param: 'magic_damage', min: 0.05}]]
+    ];
+    $.each(src, function(i, v){
+	var a = new mabi.SimpleWeapon({
+	    name: v[0],
+	    effects: v[2]
+	});
+	dam.titles.push(a);
+	dam.titles[v[1]] = a;
+    });
+};
 
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'アイスボルト',
-	    flags: ['ice', 'bolt'],
-	    ranks: [
-		[{param: 'damage_max', min: 80}]
-	    ]
-	}));
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'ファイアボルト',
-	    flags: ['fire', 'bolt', 'charge_bonus'],
-	    ranks: [
-		[{param: 'damage_max', min: 120}]
-	    ]
-	}));
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'ライトニングボルト',
-	    flags: ['lightning', 'bolt'],
-	    ranks: [
-		[{param: 'damage_max', min: 150}]
-	    ]
-	}));
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'ファイアボール',
-	    flags: ['fire'],
-	    ranks: [
-		[{param: 'damage_max', min: 2400}]
-	    ]
-	}));
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'アイススピア',
-	    flags: ['ice', 'charge_bonus'],
-	    ranks: [
-		[{param: 'damage_max', min: 240}]
-	    ]
-	}));
-    dam.skills.push(
-	new mabi.SimpleSkillClass(
-	{
-	    name: 'サンダー',
-	    flags: ['lightning'],
-	    ranks: [
-		[{param: 'damage_max', min: 400}]
-	    ]
-	}));
+dam.addBuiltInSkills = function(){
+    var src = [
+	['アイスボルト', 'ICEBOLT',
+	 ['ice', 'bolt'],
+	 [
+	     [{param: 'damage_max', min: 80}]
+	 ]],
+	['ファイアボルト', 'FIREBOLT',
+	 ['fire', 'bolt', 'charge_bonus'],
+	 [
+	     [{param: 'damage_max', min: 120}]
+	 ]],
+	['ライトニングボルト', 'LIGHTNING_BOLT',
+	 ['lightning', 'bolt'],
+	 [
+	     [{param: 'damage_max', min: 150}]
+	 ]],
+	['ファイアボール', 'FIREBALL',
+	 ['fire'],
+	 [
+	     [{param: 'damage_max', min: 2400}]
+	 ]],
+	['アイススピア', 'ICE_SPEAR',
+	 ['ice', 'charge_bonus'],
+	 [
+	     [{param: 'damage_max', min: 240}]
+	 ]],
+	['サンダー', 'THUNDER',
+	 ['lightning'],
+	 [
+	     [{param: 'damage_max', min: 400}]
+	 ]],
+
+	['アイスマスタリ', 'MAGIC_ICE_MASTERY',
+	 [],
+	 [
+	     [{param: 'ice_magic_damage', min: 0.15}]
+	 ]],
+	['ファイアマスタリ', 'MAGIC_FIRE_MASTERY',
+	 [],
+	 [
+	     [{param: 'fire_magic_damage', min: 0.15}]
+	 ]],
+	['ライトニングマスタリ', 'MAGIC_LIGHTNING_MASTERY',
+	 [],
+	 [
+	     [{param: 'lightning_magic_damage', min: 0.15}]
+	 ]],
+	['ボルトマスタリ', 'MAGIC_BOLT_MASTERY',
+	 [],
+	 [
+	     [{param: 'bolt_magic_damage', min: 0.15}]
+	 ]],
+	['ボルト魔法の合体', 'BOLT_COMPOSER',
+	 [],
+	 [
+	     [{param: 'fused_bolt_magic_damage', min: 0.15}]
+	 ]]
+    ];
+
+    $.each(src, function(i, v){
+	var a = new mabi.SkillClass({
+	    name: v[0],
+	    flags: v[2],
+	    ranks: v[3]
+	});
+	dam.skills.push(a);
+	dam.skills[v[1]] = a;
+    });
 };
 
 /**
- * Character を作成する
+ * デフォルトの Weapon/Title/Skill を追加する
  */
-dam.createCharacter = function(dto){
-    var c = new mabi.Character(dto);
-
-    $.each(dto, function(k, v){
-	       c.setParam(k, v);
-	   });
-    return c;
+dam.addBuiltInItems = function(){
+    dam.addBuiltInWands();
+    dam.addBuiltInTitles();
+    dam.addBuiltInSkills();
 };
 
 /**
@@ -196,68 +204,16 @@ dam.combination = function(seed, fn, i, map){
     }
 };
 
-/**
- * template から実際の Condition を生成する
- * params に指定されたフィールドは、 params で上書きする
- * 
- * @param nameFn 名前を生成する関数
- */
-dam.createCondition = function(template, params, nameFn){
-    var characterTemplate = template.character;
-
-    $.each(params, function(k, v){
-	       if(k in characterTemplate){
-		   // console.log(k + 'を character に設定します');
-		   characterTemplate[k] = v;
-	       }else if(k in template){
-		   // console.log(k + 'を template に設定します');
-		   template[k] = v;
-	       }
-	   });
-    template.name = nameFn(template);
-    var dto = {
-	name: template.name,
-	character: dam.createCharacter(template.character),
-	weapon: dam.weapons.get(template.weapon),
-	title: dam.titles.get(template.title)
-    };
-    // console.log(dto);
-    var condition = new mabi.Condition(dto);
-    return condition;
-};
-
-/**
- * seed を元に、組み合わせを生成し、その組み合わせ毎に Condition を生成する
- * 
- * @param seed 組み合わせデータ
- * @param template テンプレート
- * @param nameFn 名前を生成する関数
- */
-dam.addCombinationConditions = function(seed, template, nameFn){
-    dam.combination(seed, function(map){
-			console.log(map['int'], map['weapon']);
-			var condition = dam.createCondition(template, map, nameFn);
-			dam.conditions.push(condition);
-		    });
-};
-
-/**
- * デフォルトの Condition を追加する
- */
-// dam.addBuiltInConditions = function(){
-//     dam.addCombinationConditions(seed, template, function(dto){
-// 				     return 'Int' + dto.character['int'] + ' ' + dto.weapon;
-// 				 });
-// };
-
 dam.setDefaultContext = function(context){
+
+    // Expression
     var critical = false;
-    var ib = dam.skills.get('アイスボルト').create(1);
-    var fb = dam.skills.get('ファイアボルト').create(1);
-    var lb = dam.skills.get('ライトニングボルト').create(1);
-    var fbl = dam.skills.get('ファイアボール').create(1);
-    var th = dam.skills.get('サンダー').create(1);
-    var is = dam.skills.get('アイススピア').create(1);
+    var ib = dam.skills.ICEBOLT;
+    var fb = dam.skills.FIREBOLT;
+    var lb = dam.skills.LIGHTNING_BOLT;
+    var fbl = dam.skills.FIREBALL;
+    var th = dam.skills.THUNDER;
+    var is = dam.skills.ICE_SPEAR;
     $.each([
 	// [new mabi.MagicDamage(ib, {name: 'IB', charge: 1, critical: critical})],
 	// [new mabi.MagicDamage(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
@@ -278,6 +234,7 @@ dam.setDefaultContext = function(context){
 	context.addExpression(v[0]);
     });
 
+    // EquipmentSet
     var weapons = [
 	// 'アイスワンド', 
 	'クラウンアイスワンド(150式)',
@@ -292,17 +249,14 @@ dam.setDefaultContext = function(context){
 	// 'ライトニングワンド(S3)'
     ];
     $.each(weapons, function(i, v){
-	context.addEquipmentSet(dam.weapons.get(v));
+	var equipmentSet = new mabi.EquipmentSet();
+	equipmentSet.setRightHand(dam.weapons.get(v));
+	equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+	context.addEquipmentSet(equipmentSet);
     });
 
-    /*
-     * 各属性ダメージは ランク1で 0.15, へぼなで 0.1 増加
-     */
+    // Character
     var ints = ['int', [700]];
-    var lightnings = ['lightning_magic_damage', [0.15]];
-    var fires = ['fire_magic_damage', [0.15, 0.15 + 0.15]]; // ヘボナFB(TODO)
-    var ices = ['ice_magic_damage', [/*0.15, */0.15 + 0.15]]; // ヘボナIB(TODO)
-
     var abbreviations = {
 	'int': 'Int',
 	lightning_magic_damage: 'L',
@@ -310,14 +264,9 @@ dam.setDefaultContext = function(context){
 	ice_magic_damage: 'I'};
 
     var template = {
-    	'int': 600,
-    	ice_magic_damage: 0.15, // アイスマスタリ1
-    	fire_magic_damage: 0.15, // ファイアマスタリ1
-    	lightning_magic_damage: 0.15, // ライトニングマスタリ1
-    	bolt_magic_damage: 0.15, // ボルトマスタリ1
-    	fused_bolt_magic_damage: 0.15 // ボルト魔法
+    	'int': 600
     };
-    dam.combination([ices, ints], function(map){
+    dam.combination([ints], function(map){
 	var names = [];
 	$.each(map, function(k, v){
 	    if(v > 1){
@@ -329,10 +278,24 @@ dam.setDefaultContext = function(context){
 	});
 	template.name = names.join(' ');
 
-	var character = dam.createCharacter(template);
-	context.addCharacter(character);
+	var body = mabi.ElementBuilder.body(template);
+	body.setSkill(dam.skills.ICEBOLT, 1);
+	body.setSkill(dam.skills.FIREBOLT, 1);
+	body.setSkill(dam.skills.LIGHTNING_BOLT, 1);
+	body.setSkill(dam.skills.FIREBALL, 1);
+	body.setSkill(dam.skills.THUNDER, 1);
+	body.setSkill(dam.skills.ICE_SPEAR, 1);
+
+	body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
+	body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
+	body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
+	body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
+	body.setSkill(dam.skills.BOLT_COMPOSER, 1);
+
+	context.addBody(body);
     });
 
+    // MOB
     $.each(
 	[['ブロンズボーンアーチャー', 960, 42, 0.19],
 	 ['シルバーボーンアーチャー', 1040, 42, 0.19],
@@ -354,8 +317,8 @@ dam.setDefaultContext = function(context){
 	     context.addMob(mob);
 	 });
 
-    context.setRowFields([dam.fields.CHARACTER, dam.fields.MOB]);
-    // context.setRowFields([dam.fields.CHARACTER]);
+    context.setRowFields([dam.fields.BODY, dam.fields.MOB]);
+    // context.setRowFields([dam.fields.BODY]);
     // context.setColumnFields([dam.fields.EXPRESSION]);
     context.setColumnFields([dam.fields.EQUIPMENT_SET, dam.fields.EXPRESSION]);
 };

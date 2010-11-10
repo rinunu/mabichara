@@ -21,7 +21,7 @@ mabi.Context = function(options){
     // row, column から指定された field の値を取得する関数
     this.getter_ = null;
 
-    this.conditions_ = options.conditions;
+    this.characters_ = options.characters;
     this.columns_ = [];
 
 
@@ -68,8 +68,8 @@ mabi.Context.prototype.addExpression = function(data){
 /**
  * 
  */
-mabi.Context.prototype.addCharacter = function(data){
-    this.addData(dam.fields.CHARACTER, data);
+mabi.Context.prototype.addBody = function(data){
+    this.addData(dam.fields.BODY, data);
 };
 
 /**
@@ -131,7 +131,7 @@ mabi.Context.prototype.update = function(){
 };
 
 /**
- * row, column から Character, Mob 等を取り出す関数を作成する
+ * row, column から Body, Mob 等を取り出す関数を作成する
  */
 mabi.Context.prototype.updateGetter = function(){
     var map = {};
@@ -211,12 +211,11 @@ mabi.Context.prototype.each_ = function(fields, fn){
  * セルの値を計算する
  */
 mabi.Context.prototype.calculate = function(row, column){
+    var character =  new mabi.Character;
+    character.setBody(this.getter_(dam.fields.BODY, row, column));
+    character.setEquipmentSet(this.getter_(dam.fields.EQUIPMENT_SET, row, column))
     var c = {
-	condition:  new mabi.Condition({
-	    character: this.getter_(dam.fields.CHARACTER, row, column),
-	    title: this.title_,
-	    weapon: this.getter_(dam.fields.EQUIPMENT_SET, row, column)
-	}),
+	character: character,
 	mob: this.getter_(dam.fields.MOB, row, column),
     };
     var expression = this.getter_(dam.fields.EXPRESSION, row, column)
@@ -228,8 +227,8 @@ mabi.Context.prototype.calculate = function(row, column){
 
 
 dam.fields = {};
-dam.fields.CHARACTER = {
-    id: 'character'
+dam.fields.BODY = {
+    id: 'body'
 };
 
 dam.fields.EXPRESSION = {

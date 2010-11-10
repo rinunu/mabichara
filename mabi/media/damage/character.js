@@ -4,3 +4,6 @@ mabi.Character = function(options){
 };
 
 util.extend(mabi.Character, mabi.Element);
+
+mabi.Element.accessors(mabi.Character, ['body', 'equipmentSet']);
+

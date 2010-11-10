@@ -5,30 +5,31 @@
 /**
  * 基本的な魔法攻撃ダメージ計算式
  * 
- * @param skill 攻撃に使用する SimpleSkill
+ * @param skill 攻撃に使用する SkillClass
  * @param charge 攻撃時のチャージ数
  * @param options {
  *   critical: 
  * }
  */
 mabi.MagicDamage = function(skill, options){
-    console.assert(skill instanceof mabi.SimpleSkill);
+    console.assert(skill instanceof mabi.Skill);
     options = options || {};
 
     this.super_.constructor.call(
 	this, 
 	function(c){
-	    var condition = c.condition;
+	    var character = c.character;
 	    var mob = c.mob;
-	    var magicAttack = 0.05 * condition.param('int');
-	    var weapon = condition.weapon();
+	    var weapon = character.equipmentSet().rightHand();
+	    console.assert(character instanceof mabi.Character);
 
+	    var magicAttack = 0.05 * character.param('int');
 	    var typeMasteryBonus = 0; // 属性マスタリボーナス
 	    var wandBonuses = {ice: 10, fire: 5, lightning: 7};
 	    var wandBonus = 0;
 	    $.each(['ice', 'fire', 'lightning'], function(i, v){
 		       if(skill.is(v)){
-			   typeMasteryBonus = condition.param(v + '_magic_damage');
+			   typeMasteryBonus = character.param(v + '_magic_damage');
 			   if(skill.is('bolt') && weapon && weapon.is(v)){
 			       wandBonus = wandBonuses[v];
 			   }
@@ -36,22 +37,24 @@ mabi.MagicDamage = function(skill, options){
 		   });
 	    var boltMasteryBonus = 0; // ボルトマスタリボーナス
 	    if(skill.is('bolt')){
-		boltMasteryBonus = condition.param('bolt_magic_damage');
+		boltMasteryBonus = character.param('bolt_magic_damage');
 	    }
 	    var chargeBonus = skill.is('charge_bonus') ? options.charge : 1;
 	    var fullChargeBonus = chargeBonus == 5 ? 1.3 : 1;
 
 	    var a = 1 + magicAttack / 100 + typeMasteryBonus + boltMasteryBonus;
-	    var b = 1 + condition.param('weapon_magic_damage') + condition.param('magic_damage');
+	    var b = 1 + character.param('weapon_magic_damage') + character.param('magic_damage');
 
 	    // todo ダメージエンチャントボーナス
 	    var enchantBonus = 0;
 	    var criticalBouns = options.critical ? 1.5 : 0;
 
 	    // 特別改造魔法ダメージボーナス
-	    var specialUpgradeBonus = condition.param('s_upgrade');
+	    var specialUpgradeBonus = character.param('s_upgrade');
 
-	    var damage = ((skill.param('damage_max') * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
+	    var baseDamageMax = character.body().skill(skill).param('damage_max');
+
+	    var damage = ((baseDamageMax * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
 	    damage *= (1 + criticalBouns);
 	    damage *= (1 - mob.param('protection'));
 	    damage += specialUpgradeBonus;
@@ -70,14 +73,14 @@ util.extend(mabi.MagicDamage, mabi.Expression);
 
 /**
  * サンダー型魔法のダメージ計算式
- * @param skill サンダースキル
+ * @param skill サンダー SkillClass
  * @param options {
  *   charge: 攻撃時のチャージ数
  *   critical: 
  * }
  */
 mabi.ThunderDamage = function(skill, options){
-    console.assert(skill instanceof mabi.SimpleSkill);
+    console.assert(skill instanceof mabi.SkillClass);
     // 最後の落雷はダメージが2倍(1~4チャージでは1.5倍)
 
     var one = new mabi.MagicDamage(skill, {
@@ -110,13 +113,13 @@ util.extend(mabi.ThunderDamage, mabi.Expression);
 /**
  * ボルト魔法の合体攻撃ダメージ計算式
  * 
- * @param skill0 攻撃に使用する SimpleSkill
- * @param skill1 攻撃に使用する SimpleSkill
+ * @param skill0 攻撃に使用する SkillClass
+ * @param skill1 攻撃に使用する SkillClass
  * @param charge 攻撃時のチャージ数
  */
 mabi.FusedBoltMagicDamage = function(skill0, skill1, options){
-    console.assert(skill0 instanceof mabi.SimpleSkill);
-    console.assert(skill1 instanceof mabi.SimpleSkill);
+    console.assert(skill0 instanceof mabi.SkillClass);
+    console.assert(skill1 instanceof mabi.SkillClass);
 
     var expressions = [new mabi.MagicDamage(skill0, options),
 		       new mabi.MagicDamage(skill1, options)];
@@ -124,12 +127,12 @@ mabi.FusedBoltMagicDamage = function(skill0, skill1, options){
     this.super_.constructor.call(
 	this,
 	function(c){
-	    var condition = c.condition;
+	    var character = c.character;
 	    var mob = c.mob;
 
 	    var damage = 0;
 	    $.each(expressions, function(i, v){damage += v.value(c);});
-	    damage *= 1 + condition.param('fused_bolt_magic_damage');
+	    damage *= 1 + character.param('fused_bolt_magic_damage');
 	    return damage;
 	},
 	options.name

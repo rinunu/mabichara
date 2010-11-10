@@ -1,171 +1,104 @@
 
 describe("各種計算式", function() {
     var character;
-    var condition;
+    var body;
     var expression;
     var context;
     var title;
     var mob;
+    var equipmentSet;
 
-    var MAGIC_MASTER;
-    
-    var ICEBOLT;
-    var FIREBOLT;
-    var LIGHTNING_BOLT;
-    
-    var ICE_SPEAR;
-    var FIREBALL;
-    var THUNDER;
-    
     beforeEach(function(){
-	MAGIC_MASTER = dam.titles.get('マジックマスター');
-	ICEBOLT = dam.skills.get('アイスボルト').create(1);
-	FIREBOLT = dam.skills.get('ファイアボルト').create(1);
-	LIGHTNING_BOLT = dam.skills.get('ライトニングボルト').create(1);
-	ICE_SPEAR = dam.skills.get('アイススピア').create(1);
-	FIREBALL = dam.skills.get('ファイアボール').create(1);
-	THUNDER = dam.skills.get('サンダー').create(1);
+	body = new mabi.Body();
+	body.setSkill(dam.skills.ICEBOLT, 1);
+	body.setSkill(dam.skills.FIREBOLT, 1);
+	body.setSkill(dam.skills.LIGHTNING_BOLT, 1);
+	body.setSkill(dam.skills.FIREBALL, 1);
+	body.setSkill(dam.skills.THUNDER, 1);
+	body.setSkill(dam.skills.ICE_SPEAR, 1);
+
+	equipmentSet = new mabi.EquipmentSet();
+
+	character = new mabi.Character();
+	character.setBody(body);
+	character.setEquipmentSet(equipmentSet);
+
+	context = {
+	    character: character
+	};
     });
+
 
     describe('Wiki 例', function(){
 	beforeEach(function(){
-	    character = new mabi.Character();
-	    character.setParam('int', 600);
-	    character.setParam('ice_magic_damage', 0.15); // アイスマスタリ1
-	    character.setParam('fire_magic_damage', 0.15); // ファイアマスタリ1
-	    character.setParam('lightning_magic_damage', 0.15); // ライトニングマスタリ1
-	    character.setParam('bolt_magic_damage', 0.15); // ボルトマスタリ1
-	    character.setParam('fused_bolt_magic_damage', 0.15); // ボルト魔法の合体1
-	    title = MAGIC_MASTER;
-	    
-	    mob = new mabi.Element(
-		{
-		    effects:[
-			{param: 'protection', min: 0.1}
-		    ]});
+	    body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
+	    body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
+	    body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
+	    body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
+	    body.setSkill(dam.skills.BOLT_COMPOSER, 1);
+	    body.setParam('int', 600);
+
+	    equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+
+	    mob = mabi.ElementBuilder.mob({protection: 0.1});
+
+	    context.mob = mob;
 	});
 	
 	// http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
-	it('Wiki 例1', function() {
-	    condition = new mabi.Condition(
-		{
-		    character: character,
-		    weapon: dam.weapons.get('クラウンアイスワンド(150式)'),
-		    title: title
-		});
-	    expression = new mabi.MagicDamage(ICEBOLT, {charge: 1});
-	    
-	    context = {
-		condition: condition,
-		mob: mob
-	    };
+	it('Wiki 例1', function(){
+	    equipmentSet.setRightHand(dam.weapons.get('クラウンアイスワンド(150式)'));
+	    expression = new mabi.MagicDamage(dam.skills.ICEBOLT, {charge: 1});
 	    expect(Math.floor(expression.value(context))).toEqual(181);
 	});
 	
 	// http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	it('Wiki 例2', function() {
-	    condition = new mabi.Condition(
-		{
-		    character: character,
-		    weapon: dam.weapons.get('フェニックスファイアワンド(245式)'),
-		    title: title
-		});
-	    expression = new mabi.MagicDamage(FIREBALL, {charge: 5});
-	    
-	    context = {
-		condition: condition,
-		mob: mob
-	    };
+	    equipmentSet.setRightHand(dam.weapons.get('フェニックスファイアワンド(245式)'));
+	    expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5});
 	    expect(Math.floor(expression.value(context))).toEqual(3410);
 	});
 	
 	// http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	it('Wiki 例3', function() {
-	    condition = new mabi.Condition(
-		{
-		    character: character,
-		    weapon: dam.weapons.get('フェニックスファイアワンド(245式 S3)'),
-		    title: title
-		});
-	    expression = new mabi.MagicDamage(FIREBALL, {charge: 5});
-	    
-	    context = {
-		condition: condition,
-		mob: mob};
+	    equipmentSet.setRightHand(dam.weapons.get('フェニックスファイアワンド(245式 S3)'));
+	    expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5});
 	    expect(Math.floor(expression.value(context))).toEqual(3424);
 	});
 	
 	// http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	it('Wiki 例4', function() {
-	    condition = new mabi.Condition(
-		{
-		    character: character,
-		    weapon: dam.weapons.get('ファイアワンド(S3)'),
-		    title: title
-		});
-	    expression = new mabi.FusedBoltMagicDamage(FIREBOLT, LIGHTNING_BOLT, {charge: 5});
-	    context = {
-		condition: condition,
-		mob: mob};
+	    equipmentSet.setRightHand(dam.weapons.get('ファイアワンド(S3)'));
+	    expression = new mabi.FusedBoltMagicDamage(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
 	    expect(Math.floor(expression.value(context))).toEqual(1864);
 	});
     });
 
     describe('http://aumiya.jugem.jp/?eid=173', function(){
 	beforeEach(function(){
-	    character = new mabi.Character();
 	    character.setParam('int', 600);
-	    mob = new mabi.Element(
-		{
-		    effects:[
-			{param: 'protection', min: 0}
-		    ]});
+	    equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+	    mob = mabi.ElementBuilder.mob({protection: 0});
+	    context.mob = mob;
 	});
 
 	describe('マスタリなし', function(){
 	    it('クリティカル FBL', function() {
-		condition = new mabi.Condition(
-		    {
-			character: character,
-			weapon: dam.weapons.get('ファイアワンド'),
-			title: MAGIC_MASTER
-		    });
-		expression = new mabi.MagicDamage(FIREBALL, {charge: 5, critical: true});
-		context = {
-		    condition: condition,
-		    mob: mob
-		};
+		equipmentSet.setRightHand(dam.weapons.get('ファイアワンド'));
+		expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5, critical: true});
 		expect(Math.floor(expression.value(context))).toEqual(9009);
 	    });
 	    it('クリティカル IS', function() {
 		// あわない。。
-		condition = new mabi.Condition(
-		    {
-			character: character,
-			weapon: dam.weapons.get('アイスワンド'),
-			title: MAGIC_MASTER
-		    });
-		expression = new mabi.MagicDamage(ICE_SPEAR, {charge: 5, critical: true});
-		context = {
-		    condition: condition,
-		    mob: mob
-		};
+		equipmentSet.setRightHand(dam.weapons.get('アイスワンド'));
+		expression = new mabi.MagicDamage(dam.skills.ICE_SPEAR, {charge: 5, critical: true});
 		expect(Math.floor(expression.value(context))).toEqual(5630);
 	    });
 
 	    it('クリティカル TH', function() {
 		// あわない。。
-		condition = new mabi.Condition(
-		    {
-			character: character,
-			weapon: dam.weapons.get('ライトニングワンド'),
-			title: MAGIC_MASTER
-		    });
-		expression = new mabi.ThunderDamage(THUNDER, {charge: 5, critical: true});
-		context = {
-		    condition: condition,
-		    mob: mob
-		};
+		equipmentSet.setRightHand(dam.weapons.get('ライトニングワンド'));
+		expression = new mabi.ThunderDamage(dam.skills.THUNDER, {charge: 5, critical: true});
 		expect(Math.floor(expression.value(context))).toEqual(8893);
 	    });
 	});
