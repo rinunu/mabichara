@@ -5,23 +5,27 @@
  * - update
  */
 mabi.Element = function(options){
+    var this_ = this;
     options = options || {};
-
 
     this.id_ = options.id || mabi.Element.nextId_--;
 
     // [{slot:, element:}, ...]
     this.children_ = [];
-
     this.effects_ = [];
-
     this.name_ = options.name || '';
-
     this.parent_ = null;
-
-    var effects = options.effects || [];
-    for(var i = 0; i < effects.length; i++){
-	this.addEffect(new mabi.Effect(effects[i]));
+    if(options.effects){
+        var effects = options.effects;
+        if(effects instanceof Array){
+            $.each(effects, function(i, v){
+	        this_.addEffect(v);
+            });
+        }else{
+            $.each(effects, function(k, v){
+	        this_.setParam(k, v);
+            });
+        }
     }
 };
 
@@ -138,6 +142,9 @@ mabi.Element.prototype.removeChild = function(child){
  * Effect を追加する
  */
 mabi.Element.prototype.addEffect = function(effect){
+    if(!(effect instanceof mabi.Effect)){
+        effect = new mabi.Effect(effect);
+    }
     this.effects_.push(effect);
 };
 
@@ -170,16 +177,17 @@ mabi.Element.prototype.setParam = function(param, value){
     this.addEffect(new mabi.Effect(
 		       {
 			   param: param,
-			   min: value
+			   min: value,
+                           max: value
 		       }));
 };
 
 /**
  * 指定したパラメータの値を取得する
  * 
- * 値は Character や EquipmentSet によって変化するため、それらも引数で指定する。
+ * 値は Character によって変化するため、それらも引数で指定する。
  */
-mabi.Element.prototype.param = function(param, character, equipmentSet){
+mabi.Element.prototype.param = function(param, character){
     var result = 0;
     this.eachEffect(
 	function(effect){
@@ -223,6 +231,21 @@ mabi.Element.accessors = function(class_, names){
 	};
     });
 };
+
+/**
+ * Effect への getter を作成する
+ */
+mabi.Element.effectAccessors = function(class_, names){
+    $.each(names, function(i, name){
+	class_.prototype[name] = function(character){
+	    return this.param(name, character);
+	};
+    });
+};
+
+mabi.Element.effectAccessors(mabi.Element, [
+    'defense', 'protection', 'int', 'str', 'dex', 'damageMax'
+]);
 
 // ----------------------------------------------------------------------
 // private
