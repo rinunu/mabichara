@@ -33,17 +33,27 @@ mabi.Store.prototype.each = function(fn){
 /**
  * ローカルに存在するなら取得する
  */
-mabi.Store.prototype.find = function(id){
-    id = id.id ? id.id() : id;
+mabi.Store.prototype.find = function(options){
+    if(options.name){
+        var p = function(element){
+            return element.name() == options.name;
+        };
+    }else{
+        var id = options.id ? options.id() : options;
+        var p = function(element){
+            return element.id() == id;
+        };
+    }
 
     var result = null;
     $.each(this.elements_, function(i, element){
-	       if(element.id() == id){
-		   result = element;
-		   return false;
-	       }
-	       return true;
-	   });
+	if(p(element)){
+	    result = element;
+	    return false;
+	}
+	return true;
+    });
+
     return result;
 };
 
