@@ -1,16 +1,18 @@
 dam.initializeModel = function(){
     mabi.ajax = new mabi.Ajax;
-    dam.weapons = new mabi.Elements;
+    
     dam.titles = new mabi.Elements;
     dam.skills = new mabi.SkillStore;
     dam.enchants = new mabi.EnchantStore;
+    dam.equipments = new mabi.EquipmentStore;
 
     dam.addBuiltInItems();
 
     var c = new util.ConcurrentCommand(
 	[
             dam.skills.load(),
-            dam.enchants.load()
+            dam.enchants.load(),
+            dam.equipments.load()
         ]);
     c.execute();
     return c;
