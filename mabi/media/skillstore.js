@@ -14,58 +14,58 @@ mabi.SkillStore.prototype.load = function(){
     var this_ = this;
     var src = [
 	['アイスボルト', 'ICEBOLT',
-	 ['ice', 'bolt'],
+	 ['magic', 'ice', 'bolt'],
 	 [
 	     [{param: 'damage_max', min: 80}]
 	 ]],
 	['ファイアボルト', 'FIREBOLT',
-	 ['fire', 'bolt', 'charge_bonus'],
+	 ['magic', 'fire', 'bolt', 'charge_bonus'],
 	 [
 	     [{param: 'damage_max', min: 120}]
 	 ]],
 	['ライトニングボルト', 'LIGHTNING_BOLT',
-	 ['lightning', 'bolt'],
+	 ['magic', 'lightning', 'bolt'],
 	 [
 	     [{param: 'damage_max', min: 150}]
 	 ]],
 	['ファイアボール', 'FIREBALL',
-	 ['fire'],
+	 ['magic', 'fire'],
 	 [
 	     [{param: 'damage_max', min: 2400}]
 	 ]],
 	['アイススピア', 'ICE_SPEAR',
-	 ['ice', 'charge_bonus'],
+	 ['magic', 'ice', 'charge_bonus'],
 	 [
 	     [{param: 'damage_max', min: 240}]
 	 ]],
 	['サンダー', 'THUNDER',
-	 ['lightning'],
+	 ['magic', 'lightning'],
 	 [
 	     [{param: 'damage_max', min: 400}]
 	 ]],
 
 	['アイスマスタリ', 'MAGIC_ICE_MASTERY',
-	 [],
+	 ['magic'],
 	 [
 	     [{param: 'ice_magic_damage', min: 0.15}]
 	 ]],
 	['ファイアマスタリ', 'MAGIC_FIRE_MASTERY',
-	 [],
+	 ['magic'],
 	 [
 	     [{param: 'fire_magic_damage', min: 0.15}]
 	 ]],
 	['ライトニングマスタリ', 'MAGIC_LIGHTNING_MASTERY',
-	 [],
+	 ['magic'],
 	 [
 	     [{param: 'lightning_magic_damage', min: 0.15}]
 	 ]],
 	['ボルトマスタリ', 'MAGIC_BOLT_MASTERY',
-	 [],
+	 ['magic'],
 	 [
 	     [{param: 'bolt_magic_damage', min: 0.15}]
 	 ]],
 	['ボルト魔法の合体', 'BOLT_COMPOSER',
-	 [],
+	 ['magic'],
 	 [
 	     [{param: 'fused_bolt_magic_damage', min: 0.15}]
 	 ]],

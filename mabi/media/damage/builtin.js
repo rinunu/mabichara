@@ -35,18 +35,18 @@ dam.setDefaultContext = function(context){
     var th = dam.skills.THUNDER;
     var is = dam.skills.ICE_SPEAR;
     $.each([
-	// [mabi.damages.magic(ib, {name: 'IB', charge: 1, critical: critical})],
-	// [mabi.damages.magic(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
-	// [mabi.damages.magic(fb, {name: 'FB(5C)', charge: 5, critical: critical})],
-	// [mabi.damages.magic(lb, {name: 'LB', charge: 1, critical: critical})],
+	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, critical: critical})],
+	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
+	// [mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, critical: critical})],
+	// [mabi.damages.skill(lb, {name: 'LB', charge: 1, critical: critical})],
 	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, critical: critical})],
 	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, critical: critical})],
 	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, critical: critical})],
 	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, critical: critical})],
 	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, critical: critical})]
-	// [mabi.damages.magic(fbl, {name: 'FBL', charge: 5, critical: critical})],
-	// [mabi.damages.magic(is, {name: 'IS(5C)', charge: 5, critical: critical})],
-	// [new mabi.ThunderDamage(th, {name: 'TH(5C)', charge: 5, critical: critical})]
+	// [mabi.damages.skill(fbl, {name: 'FBL', charge: 5, critical: critical})],
+	// [mabi.damages.skill(is, {name: 'IS(5C)', charge: 5, critical: critical})],
+	// [mabi.damages.thunder(th, {name: 'TH(5C)', charge: 5, critical: critical})]
 
 	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C クリ)', charge: 1, critical: true})],
 	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB(クリ)', charge: 1, critical: true})]

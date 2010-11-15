@@ -23,7 +23,10 @@ mabi.damages = {
     },
 
     /**
-     * スキルを使用したダメージを計算する
+     * スキル1発分のダメージを計算する
+     *
+     * @param skill 攻撃に使用する SkillClass
+     * @param charge 攻撃時のチャージ
      */
     skill: function(skill, options){
         options = $.extend({}, options);
@@ -35,26 +38,18 @@ mabi.damages = {
     },
 
     /**
-     * 一般的な魔法攻撃ダメージ計算式
-     * 
-     * @param skill 攻撃に使用する SkillClass
-     * @param charge 攻撃時のチャージ
-     * }
+     * 複数ヒットする攻撃のダメージを計算する
      */
-    magic: function(skill, options){
+    thunder: function(skill, options){
         if(skill.name() == 'サンダー'){
             return new mabi.Expression(function(c){
                 options = $.extend(options, c);
 	        return mabi.expressions.thunderDamage(skill, options);
 	    }, options.name);
         }else{
-	    return new mabi.Expression(function(c){
-                options = $.extend(options, c);
-	        return mabi.expressions.magicDamage(skill, options);
-	    }, options.name);
+            throw 'error';
         }
     },
-
 
     /**
      * ボルト魔法の合体攻撃ダメージ計算式
