@@ -16,8 +16,12 @@
  * - bolt
  * - 種別
  *   - magic
- *   - melee
- *   - ranged
+ *   - combat
+ *     - melee
+ *     - ranged
+ *   - alchemy
+ *   - life
+ *   - transformation
  * - switch: 攻撃後、ダメージ発生までの間に持ち替え可能か(FBL など)
  */
 describe('Skill', function() {
