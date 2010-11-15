@@ -42,11 +42,6 @@ mabi.Skill.prototype.rank = function(){
  * スキルクラス
  *
  * flags
- * 以下のフラグを持つ
- * - ice
- * - lightning
- * - fire
- * - bolt
  * - charge_bonus: 複数チャージ時にダメージボーナスが発生するか
  */
 mabi.SkillClass = function(options){
