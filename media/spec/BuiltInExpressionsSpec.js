@@ -71,28 +71,28 @@ describe("各種計算式", function() {
 	    // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	    it('Wiki 例1', function(){
 		equipmentSet.setRightHand(dam.weapons.get('クラウンアイスワンド(150式)'));
-		expression = new mabi.MagicDamage(dam.skills.ICEBOLT, {charge: 1});
+		expression = mabi.damages.magic(dam.skills.ICEBOLT, {charge: 1});
 		expect(damage()).toEqual(181);
 	    });
 	    
 	    // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	    it('Wiki 例2', function() {
 		equipmentSet.setRightHand(dam.weapons.get('フェニックスファイアワンド(245式)'));
-		expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5});
+		expression = mabi.damages.magic(dam.skills.FIREBALL, {charge: 5});
 		expect(damage()).toEqual(3410);
 	    });
 	    
 	    // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	    it('Wiki 例3', function() {
 		equipmentSet.setRightHand(dam.weapons.get('フェニックスファイアワンド(245式 S3)'));
-		expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5});
+		expression = mabi.damages.magic(dam.skills.FIREBALL, {charge: 5});
 		expect(damage()).toEqual(3424);
 	    });
 	    
 	    // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	    it('Wiki 例4', function() {
 		equipmentSet.setRightHand(dam.weapons.get('ファイアワンド(S3)'));
-		expression = new mabi.FusedBoltMagicDamage(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
+		expression = mabi.damages.fusedBolt(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
 		expect(damage()).toEqual(1864);
 	    });
 	});
@@ -107,20 +107,20 @@ describe("各種計算式", function() {
 	    describe('マスタリなし', function(){
 		it('クリティカル FBL', function() {
 		    equipmentSet.setRightHand(dam.weapons.get('ファイアワンド'));
-		    expression = new mabi.MagicDamage(dam.skills.FIREBALL, {charge: 5, critical: true});
+		    expression = mabi.damages.magic(dam.skills.FIREBALL, {charge: 5, critical: true});
 		    expect(damage()).toEqual(9009);
 		});
 		it('クリティカル IS', function() {
 		    // あわない。。
 		    equipmentSet.setRightHand(dam.weapons.get('アイスワンド'));
-		    expression = new mabi.MagicDamage(dam.skills.ICE_SPEAR, {charge: 5, critical: true});
+		    expression = mabi.damages.magic(dam.skills.ICE_SPEAR, {charge: 5, critical: true});
 		    expect(damage()).toEqual(5630);
 		});
 
 		it('クリティカル TH', function() {
 		    // あわない。。
 		    equipmentSet.setRightHand(dam.weapons.get('ライトニングワンド'));
-		    expression = new mabi.ThunderDamage(dam.skills.THUNDER, {charge: 5, critical: true});
+		    expression = mabi.damages.magic(dam.skills.THUNDER, {charge: 5, critical: true});
 		    expect(damage()).toEqual(8893);
 		});
 	    });
