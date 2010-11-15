@@ -129,6 +129,7 @@ describe("各種計算式", function() {
 	describe('近接', function(){
 	    beforeEach(function(){
 		character_.setParam('str', 100);
+                body.setSkill(dam.skills.find('スマッシュ'), 1);
 
                 equipmentSet.
                     setHead(
@@ -157,6 +158,16 @@ describe("各種計算式", function() {
                     var d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
+
+                it('スマッシュのダメージ', function() {
+		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+                    var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10 + 10 + 10; // 最大ダメージ効果
+                    var c = 100; // 武器最大ダメージ
+                    var d = Math.floor(((a + b + c) * 5 - 10) * 0.9);
+		    expect(damage()).toEqual(d);
+		});
+
 	    });
 
             describe('両手武器', function(){
@@ -168,12 +179,23 @@ describe("各種計算式", function() {
 		});
 
 		it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
+                    expression = mabi.damages.attack();
                     var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10 + 10; // 最大ダメージ効果
                     var c = 100; // 武器最大ダメージ
                     var d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
+
+                it('スマッシュのダメージは6倍になる', function() {
+		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+                    var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10 + 10 + 10; // 最大ダメージ効果
+                    var c = 100; // 武器最大ダメージ
+                    var d = Math.floor(((a + b + c) * 6 - 10) * 0.9);
+		    expect(damage()).toEqual(d);
+		});
+
 	    });
 
 	    // 二刀流
@@ -214,6 +236,9 @@ describe("各種計算式", function() {
 		});
 	    });
 	});
+
+
+        xit('スキルを持っていない場合、ダメージ計算は失敗する');
 
 
     });

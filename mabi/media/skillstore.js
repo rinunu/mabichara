@@ -68,6 +68,13 @@ mabi.SkillStore.prototype.load = function(){
 	 [],
 	 [
 	     [{param: 'fused_bolt_magic_damage', min: 0.15}]
+	 ]],
+
+        // 近接
+        ['スマッシュ', 'SMASH',
+	 ['melee'],
+	 [
+	     {damage: 5}
 	 ]]
     ];
     $.each(src, function(i, v){

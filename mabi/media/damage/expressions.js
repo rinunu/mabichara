@@ -18,7 +18,19 @@ mabi.damages = {
 
 	return new mabi.Expression(function(c){
             options = $.extend(options, c);
-	    return mabi.expressions.attackDamage(options);
+	    return mabi.expressions.meleeDamage(null, options);
+	}, options.name);
+    },
+
+    /**
+     * スキルを使用したダメージを計算する
+     */
+    skill: function(skill, options){
+        options = $.extend({}, options);
+        
+        return new mabi.Expression(function(c){
+            options = $.extend(options, c);
+	    return mabi.expressions.skillDamage(skill, options);
 	}, options.name);
     },
 
@@ -75,7 +87,7 @@ mabi.expressions = {
     },
     
     /**
-     * 基本的な計算を行う
+     * 基本的なダメージの計算を行う
      */
     basicDamage: function(options){
 	var damageMax = options.damageMax;
@@ -109,21 +121,50 @@ mabi.expressions = {
     },
 
     /**
-     * アタック1打によるダメージを計算する
+     * スキルのダメージ倍率を取得する
      */
-    attackDamage: function(options){
+    skillMultiplier: function(skill, character){
+        skill = character.body().skill(skill);
+        console.assert(skill);
+        return skill.param('damage');
+    },
+
+    /**
+     * スキルを使用した攻撃のダメージを計算する
+     */
+    skillDamage: function(skill, options){
+        console.log(skill instanceof mabi.SkillClass);
+        if(skill.is('melee')){
+            return this.meleeDamage(skill, options);
+        }else if(skill.is('magic')){
+            return this.magicDamage(skill, options);
+        }
+        throw 'error';
+    },
+
+    /**
+     * 近接スキルによるダメージを計算する
+     * @param skill 未指定の場合はアタックダメージを計算する
+     */
+    meleeDamage: function(skill, options){
 	var character = options.character;
 	var weapon = options.weapon || character.equipmentSet().rightHand();
 	var damageMax =
             weapon.damageMax(character) +
 	    this.strToDamageMax(character.str()) +
             this.damageMax(character);
+        if(skill){
+            damageMax *= this.skillMultiplier(skill, character);
+        }
 
 	return this.basicDamage($.extend({
 	    damageMax: damageMax
 	}, options));
     },
-    
+
+    rangedDamage: function(){
+    },
+
     /**
      * 基本的な魔法ダメージを計算する
      */

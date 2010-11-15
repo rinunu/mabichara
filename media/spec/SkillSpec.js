@@ -2,6 +2,12 @@
  * Skill はスキルそのものを表す SkillClass と、
  * キャラクターが持つスキルを表す Skill からなる。
  *
+ * Skill.param
+ * スキル特有の param をもつ。
+ * パッシブ効果に関しては Body の Stats と同様の param とする。
+ * スキル特有 param の一般的なものを以下に列挙する
+ * - damage: ダメージに関する数値。 スマッシュの倍率や魔法のダメージ
+ *
  * SkillClass.flags には以下のものがある
  * - 魔法属性
  *   - ice
@@ -12,6 +18,8 @@
  *   - magic
  *   - melee
  *   - ranged
+ *
+ *
  */
 describe('Skill', function() {
     var base;
