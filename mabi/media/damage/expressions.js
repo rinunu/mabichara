@@ -5,7 +5,18 @@
 // ----------------------------------------------------------------------
 // ファクトリー
 
+/**
+ * 共通的な引数は以下のとおり
+ * @param options {
+ *   charge:,
+ *   critical:
+ *   generator: ベースダメージを生成する function([min, max], character).
+ *   mabi.expressions.max, mabi.expressions,expectation などを指定する。
+ *   デフォルトは max
+ * }
+ */
 mabi.damages = {
+    
     /**
      * 近接アタック1打の最大ダメージ
      * @param options {
@@ -24,9 +35,6 @@ mabi.damages = {
 
     /**
      * スキル1発分のダメージを計算する
-     *
-     * @param skill 攻撃に使用する SkillClass
-     * @param charge 攻撃時のチャージ
      */
     skill: function(skill, options){
         options = $.extend({}, options);
@@ -53,10 +61,6 @@ mabi.damages = {
 
     /**
      * ボルト魔法の合体攻撃ダメージ計算式
-     * 
-     * @param skill0 攻撃に使用する SkillClass
-     * @param skill1 攻撃に使用する SkillClass
-     * @param charge 攻撃時のチャージ数
      */
     fusedBolt: function(skill0, skill1, options){
         return new mabi.Expression(function(c){
@@ -67,19 +71,41 @@ mabi.damages = {
 };
 
 // ----------------------------------------------------------------------
+// private
 
-/**
- * 各種ダメージを計算するための関数群
- */
 mabi.expressions = {
     /**
-     * str から最大ダメージを求める
+     * 期待値を計算する
+     */
+    expectation: function(damage, character){
+    },
+    
+    /**
+     * max を返す
+     */
+    max: function(damage, character){
+        return damage[1];
+    },
+    
+    /**
+     * min を返す
+     */
+    min: function(damage, character){
+        return damage[0];
+    },
+
+    // ----------------------------------------------------------------------
+
+    /**
+     * str から[min, max] ダメージを求める
      *
      * Str 増加値から最大ダメージを求める用途には使用できない(-10 しているため)
      */
-    strToDamageMax : function(str){
-        if(str < 10) return 0;
-	return (str - 10) / 2.5;
+    strToDamage : function(str){
+        if(str < 10) return [0, 0];
+
+        str -= 10;
+	return [str / 3, str / 2.5];
     },
 
     /**
@@ -90,35 +116,20 @@ mabi.expressions = {
     },
     
     /**
-     * 基本的なダメージの計算を行う
-     * 以下のものを考慮する
-     * - クリティカル
-     * - 防御・保護
-     */
-    basicDamage: function(options){
-        var character = options.character;
-	var damage = options.damage;
-	var mob = options.mob;
-	var defense = mob.defense();
-	var protection = mob.protection();
-        if(options.critical) damage = this.critical(damage, damage, character);
-	return (damage - defense) * (1 - protection);
-    },
-
-    /**
-     * 本体の最大ダメージ値を取得する
+     * 本体のダメージ値を取得する
      * 以下のものは除外する
-     * - str/dex による最大ダメージ上昇
      * - 武器/武器エンチャントの攻撃
+     * - str/dex による最大ダメージ上昇
      */
-    damageMax: function(character){
+    characterDamage: function(character){
         var equipmentSet = character.equipmentSet();
-        var result = 0;
+        var result = [0, 0];
         equipmentSet.eachChild(function(e){
             if(e.is('rightHand') || e.is('twoHand')){
                 return;
             }
-            result += e.damageMax(character);
+            result[0] += e.damageMin(character);
+            result[1] += e.damageMax(character);
         });
         return result;
     },
@@ -127,8 +138,19 @@ mabi.expressions = {
      * 武器のダメージを計算する
      */
     weaponDamage: function(weapon, character){
-        return weapon.damageMax(character) + 
-            weapon.sUpgrade();
+        var sUpgrade = weapon.sUpgrade();
+        return [weapon.damageMin(character) + sUpgrade,
+                weapon.damageMax(character) + sUpgrade];
+    },
+
+    add: function(a, b){
+        a[0] += b[0];
+        a[1] += b[1];
+    },
+    
+    multiply: function(a, v){
+        a[0] *= v;
+        a[1] *= v;
     },
 
     /**
@@ -149,6 +171,53 @@ mabi.expressions = {
         return result;
     },
 
+    // ----------------------------------------------------------------------
+    // 各種ダメージを計算するための関数群
+    //
+    // 各関数に共通な引数は以下のとおり
+    //
+    // @param options {
+    //   generator: 実ダメージを生成する function([min, max], character),
+    //   character:,
+    //   mob:,
+    //   charge:,
+    //   critical:
+    // }
+
+    defaultOptions: function(){
+        return {
+            charge: 1,
+            critical: false,
+            generator: mabi.expressions.max
+        };
+    },
+
+    /**
+     * ベースとなるダメージから、最終的なダメージの計算を行う
+     * 以下のものを考慮する
+     * - min, max から実ダメージ決定
+     * - クリティカル
+     * - 防御・保護
+     *
+     * @param options {
+     *   共通的な引数に加え
+     *   damage: ベースとなるダメージ[min, max]
+     * }
+     */
+    basicDamage: function(options){
+        options = $.extend(this.defaultOptions(), options);
+        
+        var character = options.character;
+	var mob = options.mob;
+	var defense = mob.defense();
+	var protection = mob.protection();
+        var max = options.damage[1];
+        var damage = options.generator(options.damage, character);
+        
+        if(options.critical) damage = this.critical(damage, max, character);
+	return (damage - defense) * (1 - protection);
+    },
+    
     /**
      * スキル1発のダメージを計算する
      */
@@ -167,41 +236,48 @@ mabi.expressions = {
      * @param skill 未指定の場合はアタックダメージを計算する
      */
     meleeDamage: function(skill, options){
+        options = $.extend(this.defaultOptions(), options);
         var this_ = this;
 	var character = options.character;
+        var baseDamage = this.strToDamage(character.str());
+        this.add(baseDamage, this.characterDamage(character));
+
+        var weapons = []; // 攻撃を行う武器
+        var skillMultiplier = 1;
         if(skill){
-	    var damageMax =
-	        this.strToDamageMax(character.str()) +
-                this.damageMax(character);
-
+            skillMultiplier = this.skillMultiplier(skill, character);
             $.each([character.equipmentSet().rightHand(),
-                   character.equipmentSet().leftHand()], function(i, v){
-                       if(v && (v.is('twoHand') || v.is('rightHand'))){
-                           damageMax += this_.weaponDamage(v, character);
-                       }
-                   });
-
-            damageMax *= this.skillMultiplier(skill, character);
+                    character.equipmentSet().leftHand()], function(i, v){
+                        if(v && (v.is('twoHand') || v.is('rightHand'))){
+                            weapons.push(v);
+                        }
+                    });
         }else{
-            var weapon = options.weapon || character.equipmentSet().rightHand();
-            var damageMax =
-                this.weaponDamage(weapon, character) +
-	        this.strToDamageMax(character.str()) +
-                this.damageMax(character);
+            weapons.push(options.weapon || character.equipmentSet().rightHand());
         }
 
+
+        $.each(weapons, function(i, weapon){
+            var weaponDamage = this_.weaponDamage(weapon, character);
+            this_.add(baseDamage, weaponDamage);
+        });
+
+        this.multiply(baseDamage, skillMultiplier);
+        
 	return this.basicDamage($.extend({
-	    damage: damageMax
+	    damage: baseDamage
 	}, options));
     },
 
-    rangedDamage: function(){
+    rangedDamage: function(options){
+        options = $.extend(this.defaultOptions(), options);
     },
 
     /**
      * 基本的な魔法ダメージを計算する
      */
     magicDamage: function(skill, options){
+        options = $.extend(this.defaultOptions(), options);
         console.assert(skill instanceof mabi.Skill);
 
 	var character = options.character;
@@ -237,9 +313,9 @@ mabi.expressions = {
 	// 特別改造魔法ダメージボーナス
 	var specialUpgradeBonus = character.param('s_upgrade');
 
-	var baseDamageMax = character.body().skill(skill).param('damage_max');
+	var baseDamage = options.generator(character.body().skill(skill).damage(), character);
 
-	var damage = ((baseDamageMax * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
+	var damage = ((baseDamage * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
         if(options.critical) damage = this.critical(damage, damage, character);
 	damage *= (1 - mob.param('protection'));
 	damage += specialUpgradeBonus;
@@ -249,6 +325,8 @@ mabi.expressions = {
     },
 
     thunderDamage: function(skill, options){
+        options = $.extend(this.defaultOptions(), options);
+        
         var oneOptions = $.extend({}, options, {charge: 1});
         var charge = options.charge;
         

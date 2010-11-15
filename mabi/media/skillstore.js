@@ -16,32 +16,32 @@ mabi.SkillStore.prototype.load = function(){
 	['アイスボルト', 'ICEBOLT',
 	 ['magic', 'ice', 'bolt'],
 	 [
-	     [{param: 'damage_max', min: 80}]
+	     [{param: 'damageMax', min: 80}]
 	 ]],
 	['ファイアボルト', 'FIREBOLT',
 	 ['magic', 'fire', 'bolt', 'charge_bonus'],
 	 [
-	     [{param: 'damage_max', min: 120}]
+	     [{param: 'damageMax', min: 120}]
 	 ]],
 	['ライトニングボルト', 'LIGHTNING_BOLT',
 	 ['magic', 'lightning', 'bolt'],
 	 [
-	     [{param: 'damage_max', min: 150}]
+	     [{param: 'damageMax', min: 150}]
 	 ]],
 	['ファイアボール', 'FIREBALL',
 	 ['magic', 'fire'],
 	 [
-	     [{param: 'damage_max', min: 2400}]
+	     [{param: 'damageMax', min: 2400}]
 	 ]],
 	['アイススピア', 'ICE_SPEAR',
 	 ['magic', 'ice', 'charge_bonus'],
 	 [
-	     [{param: 'damage_max', min: 240}]
+	     [{param: 'damageMax', min: 240}]
 	 ]],
 	['サンダー', 'THUNDER',
 	 ['magic', 'lightning'],
 	 [
-	     [{param: 'damage_max', min: 400}]
+	     [{param: 'damageMax', min: 400}]
 	 ]],
 
 	['アイスマスタリ', 'MAGIC_ICE_MASTERY',

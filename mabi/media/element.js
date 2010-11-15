@@ -219,6 +219,13 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 };
 
 /**
+ * [damageMin, damageMax] を返す
+ */
+mabi.Element.prototype.damage = function(){
+    return [this.damageMin(), this.damageMax()];
+};
+
+/**
  * Child への getter, setter を作成する
  */
 mabi.Element.accessors = function(class_, names){
@@ -246,7 +253,8 @@ mabi.Element.effectAccessors = function(class_, names){
 };
 
 mabi.Element.effectAccessors(mabi.Element, [
-    'defense', 'protection', 'int', 'str', 'dex', 'damageMax',
+    'defense', 'protection', 'int', 'str', 'dex',
+    'damageMin', 'damageMax',
     'sUpgrade', 'rUpgrade'
 ]);
 
