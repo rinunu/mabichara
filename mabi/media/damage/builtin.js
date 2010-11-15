@@ -84,6 +84,23 @@ dam.addBuiltInWands = function(){
     });
 };
 
+dam.addBuiltInWeapons = function(){
+    var src = [{
+	constant: 'HAND',
+	name: '素手',
+	effects: {
+	    damageMax: 8,
+	    critical: 0.1
+	}}];
+    $.each(src, function(i, v){
+	var a = mabi.ElementBuilder.weapon(v);
+	dam.weapons.push(a);
+	dam.weapons[v.constant] = a;
+    });
+
+    dam.addBuiltInWands();
+};
+
 dam.addBuiltInTitles = function(){
     var src = [
 	['マジックマスター', 'MAGIC_MASTER', [{param: 'magic_damage', min: 0.05}]]
@@ -173,7 +190,7 @@ dam.addBuiltInSkills = function(){
  * 組み込みの Weapon/Title/Skill を追加する
  */
 dam.addBuiltInItems = function(){
-    dam.addBuiltInWands();
+    dam.addBuiltInWeapons();
     dam.addBuiltInTitles();
     dam.addBuiltInSkills();
 };
