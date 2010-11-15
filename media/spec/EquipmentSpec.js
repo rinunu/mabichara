@@ -1,5 +1,16 @@
 
 /**
+ * 性能は以下の Effect で表す
+ * - damageMax: [min, max]
+ * - damageMin: [min, max]
+ * - critical:
+ * - woundMin:(injury?)
+ * - woundMax:(injury?)
+ * - balance
+ * - sUpgrade: 
+ * - rUpgrade:
+ * ----
+ *
  * flags は以下の値の組み合わせ
  * - 装備種別: 1つだけもつ
  *   - weapon
@@ -53,6 +64,8 @@
  * ※flags は ES の貼りつけ部位から決定した
  * http://mabinogi.wikiwiki.jp/index.php?%A5%A8%A5%F3%A5%C1%A5%E3%A5%F3%A5%C8#b71dfa3f
  *
+ * ----
+ * 特別改造は武器によって異なる
  */
 describe('Equipment', function() {
     it('装備種別を取得できる', function(){
@@ -60,4 +73,5 @@ describe('Equipment', function() {
         expect(equipment.is('weapon')).toBeTruthy();
         expect(equipment.is('foo')).toBeFalsy();
     });
+
 });

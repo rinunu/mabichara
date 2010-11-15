@@ -78,14 +78,15 @@ mabi.expressions = {
      * Str 増加値から最大ダメージを求める用途には使用できない(-10 しているため)
      */
     strToDamageMax : function(str){
+        if(str < 10) return 0;
 	return (str - 10) / 2.5;
     },
 
     /**
      * 基本ダメージにクリティカルをのせる
      */
-    critical: function(base){
-        return base * (1 + 1.5);
+    critical: function(base, max, character){
+        return base + max * (1.5 + character.rUpgrade());
     },
     
     /**
@@ -95,12 +96,12 @@ mabi.expressions = {
      * - 防御・保護
      */
     basicDamage: function(options){
+        var character = options.character;
 	var damage = options.damage;
 	var mob = options.mob;
-	var critical = options.critical ? 2.5 : 1;
 	var defense = mob.defense();
 	var protection = mob.protection();
-        if(options.critical) damage = this.critical(damage);
+        if(options.critical) damage = this.critical(damage, damage, character);
 	return (damage - defense) * (1 - protection);
     },
 
@@ -120,6 +121,14 @@ mabi.expressions = {
             result += e.damageMax(character);
         });
         return result;
+    },
+
+    /**
+     * 武器のダメージを計算する
+     */
+    weaponDamage: function(weapon, character){
+        return weapon.damageMax(character) + 
+            weapon.sUpgrade();
     },
 
     /**
@@ -158,6 +167,7 @@ mabi.expressions = {
      * @param skill 未指定の場合はアタックダメージを計算する
      */
     meleeDamage: function(skill, options){
+        var this_ = this;
 	var character = options.character;
         if(skill){
 	    var damageMax =
@@ -167,7 +177,7 @@ mabi.expressions = {
             $.each([character.equipmentSet().rightHand(),
                    character.equipmentSet().leftHand()], function(i, v){
                        if(v && (v.is('twoHand') || v.is('rightHand'))){
-                           damageMax += v.damageMax(character);
+                           damageMax += this_.weaponDamage(v, character);
                        }
                    });
 
@@ -175,7 +185,7 @@ mabi.expressions = {
         }else{
             var weapon = options.weapon || character.equipmentSet().rightHand();
             var damageMax =
-                weapon.damageMax(character) +
+                this.weaponDamage(weapon, character) +
 	        this.strToDamageMax(character.str()) +
                 this.damageMax(character);
         }
@@ -230,7 +240,7 @@ mabi.expressions = {
 	var baseDamageMax = character.body().skill(skill).param('damage_max');
 
 	var damage = ((baseDamageMax * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
-        if(options.critical) damage = this.critical(damage);
+        if(options.critical) damage = this.critical(damage, damage, character);
 	damage *= (1 - mob.param('protection'));
 	damage += specialUpgradeBonus;
 	damage *= a * b * 1.1;

@@ -63,6 +63,9 @@ describe("各種計算式", function() {
 	    body.setSkill(dam.skills.THUNDER, 1);
 	    body.setSkill(dam.skills.ICE_SPEAR, 1);
 	});
+
+        xit('特別改造');
+        xit('近接武器に持ち替えた場合の特別改造は乗るのか?');
 	
 	describe('Wiki 例', function(){
 	    beforeEach(function(){
@@ -255,6 +258,103 @@ describe("各種計算式", function() {
 	    });
 	});
 
+        // http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C6%C3%CA%CC%B2%FE%C2%A4
+        describe('特別改造', function(){
+	    beforeEach(function(){
+                body.setSkill(dam.skills.find('スマッシュ'), 1);
+		mob_ = mob({protection: 0, defense: 0});
+	    });
+
+            describe('R改造', function(){
+                describe('片手武器', function(){
+                    beforeEach(function(){
+		        equipmentSet.
+                            setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18}));
+	            });
+
+                    it('ノンクリのダメージは増加しない', function(){
+                        expression = mabi.damages.attack();
+                        var c = 100; // 武器最大ダメージ
+                        var d = Math.floor(c);
+		        expect(damage()).toEqual(d);
+                    });
+                    
+                    it('アタッククリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
+                        expression = mabi.damages.attack({critical: true});
+                        var c = 100; // 武器最大ダメージ
+                        var d = Math.floor(c * (2.5 + 0.18));
+		        expect(damage()).toEqual(d);
+                    });
+                    
+                    it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
+                        expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+                        var c = 100; // 武器最大ダメージ
+                        var d = Math.floor(c * 5 * (2.5 + 0.18));
+		        expect(damage()).toEqual(d);
+                    });
+                });
+                
+                describe('2刀流', function(){
+                    beforeEach(function(){
+		        equipmentSet.
+                            setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18})).
+                            setLeftHand(rightHandWeapon({damageMax: 50, rUpgrade: 0.18}));
+	            });
+
+                    xit('アタック時は・・わかりませんでした');
+
+                    // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1261413038/590
+                    // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1276271205/965
+                    it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + 右手R + 左手R) となる', function(){
+                        expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+                        var c = 100 + 50; // 武器最大ダメージ
+                        var d = Math.floor(c * 5 * (2.5 + 0.18 * 2));
+		        expect(damage()).toEqual(d);
+                    });
+                });
+
+                // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1276271205/972
+                xit('分身術には武器のR改造が乗る');
+            });
+
+            describe('S改造', function(){
+                describe('片手武器', function(){
+                    beforeEach(function(){
+		        equipmentSet.
+                            setRightHand(rightHandWeapon({damageMax: 100, sUpgrade: 13}));
+	            });
+
+                    it('ダメージは + X となる', function(){
+                        expression = mabi.damages.attack();
+                        var c = 100 + 13; // 武器最大ダメージ
+                        var d = Math.floor(c);
+		        expect(damage()).toEqual(d);
+                    });
+                    
+                    xit('クリ時、わかりませんでした・・', function(){
+                    });
+                    
+                    xit('スマッシュ時、わかりませんでした・・', function(){
+                    });
+                });
+                
+                describe('2刀流', function(){
+                    beforeEach(function(){
+		        equipmentSet.
+                            setRightHand(rightHandWeapon({damageMax: 100, sUpgrade: 13})).
+                            setLeftHand(rightHandWeapon({damageMax: 50, sUpgrade: 13}));
+	            });
+
+                    xit('アタック時は・・わかりませんでした');
+                    xit('スマッシュ時、わかりませんでした', function(){
+                    });
+                });
+
+            });
+
+        });
+
+
 
         describe('具体例', function(){
                         
@@ -286,8 +386,12 @@ describe("各種計算式", function() {
 		    });
 	        });
 	    });
+
+
         });
 
+        // http://aumiya.jugem.jp/?eid=203
+        // http://aumiya.jugem.jp/?eid=206
         
         xit('スキルを持っていない場合、ダメージ計算は失敗する');
         xit('スキルランクによるダメージ変化');
