@@ -31,14 +31,16 @@
  *     - heavyArmor
  *   - accessory
  *   - robe
- *   - cooking
- *     - ?(キッチンナイフ)
- *     - ?(万能おたま)
- *   - ?(裁縫キット)
  *   - instrument(楽器)
  *     - percussion?(打楽器)
  *     - wind(管楽器)
  *     - string(弦楽器 ウクレレ等)
+ *
+ * todo 例えば万能鍋は shield & cooking となる。なので、これはまた別の種類の属性なのかも?
+ *   - cooking
+ *     - ?(キッチンナイフ)
+ *     - ?(万能おたま)
+ *   - ?(裁縫キット)
  *
  * - サブ種別
  *   - twohand
