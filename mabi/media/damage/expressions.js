@@ -35,7 +35,7 @@ mabi.damages = {
     },
 
     /**
-     * 基本的な魔法攻撃ダメージ計算式
+     * 一般的な魔法攻撃ダメージ計算式
      * 
      * @param skill 攻撃に使用する SkillClass
      * @param charge 攻撃時のチャージ
@@ -85,17 +85,28 @@ mabi.expressions = {
     strToDamageMax : function(str){
 	return (str - 10) / 2.5;
     },
+
+    /**
+     * 基本ダメージにクリティカルをのせる
+     */
+    critical: function(base){
+        return base * (1 + 1.5);
+    },
     
     /**
      * 基本的なダメージの計算を行う
+     * 以下のものを考慮する
+     * - クリティカル
+     * - 防御・保護
      */
     basicDamage: function(options){
-	var damageMax = options.damageMax;
+	var damage = options.damage;
 	var mob = options.mob;
 	var critical = options.critical ? 2.5 : 1;
 	var defense = mob.defense();
 	var protection = mob.protection();
-	return (damageMax * critical - defense) * (1 - protection);
+        if(options.critical) damage = this.critical(damage);
+	return (damage - defense) * (1 - protection);
     },
 
     /**
@@ -138,7 +149,7 @@ mabi.expressions = {
      * スキル1発のダメージを計算する
      */
     skillDamage: function(skill, options){
-        console.log(skill instanceof mabi.SkillClass);
+        console.assert(skill instanceof mabi.SkillClass);
         if(skill.is('melee')){
             return this.meleeDamage(skill, options);
         }else if(skill.is('magic')){
@@ -175,7 +186,7 @@ mabi.expressions = {
         }
 
 	return this.basicDamage($.extend({
-	    damageMax: damageMax
+	    damage: damageMax
 	}, options));
     },
 
@@ -217,15 +228,14 @@ mabi.expressions = {
 
 	// todo ダメージエンチャントボーナス
 	var enchantBonus = 0;
-	var criticalBouns = options.critical ? 1.5 : 0;
 
 	// 特別改造魔法ダメージボーナス
-	    var specialUpgradeBonus = character.param('s_upgrade');
+	var specialUpgradeBonus = character.param('s_upgrade');
 
 	var baseDamageMax = character.body().skill(skill).param('damage_max');
 
 	var damage = ((baseDamageMax * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
-	damage *= (1 + criticalBouns);
+        if(options.critical) damage = this.critical(damage);
 	damage *= (1 - mob.param('protection'));
 	damage += specialUpgradeBonus;
 	damage *= a * b * 1.1;

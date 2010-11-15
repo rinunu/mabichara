@@ -149,7 +149,7 @@ describe("各種計算式", function() {
 		mob_ = mob({protection: 0.1, defense: 10});
 	    });
 
-	    describe('片手武器(二刀流出来ない)', function(){
+	    describe('片手武器', function(){
 		beforeEach(function(){
 		    equipmentSet.
                         setRightHand(
@@ -177,7 +177,15 @@ describe("各種計算式", function() {
                     var d = Math.floor(((a + b + c) * 5 - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
-
+                
+                it('スキル使用時のクリティカルのダメージ', function() {
+		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+                    var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10 + 10 + 10; // 最大ダメージ効果
+                    var c = 100; // 武器最大ダメージ
+                    var d = Math.floor(((a + b + c) * 5 * 2.5 - 10) * 0.9);
+		    expect(damage()).toEqual(d);
+		});
 	    });
 
             describe('両手武器', function(){
@@ -277,6 +285,7 @@ describe("各種計算式", function() {
 	});
 
         xit('スキルを持っていない場合、ダメージ計算は失敗する');
+        xit('スキルランクによるダメージ変化');
 
 
     });
