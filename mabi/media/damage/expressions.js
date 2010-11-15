@@ -2,6 +2,96 @@
  * 各種計算式を定義する
  */
 
+// ----------------------------------------------------------------------
+// ファクトリー
+
+mabi.damages = {
+    /**
+     * 近接アタック1打の最大ダメージ
+     * @param options {
+     *   weapon: 攻撃を行う武器。
+     *   右手、もしくは左手に持っている武器を指定する。
+     * }
+     */
+    attack: function(options){
+	options = $.extend({}, options);
+
+	return new mabi.Expression(function(c){
+            options = $.extend(options, c);
+	    return mabi.expressions.attackDamage(options);
+	}, options.name);
+    }
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * 各種ダメージを計算するための関数群
+ */
+mabi.expressions = {
+    /**
+     * str から最大ダメージを求める
+     *
+     * Str 増加値から最大ダメージを求める用途には使用できない(-10 しているため)
+     */
+    strToDamageMax : function(str){
+	return (str - 10) / 2.5;
+    },
+    
+    /**
+     * 基本的な計算を行う
+     */
+    basicDamage: function(options){
+	var damageMax = options.damageMax;
+	var mob = options.mob;
+	var critical = options.critical ? 2.5 : 1;
+	var defense = mob.defense();
+	var protection = mob.protection();
+	return (damageMax * critical - defense) * (1 - protection);
+    },
+
+    /**
+     * 本体の最大ダメージ値を取得する
+     * 以下のものは除外する
+     * - str/dex による最大ダメージ上昇
+     * - 武器/武器付属エンチャントの攻撃・クリ
+     */
+    damageMax: function(character){
+        var equipmentSet = character.equipmentSet();
+        var result = 0;
+        equipmentSet.eachChild(function(e){
+            result += e.damageMax(character);
+        });
+
+        equipmentSet.weapons().eachChild(function(v){
+            result -= v.damageMax(character);
+            // v.enchants().eachChild(function(v){
+            //     result += v.damageMax(character);
+            // });
+        });
+        return result;
+    },
+
+    /**
+     * アタック1打によるダメージを計算する
+     */
+    attackDamage: function(options){
+	var character = options.character;
+	var weapon = options.weapon || character.equipmentSet().rightHand();
+	var damageMax =
+            weapon.damageMax(character) +
+	    this.strToDamageMax(character.str()) +
+            this.damageMax(character);
+
+	return this.basicDamage($.extend({
+	    damageMax: damageMax
+	}, options));
+    }
+};
+
+// ----------------------------------------------------------------------
+// 魔法系
+
 /**
  * 基本的な魔法攻撃ダメージ計算式
  * 
@@ -140,3 +230,4 @@ mabi.FusedBoltMagicDamage = function(skill0, skill1, options){
 };
 
 util.extend(mabi.FusedBoltMagicDamage, mabi.Expression);
+

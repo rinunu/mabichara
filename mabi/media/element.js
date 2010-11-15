@@ -125,6 +125,8 @@ mabi.Element.prototype.addChild = function(child, slot){
     this.children_.push({slot: slot, element: child});
     child.setParent(this);
     util.Event.trigger(this, 'addChild', [{element: child, slot: slot}]);
+
+    return this;
 };
 
 /**

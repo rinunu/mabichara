@@ -1,5 +1,7 @@
 
 mabi.EnchantClass = function(options){
+    console.assert(options.rank);
+    console.assert($.inArray(['prefix', 'suffix'], options.type) != -1);
     mabi.Element.call(this, options);
     this.rank_ = options.rank;
     this.type_ = options.type;
@@ -26,11 +28,11 @@ mabi.EnchantClass.prototype.type = function(){
  * このコピーした Effect は変更しても enchant へは影響しない。
  * コピー時、数値は最大値を使用する。
  */
-mabi.Enchant = function(enchant){
-    mabi.Element.call(this, {name: enchant.name()});
-    this.enchant_ = enchant;
+mabi.Enchant = function(base){
+    mabi.Element.call(this, {name: base.name()});
+    this.base_ = base;
 
-    this.copyEffectsFrom(enchant);
+    this.copyEffectsFrom(base);
 
     this.eachEffect(
 	function(effect){
@@ -44,7 +46,7 @@ util.extend(mabi.Enchant, mabi.Element);
      // いくつかの移譲メソッドを作成する
      $.each(['type'], function(i, name){
 		mabi.Enchant.prototype[name] = function(){
-		    return this.enchant_[name]();
+		    return this.base_[name]();
 		};
 	    });
 })();

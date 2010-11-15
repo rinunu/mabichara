@@ -38,14 +38,10 @@ dam.addBuiltInWands = function(){
 	    upgrades: [
 		{}, {
 		    proficiency: 150,
-		    effects: [
-			{param: 'weapon_magic_damage', min: 0.22}
-		    ]
+		    effects: {weapon_magic_damage: 0.22}
 		}, {
 		    proficiency: 205,
-		    effects: [
-			{param: 'weapon_magic_damage', min: 0.28}
-		    ]
+		    effects: {weapon_magic_damage: 0.28}
 		}
 	    ]
 	}, {
@@ -55,31 +51,29 @@ dam.addBuiltInWands = function(){
 		{},
 		{
 		    proficiency: 245,
-		    effects: [
-			{param: 'weapon_magic_damage', min: -0.06}
-		    ]}]
+		    effects: {weapon_magic_damage: -0.06}
+		    }]
 	}
     ];
 
     var specials = [
 	{},
-	{name: 'S3', effects: [{param: 's_upgrade', min: 9}]}
+	{name: 'S3', effects: {s_upgrade: 9}}
     ];
 
     dam.combination([['wand', wands], ['special', specials]], function(map){
 	var wand = map['wand'];
 	var special = map['special'];
 	$.each(wand.upgrades, function(i, upgrade){
-	    var totalEffects = [];
-	    $.each([upgrade.effects, special.effects], function(i, effects){
-		if(effects) totalEffects = totalEffects.concat(effects);
+            var base = new mabi.EquipmentClass({
+		name: wand.name,
+		flags: wand.flags
 	    });
-	    dam.weapons.push(new mabi.SimpleWeapon(
-		{
-		    name: dam.name(wand.name, upgrade.proficiency, special.name),
-		    flags: wand.flags,
-		    effects: totalEffects
-		}));
+            var a = base.create();
+            a.setName(dam.name(wand.name, upgrade.proficiency, special.name));
+            a.addChild(new mabi.Element(upgrade));
+            a.addChild(new mabi.Element(special));
+	    dam.weapons.push(a);
 	});
     });
 };
@@ -103,10 +97,10 @@ dam.addBuiltInWeapons = function(){
 
 dam.addBuiltInTitles = function(){
     var src = [
-	['マジックマスター', 'MAGIC_MASTER', [{param: 'magic_damage', min: 0.05}]]
+	['マジックマスター', 'MAGIC_MASTER',  {magic_damage: 0.05}]
     ];
     $.each(src, function(i, v){
-	var a = new mabi.SimpleWeapon({
+	var a = new mabi.Title({
 	    name: v[0],
 	    effects: v[2]
 	});

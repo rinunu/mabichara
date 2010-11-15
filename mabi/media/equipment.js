@@ -4,7 +4,8 @@
  */
 mabi.EquipmentClass = function(options){
     mabi.Element.call(this, options);
-    this.ug_ = options.ug;
+    this.ug_ = options.ug || 5;
+    this.flags_ = options.flags || [];
 };
 
 util.extend(mabi.EquipmentClass, mabi.Element);
@@ -44,6 +45,13 @@ mabi.EquipmentClass.prototype.upgrades = function(options){
  */
 mabi.EquipmentClass.prototype.set = function(options){
     this.upgrades_ = options.upgrades;
+};
+
+/**
+ * フラグを調査する
+ */
+mabi.EquipmentClass.prototype.is = function(flag){
+    return $.inArray(flag, this.flags_) != -1;
 };
 
 // ----------------------------------------------------------------------
@@ -96,10 +104,10 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
     var name = this.child('equipment').name();
     var proficiency = 0;
     this.eachChild(function(c, slot){
-		       if(slot.indexOf('upgrade') == 0){
-			   proficiency += c.proficiency();
-		       }
-		   });
+	if(slot.indexOf('upgrade') == 0){
+	    proficiency += c.proficiency();
+	}
+    });
     if(proficiency >= 1){
 	name += '(' + proficiency + '式)';
     }else{
@@ -112,6 +120,7 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
 // Equipment
 
 mabi.Equipment = function(base){
+    console.assert(base);
     mabi.Element.call(this);
 
     var noEnchant = new mabi.NoEnchantedEquipment;
@@ -123,6 +132,8 @@ mabi.Equipment = function(base){
 };
 
 util.extend(mabi.Equipment, mabi.Element);
+mabi.Element.accessors(mabi.Equipment, [
+    'prefix', 'suffix', 'equipment']);
 
 /**
  * エンチャントを追加する
@@ -130,15 +141,38 @@ util.extend(mabi.Equipment, mabi.Element);
 mabi.Equipment.prototype.enchant = function(enchant){
     console.assert(enchant instanceof mabi.Enchant);
     this.addChild(enchant, enchant.type());
+
+    return this;
+};
+
+/**
+ * Enchant のみを含む Element を取得する
+ */
+mabi.Equipment.prototype.enchants = function(){
+    var result = new mabi.Element();
+    $.each([this.prefix(), this.suffix()], function(i, v){
+        if(v) result.addChild(v);
+    });
+    return result;
 };
 
 // 委譲メソッドを作成する
 (function(){
-     $.each(['base', 'setBase', 'setUpgrade'],
-	    function(i, name){
-		mabi.Equipment.prototype[name] = function(){
-		    var a = this.child('equipment');
-		    return a[name].apply(a, arguments);
-		};
-	    });
+    $.each(['base', 'setBase', 'setUpgrade'],
+	   function(i, name){
+	       mabi.Equipment.prototype[name] = function(){
+		   var a = this.child('equipment');
+		   return a[name].apply(a, arguments);
+	       };
+	   });
+
+    $.each(['is'],
+	   function(i, name){
+	       mabi.Equipment.prototype[name] = function(){
+		   var a = this.base();
+		   return a[name].apply(a, arguments);
+	       };
+	   });
+    
 })();
+
