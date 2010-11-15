@@ -35,3 +35,7 @@ mabi.Elements.prototype.get = function(name){
     }
     return result;
 };
+
+mabi.Elements.prototype.find = mabi.Elements.prototype.get;
+
+

@@ -1,9 +1,16 @@
 dam.initializeModel = function(){
     dam.weapons = new mabi.Elements;
     dam.titles = new mabi.Elements;
-    dam.skills = new mabi.Elements;
+    dam.skills = new mabi.SkillStore;
 
     dam.addBuiltInItems();
+
+    var c = new util.ConcurrentCommand(
+	[
+            dam.skills.load()
+        ]);
+    c.execute();
+    return c;
 };
 
 dam.initializeView = function(){
@@ -31,7 +38,9 @@ dam.initializeView = function(){
 };
 
 dam.initialize = function(){
-    dam.initializeModel();
-    dam.initializeView();
+    dam.initializeModel().success(function(){
+        console.log('initialized model');
+        dam.initializeView();        
+    });
 };
 

@@ -22,9 +22,11 @@
 <script type="text/javascript">
   google.load('visualization', '1', {'packages':['corechart']});
   google.setOnLoadCallback(function(){
-    dam.initializeModel();
-    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-    jasmine.getEnv().execute();
+    dam.initializeModel().success(function(){
+      console.log('initialized model');
+      jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+      jasmine.getEnv().execute();
+    });
   });
 </script>
 
