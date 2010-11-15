@@ -102,20 +102,16 @@ mabi.expressions = {
      * 本体の最大ダメージ値を取得する
      * 以下のものは除外する
      * - str/dex による最大ダメージ上昇
-     * - 武器/武器付属エンチャントの攻撃・クリ
+     * - 武器/武器エンチャントの攻撃
      */
     damageMax: function(character){
         var equipmentSet = character.equipmentSet();
         var result = 0;
         equipmentSet.eachChild(function(e){
+            if(e.is('rightHand') || e.is('twoHand')){
+                return;
+            }
             result += e.damageMax(character);
-        });
-
-        equipmentSet.weapons().eachChild(function(v){
-            result -= v.damageMax(character);
-            // v.enchants().eachChild(function(v){
-            //     result += v.damageMax(character);
-            // });
         });
         return result;
     },
@@ -124,13 +120,22 @@ mabi.expressions = {
      * スキルのダメージ倍率を取得する
      */
     skillMultiplier: function(skill, character){
+        console.assert(skill instanceof mabi.SkillClass);
         skill = character.body().skill(skill);
         console.assert(skill);
-        return skill.param('damage');
+
+        var result = skill.param('damage');
+
+        var rightHand = character.equipmentSet().rightHand();
+        if(rightHand && rightHand.is('twoHand') && rightHand.is('weapon')){
+            result *= 1.2;
+        }
+
+        return result;
     },
 
     /**
-     * スキルを使用した攻撃のダメージを計算する
+     * スキル1発のダメージを計算する
      */
     skillDamage: function(skill, options){
         console.log(skill instanceof mabi.SkillClass);
@@ -143,18 +148,30 @@ mabi.expressions = {
     },
 
     /**
-     * 近接スキルによるダメージを計算する
+     * 近接スキル1発のダメージを計算する
      * @param skill 未指定の場合はアタックダメージを計算する
      */
     meleeDamage: function(skill, options){
 	var character = options.character;
-	var weapon = options.weapon || character.equipmentSet().rightHand();
-	var damageMax =
-            weapon.damageMax(character) +
-	    this.strToDamageMax(character.str()) +
-            this.damageMax(character);
         if(skill){
+	    var damageMax =
+	        this.strToDamageMax(character.str()) +
+                this.damageMax(character);
+
+            $.each([character.equipmentSet().rightHand(),
+                   character.equipmentSet().leftHand()], function(i, v){
+                       if(v && (v.is('twoHand') || v.is('rightHand'))){
+                           damageMax += v.damageMax(character);
+                       }
+                   });
+
             damageMax *= this.skillMultiplier(skill, character);
+        }else{
+            var weapon = options.weapon || character.equipmentSet().rightHand();
+            var damageMax =
+                weapon.damageMax(character) +
+	        this.strToDamageMax(character.str()) +
+                this.damageMax(character);
         }
 
 	return this.basicDamage($.extend({

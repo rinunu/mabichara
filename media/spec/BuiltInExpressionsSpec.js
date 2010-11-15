@@ -22,8 +22,8 @@ describe("各種計算式", function() {
     }
 
     // 装備を作成する
-    function equipment(effects){
-        var base = new mabi.EquipmentClass({effects: effects});
+    function equipment(effects, flags){
+        var base = new mabi.EquipmentClass({effects: effects, flags: flags});
         return base.create();
     }
 
@@ -31,8 +31,18 @@ describe("各種計算式", function() {
         return mabi.ElementBuilder.mob(effects);
     }
     
-    function weapon(effects){
-        return mabi.ElementBuilder.weapon({effects: effects});
+    function rightHandWeapon(effects, flags){
+        flags = flags || [];
+        flags = flags.concat(['weapon', 'rightHand']);
+
+        return equipment(effects, flags);
+    }
+    
+    function twoHandWeapon(effects, flags){
+        flags = flags || [];
+        flags = flags.concat(['weapon', 'twoHand']);
+
+        return equipment(effects, flags);
     }
 
     beforeEach(function(){
@@ -143,7 +153,7 @@ describe("各種計算式", function() {
 		beforeEach(function(){
 		    equipmentSet.
                         setRightHand(
-                            weapon({damageMax: 100}).
+                            rightHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10}))).
                         setLeftHand(
                             equipment().
@@ -174,25 +184,44 @@ describe("各種計算式", function() {
 		beforeEach(function(){
                     equipmentSet.
                         setRightHand(
-                            weapon({damageMax: 100}).
+                            twoHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10})));
 		});
 
 		it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
                     expression = mabi.damages.attack();
                     var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
-                    var b = 10 + 10; // 最大ダメージ効果
-                    var c = 100; // 武器最大ダメージ
+                    var b = 10; // 最大ダメージ効果
+                    var c = 100 + 10; // 武器最大ダメージ
                     var d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
 
-                it('スマッシュのダメージは6倍になる', function() {
+                it('スマッシュのダメージは6倍になる', function(){
 		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
-                    var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
-                    var b = 10 + 10 + 10; // 最大ダメージ効果
-                    var c = 100; // 武器最大ダメージ
+                    var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10; // 最大ダメージ効果
+                    var c = 100 + 10; // 武器最大ダメージ
                     var d = Math.floor(((a + b + c) * 6 - 10) * 0.9);
+		    expect(damage()).toEqual(d);
+		});
+
+	    });
+
+            describe('両手装備(Not 武器)', function(){
+		beforeEach(function(){
+                    equipmentSet.
+                        setRightHand(
+                            equipment({damageMax: 100}, ['twoHand']).
+                                enchant(prefix({str:10, damageMax:10})));
+		});
+
+                it('スマッシュのダメージは5倍', function(){
+		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+                    var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10; // 最大ダメージ効果
+                    var c = 100 + 10; // 武器最大ダメージ
+                    var d = Math.floor(((a + b + c) * 5 - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
 
@@ -213,10 +242,10 @@ describe("各種計算式", function() {
 		beforeEach(function(){
                     equipmentSet.
                         setRightHand(
-                            weapon({damageMax: 100}).
+                            rightHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10}))).
                         setLeftHand(
-                            weapon({damageMax: 50}).
+                            rightHandWeapon({damageMax: 50}).
                                 enchant(prefix({str:10, damageMax:10})));
 		});
 
@@ -234,9 +263,18 @@ describe("各種計算式", function() {
                     d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 		});
+
+                it('スマッシュのダメージは (本体 + 右手 + 左手) * 5', function(){
+		    expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+                    var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var b = 10; // 本体最大ダメージ効果
+                    var c = (100 + 10) + (50 + 10); // 武器最大ダメージ
+                    var d = Math.floor(((a + b + c) * 5 - 10) * 0.9);
+		    expect(damage()).toEqual(d);
+		});
+                
 	    });
 	});
-
 
         xit('スキルを持っていない場合、ダメージ計算は失敗する');
 
