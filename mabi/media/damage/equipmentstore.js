@@ -83,16 +83,25 @@ mabi.EquipmentStore.prototype.load = function(){
 	    this_.push(a);
 	});
     });
-    
-    var src = [{
-	constant: 'HAND',
-	name: '素手',
-	effects: {
-	    damageMax: 8,
-	    critical: 0.1
-	}}];
+
+    // ----------------------------------------------------------------------
+
+    var src = [
+        {
+	    constant: 'HAND',
+	    name: '素手',
+	    effects: {
+	        damageMax: 8,
+	        critical: 0.1
+	    }},
+        {
+	    name: '万能鍋',
+            flags: ['cooking']
+        }
+    ];
     $.each(src, function(i, v){
-	var a = mabi.ElementBuilder.weapon(v);
+	var a = new mabi.EquipmentClass(v).create();
+        a.setName(v.name);
 	this_.push(a);
     });
 

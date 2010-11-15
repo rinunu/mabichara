@@ -38,25 +38,3 @@ mabi.ElementBuilder.body = function(dto){
     return body;
 };
 
-/**
- * Weapon を作成する
- */
-mabi.ElementBuilder.weapon = function(options){
-    var flags = ['weapon'];
-    if(options.flags) flags = flags.concat(options);
-    var dto = {
-	name: options.name,
-	flags: flags,
-	effects: []
-    };
-    if(options.effects){
-	$.each(options.effects, function(k, v){
-	    dto.effects.push({param: k, min: v});
-	});
-    }
-
-    var weapon = new mabi.EquipmentClass(dto).create();
-    weapon.setName(options.name);
-    return weapon;
-};
-
