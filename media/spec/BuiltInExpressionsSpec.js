@@ -11,6 +11,12 @@ describe("各種計算式", function() {
         if(!a) throw 'error';
         return a;
     }
+    
+    function title(name){
+        var a = dam.titles.find({name: name});
+        if(!a) throw 'error';
+        return a;
+    }
 
     // ダメージを計算する
     function damage(){
@@ -411,7 +417,7 @@ describe("各種計算式", function() {
 		    body.setSkill(dam.skills.BOLT_COMPOSER, 1);
 		    body.setParam('int', 600);
 
-		    equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+		    equipmentSet.setTitle(title('マジックマスター'));
 
 		    mob_ = mob({protection: 0.1});
 	        });
@@ -449,7 +455,7 @@ describe("各種計算式", function() {
 	    describe('http://aumiya.jugem.jp/?eid=173', function(){
 	        beforeEach(function(){
 		    character_.setParam('int', 600);
-		    equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+		    equipmentSet.setTitle(title('マジックマスター'));
 		    mob_ = mob({protection: 0});
 	        });
 
@@ -486,7 +492,7 @@ describe("各種計算式", function() {
 		    body.setSkill(dam.skills.BOLT_COMPOSER, 1);
 		    body.setParam('int', 700);
 
-		    // equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+		    // equipmentSet.setTitle(title('マジックマスター'));
                 });
 
                 it('LB S改造', function(){

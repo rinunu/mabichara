@@ -323,7 +323,7 @@ mabi.expressions = {
 	var fullChargeBonus = chargeBonus == 5 ? 1.3 : 1;
 
 	var a = 1 + magicAttack / 100 + typeMasteryBonus + boltMasteryBonus;
-	var b = 1 + character.param('weapon_magic_damage') + character.param('magic_damage');
+	var b = 1 + character.param('weapon_magic_damage') + character.param('magic') / 100.0;
 
 	// todo ダメージエンチャントボーナス
 	var enchantBonus = 0;

@@ -2,27 +2,6 @@
  * ビルトインの情報を定義する
  */
 
-dam.addBuiltInTitles = function(){
-    var src = [
-	['マジックマスター', 'MAGIC_MASTER',  {magic_damage: 0.05}]
-    ];
-    $.each(src, function(i, v){
-	var a = new mabi.Title({
-	    name: v[0],
-	    effects: v[2]
-	});
-	dam.titles.push(a);
-	dam.titles[v[1]] = a;
-    });
-};
-
-/**
- * 組み込みの Weapon/Title/Skill を追加する
- */
-dam.addBuiltInItems = function(){
-    dam.addBuiltInTitles();
-};
-
 dam.setDefaultContext = function(context){
     var data = new mabi.CombinationDamageData;
 
@@ -35,13 +14,15 @@ dam.setDefaultContext = function(context){
     var th = dam.skills.THUNDER;
     var is = dam.skills.ICE_SPEAR;
     $.each([
+        [mabi.damages.attack({name: 'スマッシュ', generator: generator})]
+        
 	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, generator: generator})],
 	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, generator: generator})],
 	// [mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, generator: generator})],
 	// [mabi.damages.skill(lb, {name: 'LB', charge: 1, generator: generator})],
-	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, generator: generator})],
+	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, generator: generator})],
 	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, generator: generator})],
-	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, generator: generator})],
+	// [mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, generator: generator})],
 	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, generator: generator})],
 	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, generator: generator})]
 	// [mabi.damages.skill(fbl, {name: 'FBL', charge: 5, generator: generator})],
@@ -49,7 +30,7 @@ dam.setDefaultContext = function(context){
 	// [mabi.damages.thunder(th, {name: 'TH(5C)', charge: 5, generator: generator})]
 
 	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C クリ)', charge: 1, critical: true})],
-	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB(クリ)', charge: 1, generator: 'maxCritical'})]
+	// [mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB(クリ)', charge: 1, generator: 'maxCritical'})]
     ], function(i, v){
 	data.addExpression(v[0]);
     });
@@ -72,13 +53,15 @@ dam.setDefaultContext = function(context){
 	var equipmentSet = new mabi.EquipmentSet();
 	equipmentSet.setName(v);
 	equipmentSet.setRightHand(dam.equipments.get(v));
-	equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+	equipmentSet.setTitle(dam.titles.find({name: 'マジックマスター'}));
 	data.addEquipmentSet(equipmentSet);
     });
 
     // Character
     var ints = ['int', [600, 700]];
+    var strs = ['str', [50, 100, 150, 200, 250, 300]];
     var abbreviations = {
+        'str': 'Str',
 	'int': 'Int',
 	lightning_magic_damage: 'L',
 	fire_magic_damage: 'F',
@@ -87,7 +70,7 @@ dam.setDefaultContext = function(context){
     var template = {
     	'int': 600
     };
-    dam.combination([ints], function(map){
+    dam.combination([strs], function(map){
 	var names = [];
 	$.each(map, function(k, v){
 	    if(v > 1){
@@ -100,6 +83,8 @@ dam.setDefaultContext = function(context){
 	template.name = names.join(' ');
 
 	var body = mabi.ElementBuilder.body(template);
+        body.setSkill(dam.skills.find({name: 'スマッシュ'}), 1);
+        
 	body.setSkill(dam.skills.ICEBOLT, 1);
 	body.setSkill(dam.skills.FIREBOLT, 1);
 	body.setSkill(dam.skills.LIGHTNING_BOLT, 1);
