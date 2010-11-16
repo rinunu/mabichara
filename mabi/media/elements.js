@@ -36,6 +36,29 @@ mabi.Elements.prototype.get = function(name){
     return result;
 };
 
-mabi.Elements.prototype.find = mabi.Elements.prototype.get;
+mabi.Elements.prototype.find = function(options){
+    if(options.name){
+        var p = function(element){
+            return element.name() == options.name;
+        };
+    }else{
+        var id = options.id ? options.id() : options;
+        var p = function(element){
+            return element.id() == id;
+        };
+    }
+
+    var result = null;
+    $.each(this.items_, function(i, element){
+	if(p(element)){
+	    result = element;
+	    return false;
+	}
+	return true;
+    });
+
+    return result;
+};
+
 
 

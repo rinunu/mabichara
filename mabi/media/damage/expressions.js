@@ -149,7 +149,7 @@ mabi.expressions = {
         var equipmentSet = character.equipmentSet();
         var result = [0, 0];
         equipmentSet.eachChild(function(e){
-            if(e.is('rightHand') || e.is('twoHand')){
+            if(e instanceof mabi.Equipment && (e.is('rightHand') || e.is('twoHand'))){
                 return;
             }
             result[0] += e.damageMin(character);

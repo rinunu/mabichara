@@ -6,6 +6,12 @@ describe("各種計算式", function() {
     var equipmentSet;
     var mob_;
 
+    function skill(name){
+        var a = dam.skills.find({name: name});
+        if(!a) throw 'error';
+        return a;
+    }
+
     // ダメージを計算する
     function damage(){
         var context = {
@@ -69,7 +75,7 @@ describe("各種計算式", function() {
     describe('近接', function(){
 	beforeEach(function(){
 	    character_.setParam('str', 100);
-            body.setSkill(dam.skills.find('スマッシュ'), 1);
+            body.setSkill(skill('スマッシュ'), 1);
 
             equipmentSet.
                 setHead(
@@ -100,7 +106,7 @@ describe("各種計算式", function() {
 	    });
 
             it('スマッシュのダメージ', function() {
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+		expression = mabi.damages.skill(skill('スマッシュ'));
                 var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10 + 10 + 10; // 最大ダメージ効果
                 var c = 100; // 武器最大ダメージ
@@ -109,7 +115,7 @@ describe("各種計算式", function() {
 	    });
             
             it('スキル使用時のクリティカルのダメージ', function() {
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
+		expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                 var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10 + 10 + 10; // 最大ダメージ効果
                 var c = 100; // 武器最大ダメージ
@@ -136,7 +142,7 @@ describe("各種計算式", function() {
 	    });
 
             it('スマッシュのダメージは6倍になる', function(){
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+		expression = mabi.damages.skill(skill('スマッシュ'));
                 var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10; // 最大ダメージ効果
                 var c = 100 + 10; // 武器最大ダメージ
@@ -155,7 +161,7 @@ describe("各種計算式", function() {
 	    });
 
             it('スマッシュのダメージは5倍', function(){
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+		expression = mabi.damages.skill(skill('スマッシュ'));
                 var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10; // 最大ダメージ効果
                 var c = 100 + 10; // 武器最大ダメージ
@@ -203,7 +209,7 @@ describe("各種計算式", function() {
 	    });
 
             it('スマッシュのダメージは (本体 + 右手 + 左手) * 5', function(){
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'));
+		expression = mabi.damages.skill(skill('スマッシュ'));
                 var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10; // 本体最大ダメージ効果
                 var c = (100 + 10) + (50 + 10); // 武器最大ダメージ
@@ -217,7 +223,7 @@ describe("各種計算式", function() {
     // http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C6%C3%CA%CC%B2%FE%C2%A4
     describe('特別改造', function(){
 	beforeEach(function(){
-            body.setSkill(dam.skills.find('スマッシュ'), 1);
+            body.setSkill(skill('スマッシュ'), 1);
 	    mob_ = mob({protection: 0, defense: 0});
 	});
 
@@ -243,7 +249,7 @@ describe("各種計算式", function() {
                 });
                 
                 it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
-                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
+                    expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                     var c = 100; // 武器最大ダメージ
                     var d = Math.floor(c * 5 * (2.5 + 0.18));
 		    expect(damage()).toEqual(d);
@@ -262,7 +268,7 @@ describe("各種計算式", function() {
                 // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1261413038/590
                 // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1276271205/965
                 it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + 右手R + 左手R) となる', function(){
-                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
+                    expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                     var c = 100 + 50; // 武器最大ダメージ
                     var d = Math.floor(c * 5 * (2.5 + 0.18 * 2));
 		    expect(damage()).toEqual(d);
