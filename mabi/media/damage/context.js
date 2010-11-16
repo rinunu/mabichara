@@ -93,14 +93,14 @@ mabi.Context.prototype.update = function(){
 
     // DataTable に変換
     var table = new google.visualization.DataTable();
-    table.addColumn('string', 'キャラクター');
+    table.addColumn('string', '');
     $.each(columnArray, function(iColumn, column){
-      	table.addColumn('number', this_.name(column));
+      	table.addColumn('number', this_.name(column.idFields));
 	table.setColumnProperty(iColumn + 1, 'idFields', column.idFields);
     });
     table.addRows(rowArray.length);
     $.each(rowArray, function(iRow, row){
-	table.setValue(iRow, 0, 'todo');
+	table.setValue(iRow, 0, this_.name(row.idFields));
 	table.setRowProperty(iRow, 'idFields', row.idFields);
 	$.each(columnArray, function(iColumn, column){
 	    table.setValue(iRow, iColumn + 1, row.values[column.id]);
@@ -116,10 +116,10 @@ mabi.Context.prototype.update = function(){
  */
 mabi.Context.prototype.updateGetter = function(){
     var rowFieldIds = [];
-    $.each(this.rowFields_, function(i, v){rowFieldIds.push(v.id)});
+    $.each(this.rowFields_, function(i, v){rowFieldIds.push(v.id);});
 
     var columnFieldIds = [];
-    $.each(this.columnFields_, function(i, v){columnFieldIds.push(v.id)});
+    $.each(this.columnFields_, function(i, v){columnFieldIds.push(v.id);});
 
     function getId(record, fieldIds){
 	var ids = [];
@@ -136,10 +136,10 @@ mabi.Context.prototype.updateGetter = function(){
 	}
 	return fields;
     }
-    this.getRowId = function(record){ return getId(record, rowFieldIds); }
-    this.getColumnId = function(record){ return getId(record, columnFieldIds); }
-    this.getRowFields = function(record){ return getFields(record, rowFieldIds); }
-    this.getColumnFields = function(record){ return getFields(record, columnFieldIds); }
+    this.getRowId = function(record){ return getId(record, rowFieldIds); };
+    this.getColumnId = function(record){ return getId(record, columnFieldIds); };
+    this.getRowFields = function(record){ return getFields(record, rowFieldIds); };
+    this.getColumnFields = function(record){ return getFields(record, columnFieldIds); };
 };
 
 /**
@@ -164,9 +164,8 @@ mabi.Context.prototype.eachRow = function(fn){
  * カラムもしくは row の名前を取得する
  */
 mabi.Context.prototype.name = function(values){
-    return $.map(values, function(v){return v.name()}).join(' | ');
+    return $.map(values, function(v){return v.name();}).join(' / ');
 };
-
 
 /**
  * すべての column もしくは row を列挙する
