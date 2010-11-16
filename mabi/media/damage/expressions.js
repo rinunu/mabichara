@@ -9,9 +9,7 @@
  * 共通的な引数は以下のとおり
  * @param options {
  *   charge:,
- *   critical:
- *   generator: ベースダメージを生成する function([min, max], character).
- *   mabi.expressions.max, mabi.expressions,expectation などを指定する。
+ *   generator: 実ダメージを生成する('max', 'min', 'maxCritical', 'expectation')
  *   デフォルトは max
  * }
  */
@@ -74,27 +72,49 @@ mabi.damages = {
 // private
 
 mabi.expressions = {
+    
+    // ----------------------------------------------------------------------
+    // min, max から実際のダメージを決定する
+    
     /**
-     * 期待値を計算する
+     * 期待値を計算する(バランス80, クリ30% 前提)
      */
-    expectation: function(damage, character){
+    gen_expectation: function(damage, character){
+        var min = damage[0];
+        var max = damage[1];
+        var noncri = (max - min) * 0.75 + min;
+        return noncri * 0.7 + this.critical(noncri, max, character) * 0.3;
     },
     
     /**
-     * max を返す
+     * 最小値+クリティカルが発生しなかったものとして計算する
      */
-    max: function(damage, character){
+    gen_max: function(damage, character){
         return damage[1];
     },
-    
+
     /**
-     * min を返す
+     * 最小値+クリティカルが発生しなかったものとして計算する
      */
-    min: function(damage, character){
+    gen_min: function(damage, character){
         return damage[0];
     },
-
+    
+    /**
+     * 最大値+クリティカルが発生したものとして計算する
+     */
+    gen_maxCritical: function(damage, character){
+        return this.critical(damage[1], damage[1], character);
+    },
+    
     // ----------------------------------------------------------------------
+
+    /**
+     * 実ダメージを生成する
+     */
+    generate : function(damage, options){
+        return this['gen_' + options.generator](damage, options.character);
+    },
 
     /**
      * str から[min, max] ダメージを求める
@@ -177,18 +197,16 @@ mabi.expressions = {
     // 各関数に共通な引数は以下のとおり
     //
     // @param options {
-    //   generator: 実ダメージを生成する function([min, max], character),
+    //   generator:
     //   character:,
     //   mob:,
     //   charge:,
-    //   critical:
     // }
 
     defaultOptions: function(){
         return {
             charge: 1,
-            critical: false,
-            generator: mabi.expressions.max
+            generator: 'max'
         };
     },
 
@@ -211,10 +229,7 @@ mabi.expressions = {
 	var mob = options.mob;
 	var defense = mob.defense();
 	var protection = mob.protection();
-        var max = options.damage[1];
-        var damage = options.generator(options.damage, character);
-        
-        if(options.critical) damage = this.critical(damage, max, character);
+        var damage = this.generate(options.damage, options);
 	return (damage - defense) * (1 - protection);
     },
     
@@ -313,10 +328,14 @@ mabi.expressions = {
 	// 特別改造魔法ダメージボーナス
 	var specialUpgradeBonus = character.param('s_upgrade');
 
-	var baseDamage = options.generator(character.body().skill(skill).damage(), character);
-
-	var damage = ((baseDamage * fullChargeBonus + wandBonus) * chargeBonus + enchantBonus);
-        if(options.critical) damage = this.critical(damage, damage, character);
+	var damage = character.body().skill(skill).damage();
+        this.multiply(damage, fullChargeBonus);
+	this.add(damage, [wandBonus, wandBonus]);
+        this.multiply(damage, chargeBonus);
+        this.add(damage, [enchantBonus, enchantBonus]);
+        
+        damage = this.generate(damage, options);
+        
 	damage *= (1 - mob.param('protection'));
 	damage += specialUpgradeBonus;
 	damage *= a * b * 1.1;

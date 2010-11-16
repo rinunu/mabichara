@@ -27,7 +27,7 @@ dam.setDefaultContext = function(context){
     var data = new mabi.CombinationDamageData;
 
     // Expression
-    var critical = false;
+    var generator = 'maxCritical';
     var ib = dam.skills.ICEBOLT;
     var fb = dam.skills.FIREBOLT;
     var lb = dam.skills.LIGHTNING_BOLT;
@@ -35,21 +35,21 @@ dam.setDefaultContext = function(context){
     var th = dam.skills.THUNDER;
     var is = dam.skills.ICE_SPEAR;
     $.each([
-	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, critical: critical})],
-	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, critical: critical})],
-	// [mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, critical: critical})],
-	// [mabi.damages.skill(lb, {name: 'LB', charge: 1, critical: critical})],
-	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, critical: critical})],
-	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, critical: critical})],
-	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, critical: critical})],
-	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, critical: critical})],
-	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, critical: critical})]
-	// [mabi.damages.skill(fbl, {name: 'FBL', charge: 5, critical: critical})],
-	// [mabi.damages.skill(is, {name: 'IS(5C)', charge: 5, critical: critical})],
-	// [mabi.damages.thunder(th, {name: 'TH(5C)', charge: 5, critical: critical})]
+	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, generator: generator})],
+	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, generator: generator})],
+	// [mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, generator: generator})],
+	// [mabi.damages.skill(lb, {name: 'LB', charge: 1, generator: generator})],
+	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, generator: generator})],
+	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, generator: generator})],
+	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, generator: generator})],
+	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, generator: generator})],
+	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, generator: generator})]
+	// [mabi.damages.skill(fbl, {name: 'FBL', charge: 5, generator: generator})],
+	// [mabi.damages.skill(is, {name: 'IS(5C)', charge: 5, generator: generator})],
+	// [mabi.damages.thunder(th, {name: 'TH(5C)', charge: 5, generator: generator})]
 
 	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C クリ)', charge: 1, critical: true})],
-	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB(クリ)', charge: 1, critical: true})]
+	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB(クリ)', charge: 1, generator: 'maxCritical'})]
     ], function(i, v){
 	data.addExpression(v[0]);
     });

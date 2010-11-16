@@ -104,7 +104,7 @@ describe("各種計算式", function() {
 	    });
             
             it('スキル使用時のクリティカルのダメージ', function() {
-		expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+		expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
                 var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                 var b = 10 + 10 + 10; // 最大ダメージ効果
                 var c = 100; // 武器最大ダメージ
@@ -231,14 +231,14 @@ describe("各種計算式", function() {
                 });
                 
                 it('アタッククリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
-                    expression = mabi.damages.attack({critical: true});
+                    expression = mabi.damages.attack({generator: 'maxCritical'});
                     var c = 100; // 武器最大ダメージ
                     var d = Math.floor(c * (2.5 + 0.18));
 		    expect(damage()).toEqual(d);
                 });
                 
                 it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
-                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
                     var c = 100; // 武器最大ダメージ
                     var d = Math.floor(c * 5 * (2.5 + 0.18));
 		    expect(damage()).toEqual(d);
@@ -257,7 +257,7 @@ describe("各種計算式", function() {
                 // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1261413038/590
                 // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1276271205/965
                 it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + 右手R + 左手R) となる', function(){
-                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {critical: true});
+                    expression = mabi.damages.skill(dam.skills.find('スマッシュ'), {generator: 'maxCritical'});
                     var c = 100 + 50; // 武器最大ダメージ
                     var d = Math.floor(c * 5 * (2.5 + 0.18 * 2));
 		    expect(damage()).toEqual(d);
@@ -305,9 +305,43 @@ describe("各種計算式", function() {
 
     });
 
+    describe('その他', function(){
 
+        // 期待値を求める(バランス計算は行わず、 80% 固定とする)
+        //
+        // クリを含まない期待値 a = (max - min) * 0.75 + min
+        // クリを含む期待値は「a * 0.7 + {a + (max * クリ倍率)} * 0.3」となる
+        // 
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%C6%A1%BC%A5%BF%A5%B9%2F%A5%D0%A5%E9%A5%F3%A5%B9
+        // http://lab.lowreal.net/test/mabinogi/damage.html
+        // http://www.mabinogi.jp/6th/community/knowledgeContent.asp?ty=&c1=&c2=&lv=0&od=&ix=19117&p=
+        describe('期待値', function(){
+            it('バランス80%、クリ30% 時の期待値', function(){
+		equipmentSet.setRightHand(rightHandWeapon({damageMin: 10, damageMax: 100}));
+                expression = mabi.damages.attack({generator: 'expectation'});
+		expect(damage()).toEqual(122); // 結果は上記計算機より(ただし小数点切り捨て)
+            });
+            
+            xit('魔法のバランスは100%までいく');
+        });
+
+
+    });
 
     describe('具体例', function(){
+
+        // 上にも出ていますが青で最大+21　赤でクリ倍率+26%　クリ1を前提に計算してみました　バランス80%(期待値は約75%)の時、特別改造無しのクリを考えないダメージ期待値272.75(＝最小0最大363)(クリ30%を考慮した期待値で436.1)で赤が1ダメージほど優位になる結果となりました -- 2010-11-08 (月) 12:19:53
+        // ↑最小0 最大363なら赤改造なしで272.75*0.7+363*1.5*0.3=354　赤改造26%で272.75*0.7+363*1.76*0.3=382.5ですよ。 -- 2010-11-08 (月) 16:28:56
+        // ちなみに青改造3回で最小10 最大384の場合は290.5*0.7+384*1.5*0.3=376となります。実際のところ最小150前後は普通あるので、もう少し赤と青の差は小さいですが。 -- 2010-11-08 (月) 16:32:32
+        // クリティカル発生時最大ダメージの150%追加なので　「最大ダメージ(363)*クリ倍率(1.5)*クリ率(0.3)」ではなく「｛(最大ダメージ*1.5)+平均ダメージ｝*0.3」だと思ったんですが、当方の勘違いでしょうか？ -- 2010-11-08 (月) 22:09:44
+        xit('', {});
+
+        // http://akiwing.blog48.fc2.com/blog-entry-112.html
+        // http://akiwing.blog48.fc2.com/blog-category-2.html
+
+
+
+        
         describe('魔法', function(){
 	    beforeEach(function(){
 	        body.setSkill(dam.skills.ICEBOLT, 1);
@@ -373,24 +407,27 @@ describe("各種計算式", function() {
 	        describe('マスタリなし', function(){
 		    it('クリティカル FBL', function() {
 		        equipmentSet.setRightHand(dam.equipments.get('ファイアワンド'));
-		        expression = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5, critical: true});
+		        expression = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(9009);
 		    });
 		    it('クリティカル IS', function() {
 		        // あわない。。
 		        equipmentSet.setRightHand(dam.equipments.get('アイスワンド'));
-		        expression = mabi.damages.skill(dam.skills.ICE_SPEAR, {charge: 5, critical: true});
+		        expression = mabi.damages.skill(dam.skills.ICE_SPEAR, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(5630);
 		    });
 
 		    it('クリティカル TH', function() {
 		        // あわない。。
 		        equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド'));
-		        expression = mabi.damages.thunder(dam.skills.THUNDER, {charge: 5, critical: true});
+		        expression = mabi.damages.thunder(dam.skills.THUNDER, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(8893);
 		    });
 	        });
 	    });
+
+
+            
         });
     });
 
