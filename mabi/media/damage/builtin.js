@@ -13,8 +13,10 @@ dam.setDefaultContext = function(context){
     var fbl = dam.skills.FIREBALL;
     var th = dam.skills.THUNDER;
     var is = dam.skills.ICE_SPEAR;
+    var smash = dam.skills.find({name: 'スマッシュ'});
     $.each([
-        [mabi.damages.attack({name: 'スマッシュ', generator: generator})]
+        [mabi.damages.attack({name: 'アタック', generator: generator})],
+        [mabi.damages.skill(smash, {name: 'スマッシュ', generator: generator})]
         
 	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, generator: generator})],
 	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, generator: generator})],
@@ -38,10 +40,10 @@ dam.setDefaultContext = function(context){
     // EquipmentSet
     var weapons = [
 	// 'アイスワンド', 
-	'クラウンアイスワンド(150式)',
-	'クラウンアイスワンド(150式 S3)',
-	'クラウンアイスワンド(205式)',
-	'クラウンアイスワンド(205式 S3)'
+	// 'クラウンアイスワンド(150式)',
+	// 'クラウンアイスワンド(150式 S3)',
+	// 'クラウンアイスワンド(205式)',
+	// 'クラウンアイスワンド(205式 S3)'
 	// 'ファイアワンド', 
 	// 'ファイアワンド(S3)',
 	// 'フェニックスファイアワンド(245式)', 
@@ -56,6 +58,30 @@ dam.setDefaultContext = function(context){
 	equipmentSet.setTitle(dam.titles.find({name: 'マジックマスター'}));
 	data.addEquipmentSet(equipmentSet);
     });
+
+    // 近接武器
+    var weaponBase = dam.equipments.find({name: '両手剣'});
+    var equipmentSet = new mabi.EquipmentSet();
+    
+    equipmentSet.setName('改造なし');
+    var e = weaponBase.create();
+    equipmentSet.setRightHand(e);
+    data.addEquipmentSet(equipmentSet);
+
+    equipmentSet = new mabi.EquipmentSet();
+    equipmentSet.setName('R3改造');
+    e = weaponBase.create();
+    e.setParam('rUpgrade', 0.26);
+    equipmentSet.setRightHand(e);
+    data.addEquipmentSet(equipmentSet);
+    
+    equipmentSet = new mabi.EquipmentSet();
+    equipmentSet.setName('S3改造');
+    e = weaponBase.create();
+    e.setParam('sUpgradeMax', 10);
+    e.setParam('sUpgradeMax', 21);
+    equipmentSet.setRightHand(e);
+    data.addEquipmentSet(equipmentSet);
 
     // Character
     var ints = ['int', [600, 700]];
@@ -102,8 +128,9 @@ dam.setDefaultContext = function(context){
     });
 
     // MOB
-    $.each(
-	[['ブロンズボーンアーチャー', 960, 42, 0.19],
+    $.each([
+        ['防御保護0', 1000, 0, 0],
+        /*['ブロンズボーンアーチャー', 960, 42, 0.19],
 	 ['シルバーボーンアーチャー', 1040, 42, 0.19],
 	 ['ゴールドボーンアーチャー', 1160, 50, 0.22],
 	 
@@ -112,20 +139,19 @@ dam.setDefaultContext = function(context){
 	 ['ゴールドボーンランサー', 1640, 55, 0.3],
 	 
 	 ['ブロンズボーンファイター', 1800, 52, 0.27],
-	 ['シルバーボーンファイター', 1960, 52, 0.27],
-	 ['ゴールドボーンファイター', 2240, 61, 0.3]], function(i, v){
-	     var mob = new mabi.Element({
-		 name: v[0] + '(HP ' + v[1] + ')',
-		 effects:[
-		     {param: 'defense', min: v[2]},
-		     {param: 'protection', min: v[3]}
-		 ]});
-	     data.addMob(mob);
-	 });
-
+	 ['シルバーボーンファイター', 1960, 52, 0.27],*/
+	 ['ゴールドボーンファイター', 2240, 61, 0.3]
+        ], function(i, v){
+	    var mob = new mabi.Element({
+		name: v[0] + '(HP ' + v[1] + ')',
+		effects:[
+		    {param: 'defense', min: v[2]},
+		    {param: 'protection', min: v[3]}
+		]});
+	    data.addMob(mob);
+	});
+    
     context.setDamageData(data);
-    context.setRowFields([dam.fields.BODY, dam.fields.MOB]);
-    // context.setRowFields([dam.fields.BODY]);
-    // context.setColumnFields([dam.fields.EXPRESSION]);
-    context.setColumnFields([dam.fields.EQUIPMENT_SET, dam.fields.EXPRESSION]);
+    context.setRowFields([dam.fields.BODY]);
+    context.setColumnFields([dam.fields.EQUIPMENT_SET, dam.fields.EXPRESSION, dam.fields.MOB]);
 };

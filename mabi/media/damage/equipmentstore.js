@@ -73,11 +73,10 @@ mabi.EquipmentStore.prototype.load = function(){
 	var wand = map['wand'];
 	var special = map['special'];
 	$.each(wand.upgrades, function(i, upgrade){
-            var base = new mabi.EquipmentClass({
+            var a = new mabi.EquipmentClass({
 		name: wand.name,
 		flags: wand.flags
 	    });
-            var a = base.create();
             a.setName(name(wand.name, upgrade.proficiency, special.name));
             a.addChild(new mabi.Element(upgrade));
             a.addChild(new mabi.Element(special));
@@ -98,11 +97,14 @@ mabi.EquipmentStore.prototype.load = function(){
         {
 	    name: '万能鍋',
             flags: ['cooking']
+        },
+        {
+            name: '両手剣',
+            flags: ['weapon', 'twoHand']
         }
     ];
     $.each(src, function(i, v){
-	var a = new mabi.EquipmentClass(v).create();
-        a.setName(v.name);
+	var a = new mabi.EquipmentClass(v);
 	this_.push(a);
     });
 
