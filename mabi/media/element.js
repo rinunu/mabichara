@@ -255,7 +255,7 @@ mabi.Element.effectAccessors = function(class_, names){
 mabi.Element.effectAccessors(mabi.Element, [
     'defense', 'protection', 'int', 'str', 'dex',
     'damageMin', 'damageMax',
-    'sUpgrade', 'rUpgrade'
+    'sUpgradeMin', 'sUpgradeMax', 'rUpgrade'
 ]);
 
 // ----------------------------------------------------------------------

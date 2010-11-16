@@ -51,8 +51,9 @@ mabi.EquipmentStore.prototype.load = function(){
     ];
 
     var specials = [
-	    {},
-	{name: 'S3', effects: {s_upgrade: 9}}
+	{},
+	{name: 'S3', effects: {sUpgradeMax: 9}},
+        {name: 'R3', effects: {rUpgrade: 0.26}}
     ];
 
     var name = function(name, proficiency, special){

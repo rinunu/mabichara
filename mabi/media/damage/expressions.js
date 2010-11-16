@@ -82,7 +82,10 @@ mabi.expressions = {
     gen_expectation: function(damage, character){
         var min = damage[0];
         var max = damage[1];
-        var noncri = (max - min) * 0.75 + min;
+        var noncri = (max - min) * 0.7514 + min; // 正確じゃない。。
+        // return noncri;
+        // console.log('noncri', noncri);
+        // console.log('cri', this.critical(noncri, max, character));
         return noncri * 0.7 + this.critical(noncri, max, character) * 0.3;
     },
     
@@ -132,6 +135,7 @@ mabi.expressions = {
      * 基本ダメージにクリティカルをのせる
      */
     critical: function(base, max, character){
+        // console.log(character.rUpgrade());
         return base + max * (1.5 + character.rUpgrade());
     },
     
@@ -158,9 +162,8 @@ mabi.expressions = {
      * 武器のダメージを計算する
      */
     weaponDamage: function(weapon, character){
-        var sUpgrade = weapon.sUpgrade();
-        return [weapon.damageMin(character) + sUpgrade,
-                weapon.damageMax(character) + sUpgrade];
+        return [weapon.damageMin(character) + weapon.sUpgradeMin(),
+                weapon.damageMax(character) + weapon.sUpgradeMax()];
     },
 
     add: function(a, b){
@@ -326,7 +329,7 @@ mabi.expressions = {
 	var enchantBonus = 0;
 
 	// 特別改造魔法ダメージボーナス
-	var specialUpgradeBonus = character.param('s_upgrade');
+	var specialUpgradeBonus = character.sUpgradeMax();
 
 	var damage = character.body().skill(skill).damage();
         this.multiply(damage, fullChargeBonus);

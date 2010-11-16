@@ -51,6 +51,8 @@ describe("各種計算式", function() {
 	character_ = new mabi.Character();
 	character_.setBody(body);
 	character_.setEquipmentSet(equipmentSet);
+
+        mob_ = mob({protection: 0, defense: 0});
     });
 
     // todo 魔法とエンチャント
@@ -59,6 +61,9 @@ describe("各種計算式", function() {
 
         xit('特別改造');
         xit('近接武器に持ち替えた場合の特別改造は乗るのか?');
+
+        // http://mabimaho.exblog.jp/11715223
+        xit('ブレイズ');
     });
 
     describe('近接', function(){
@@ -272,7 +277,7 @@ describe("各種計算式", function() {
             describe('片手武器', function(){
                 beforeEach(function(){
 		    equipmentSet.
-                        setRightHand(rightHandWeapon({damageMax: 100, sUpgrade: 13}));
+                        setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13}));
 	        });
 
                 it('ダメージは + X となる', function(){
@@ -292,8 +297,8 @@ describe("各種計算式", function() {
             describe('2刀流', function(){
                 beforeEach(function(){
 		    equipmentSet.
-                        setRightHand(rightHandWeapon({damageMax: 100, sUpgrade: 13})).
-                        setLeftHand(rightHandWeapon({damageMax: 50, sUpgrade: 13}));
+                        setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13})).
+                        setLeftHand(rightHandWeapon({damageMax: 50, sUpgradeMax: 13}));
 	        });
 
                 xit('アタック時は・・わかりませんでした');
@@ -324,23 +329,61 @@ describe("各種計算式", function() {
             
             xit('魔法のバランスは100%までいく');
         });
-
-
     });
 
     describe('具体例', function(){
 
-        // 上にも出ていますが青で最大+21　赤でクリ倍率+26%　クリ1を前提に計算してみました　バランス80%(期待値は約75%)の時、特別改造無しのクリを考えないダメージ期待値272.75(＝最小0最大363)(クリ30%を考慮した期待値で436.1)で赤が1ダメージほど優位になる結果となりました -- 2010-11-08 (月) 12:19:53
-        // ↑最小0 最大363なら赤改造なしで272.75*0.7+363*1.5*0.3=354　赤改造26%で272.75*0.7+363*1.76*0.3=382.5ですよ。 -- 2010-11-08 (月) 16:28:56
-        // ちなみに青改造3回で最小10 最大384の場合は290.5*0.7+384*1.5*0.3=376となります。実際のところ最小150前後は普通あるので、もう少し赤と青の差は小さいですが。 -- 2010-11-08 (月) 16:32:32
-        // クリティカル発生時最大ダメージの150%追加なので　「最大ダメージ(363)*クリ倍率(1.5)*クリ率(0.3)」ではなく「｛(最大ダメージ*1.5)+平均ダメージ｝*0.3」だと思ったんですが、当方の勘違いでしょうか？ -- 2010-11-08 (月) 22:09:44
-        xit('', {});
+        // http://www.mabinogi.jp/6th/community/knowledgeContent.asp?ty=&c1=&c2=&lv=0&od=&ix=19117&p=
+        // > 通常 ：最小60最大110クリ30%の時ダメージ期待値は147
+        // 青3段：最小70最大131クリ30%の時ダメージ期待値は174.7
+        // 赤3段：最小60最大110クリ30%の時ダメージ期待値は155.8
+        describe('特別改造(両手剣・弓)', function(){
+	    beforeEach(function(){
+                expression = mabi.damages.attack({generator: 'expectation'});
+	    });
 
-        // http://akiwing.blog48.fc2.com/blog-entry-112.html
-        // http://akiwing.blog48.fc2.com/blog-category-2.html
+            it('改造なし', function(){
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110}));
+		expect(damage()).toEqual(147);
+            });
+            
+            it('S改造', function(){
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, sUpgradeMin: 10, sUpgradeMax: 21}));
+                expect(damage()).toEqual(174);
+            });
+            
+            it('R改造', function(){
+                console.log('R改造');
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, rUpgrade: 0.26}));
+                expect(damage()).toEqual(155);
+            });
+        });
 
+        // http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C6%C3%CA%CC%B2%FE%C2%A4
+        // > 上にも出ていますが青で最大+21　赤でクリ倍率+26%　クリ1を前提に計算してみました
+        // バランス80%(期待値は約75%)の時、特別改造無しのクリを考えないダメージ期待値272.75(＝最小0最大363)(クリ30%を考慮した期待値で436.1)で赤が1ダメージほど優位になる結果となりました
+        describe('特別改造(両手剣・弓)', function(){
+	    beforeEach(function(){
+                expression = mabi.damages.attack({generator: 'expectation'});
+	    });
 
-
+            it('改造なし', function(){
+                // 272.75 * 0.7 + (272.75 + 363 * 1.5) * 0.3 
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363}));
+		expect(damage()).toEqual(436);
+            });
+            
+            it('R改造', function(){
+                console.log('R改造');
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26}));
+		expect(damage()).toEqual(464);
+            });
+            
+            it('S改造', function(){
+                equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, sUpgradeMin: 10, sUpgradeMax: 21}));
+		expect(damage()).toEqual(463);
+            });
+        });
         
         describe('魔法', function(){
 	    beforeEach(function(){
@@ -426,11 +469,45 @@ describe("各種計算式", function() {
 	        });
 	    });
 
+            // http://mabimaho.exblog.jp/page/2/
+            // 合わない。。 バランス80で計算してるので、本来はさらにダメージが上がる結果になるはず。。
+	    describe('魔法期待値', function(){
+	        beforeEach(function(){
+		    body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
+		    body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
+		    body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
+		    body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
+		    body.setSkill(dam.skills.BOLT_COMPOSER, 1);
+		    body.setParam('int', 700);
 
+		    // equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
+                });
+
+                // it('LB', function(){
+                //     equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド'));
+		//     expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
+		//     expect(damage()).toEqual(316.6);
+	        // });
+                it('LB S改造', function(){
+                    equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド(S3)'));
+		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
+		    expect(damage()).toEqual(317.8);
+	        });
+                it('LB R改造', function(){
+                    equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド(R3)'));
+		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
+		    expect(damage()).toEqual(316.6);
+	        });
+            });
+
+            
             
         });
     });
 
+    // http://akiwing.blog48.fc2.com/blog-entry-112.html
+    // http://akiwing.blog48.fc2.com/blog-category-2.html
+    // http://mabimaho.exblog.jp/11715223
     // http://aumiya.jugem.jp/?eid=203
     // http://aumiya.jugem.jp/?eid=206
     
