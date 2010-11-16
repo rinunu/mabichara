@@ -340,7 +340,7 @@ describe("各種計算式", function() {
         describe('期待値', function(){
             it('バランス80%、クリ30% 時の期待値', function(){
 		equipmentSet.setRightHand(rightHandWeapon({damageMin: 10, damageMax: 100}));
-                expression = mabi.damages.attack({generator: 'expectation'});
+                expression = mabi.damages.attack({generator: 'criticalExpectation'});
 		expect(damage()).toEqual(122); // 結果は上記計算機より(ただし小数点切り捨て)
             });
             
@@ -356,7 +356,7 @@ describe("各種計算式", function() {
         // 赤3段：最小60最大110クリ30%の時ダメージ期待値は155.8
         describe('特別改造(両手剣・弓)', function(){
 	    beforeEach(function(){
-                expression = mabi.damages.attack({generator: 'expectation'});
+                expression = mabi.damages.attack({generator: 'criticalExpectation'});
 	    });
 
             it('改造なし', function(){
@@ -381,7 +381,7 @@ describe("各種計算式", function() {
         // バランス80%(期待値は約75%)の時、特別改造無しのクリを考えないダメージ期待値272.75(＝最小0最大363)(クリ30%を考慮した期待値で436.1)で赤が1ダメージほど優位になる結果となりました
         describe('特別改造(両手剣・弓)', function(){
 	    beforeEach(function(){
-                expression = mabi.damages.attack({generator: 'expectation'});
+                expression = mabi.damages.attack({generator: 'criticalExpectation'});
 	    });
 
             it('改造なし', function(){
@@ -502,12 +502,12 @@ describe("各種計算式", function() {
 
                 it('LB S改造', function(){
                     equipmentSet.setRightHand(equipment('ライトニングワンド(S3)'));
-		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
+		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(317.8);
 	        });
                 it('LB R改造', function(){
                     equipmentSet.setRightHand(equipment('ライトニングワンド(R3)'));
-		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
+		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(316.6);
 	        });
 

@@ -77,15 +77,22 @@ mabi.expressions = {
     // min, max から実際のダメージを決定する
     
     /**
-     * 期待値を計算する(バランス80, クリ30% 前提)
+     * 期待値を計算する(バランス80, クリなし 前提)
      */
     gen_expectation: function(damage, character){
         var min = damage[0];
         var max = damage[1];
         var noncri = (max - min) * 0.7514 + min; // 正確じゃない。。
-        // return noncri;
-        // console.log('noncri', noncri);
-        // console.log('cri', this.critical(noncri, max, character));
+        return noncri;
+    },
+    
+    /**
+     * 期待値を計算する(バランス80, クリ30% 前提)
+     */
+    gen_criticalExpectation: function(damage, character){
+        var min = damage[0];
+        var max = damage[1];
+        var noncri = (max - min) * 0.7514 + min; // 正確じゃない。。
         return noncri * 0.7 + this.critical(noncri, max, character) * 0.3;
     },
     
