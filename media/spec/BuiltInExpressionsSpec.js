@@ -470,7 +470,7 @@ describe("各種計算式", function() {
 	    });
 
             // http://mabimaho.exblog.jp/page/2/
-            // 合わない。。 バランス80で計算してるので、本来はさらにダメージが上がる結果になるはず。。
+            // 合わない。。 バランス80で計算してるので、本来はさらにダメージが上がるから、さらにあわない・・
 	    describe('魔法期待値', function(){
 	        beforeEach(function(){
 		    body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
@@ -483,11 +483,6 @@ describe("各種計算式", function() {
 		    // equipmentSet.setTitle(dam.titles.MAGIC_MASTER);
                 });
 
-                // it('LB', function(){
-                //     equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド'));
-		//     expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
-		//     expect(damage()).toEqual(316.6);
-	        // });
                 it('LB S改造', function(){
                     equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド(S3)'));
 		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
@@ -497,6 +492,23 @@ describe("各種計算式", function() {
                     equipmentSet.setRightHand(dam.equipments.get('ライトニングワンド(R3)'));
 		    expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'expectation'});
 		    expect(damage()).toEqual(316.6);
+	        });
+
+                // > 合成ボルト魔法の場合、S改造分のダメージ２回計算式にかかってくるのですね。
+                // Int700、各種マスタリRank1、S改造+9、CIW+22%改造で合成魔法の場合ですが、保護無視で39.8(計算違ってたらごめんなさい）の追加ダメージとなるとかなり大きいですね。
+                // 中級魔法もあるし、単純にR改造かなって思ってましたけどS改造バカにできない(￣￢￣*)
+                // => おそらくボルト合成魔法の 0.15 を忘れてると思われるので、39.8 * 1.15 = 45 であってるはず？
+                it('IB+FB S3', function(){
+                    // 39.8 = 18 * (1 + 0.35 + 0.15 + 0.15) * (1 + 0.22) * 1.1
+                    // 39.8 * 1.15
+                    mob_ = mob({protection: 1, defense: 0});
+                    equipmentSet.setRightHand(dam.equipments.get('クラウンアイスワンド(150式)'));
+		    expression = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
+		    expect(damage()).toEqual(0);
+
+                    equipmentSet.setRightHand(dam.equipments.get('クラウンアイスワンド(150式 S3)'));
+		    expression = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
+		    expect(damage()).toEqual(45);
 	        });
             });
 
