@@ -221,6 +221,15 @@ mabi.expressions = {
     },
 
     /**
+     * 最終的なダメージを決定する
+     *
+     * ダメージがマイナスなら 1 とする
+     */
+    hit: function(damage){
+        return damage > 1 ? damage : 1;
+    },
+
+    /**
      * ベースとなるダメージから、最終的なダメージの計算を行う
      * 以下のものを考慮する
      * - min, max から実ダメージ決定
@@ -243,7 +252,9 @@ mabi.expressions = {
         var damage = this.generate(options.damage, options);
         var extraDamage = options.extraDamage || 0;
         var multiplier = options.multiplier || 1;
-	return ((damage - defense) * (1 - protection) + extraDamage) * multiplier;
+        
+	damage = ((damage - defense) * (1 - protection) + extraDamage) * multiplier;
+        return damage;
     },
     
     /**
@@ -284,7 +295,6 @@ mabi.expressions = {
             weapons.push(options.weapon || character.equipmentSet().rightHand());
         }
 
-
         $.each(weapons, function(i, weapon){
             var weaponDamage = this_.weaponDamage(weapon, character);
             this_.add(baseDamage, weaponDamage);
@@ -292,9 +302,9 @@ mabi.expressions = {
 
         this.multiply(baseDamage, skillMultiplier);
         
-	return this.basicDamage($.extend({
+	return this.hit(this.basicDamage($.extend({
 	    damage: baseDamage
-	}, options));
+	}, options)));
     },
 
     rangedDamage: function(options){
@@ -304,7 +314,7 @@ mabi.expressions = {
     /**
      * 基本的な魔法ダメージを計算する
      */
-    magicDamage: function(skill, options){
+    basicMagicDamage: function(skill, options){
         options = $.extend(this.defaultOptions(), options);
         console.assert(skill instanceof mabi.Skill);
 
@@ -355,6 +365,26 @@ mabi.expressions = {
         }, options));
     },
 
+    /**
+     * 1ヒット分の魔法ダメージを計算する(合体魔法以外)
+     */
+    magicDamage: function(skill, options){
+        return this.hit(this.basicMagicDamage(skill, options));
+    },
+
+    fusedBoltDamage: function(skill0, skill1, options){
+        console.assert(skill0 instanceof mabi.SkillClass);
+        console.assert(skill1 instanceof mabi.SkillClass);
+
+	var character = options.character;
+
+	var damage = 0;
+        damage += this.basicMagicDamage(skill0, options);
+	damage += this.basicMagicDamage(skill1, options);
+	damage *= 1 + character.param('fused_bolt_magic_damage');
+	return this.hit(damage);
+    },
+
     thunderDamage: function(skill, options){
         options = $.extend(this.defaultOptions(), options);
         
@@ -373,21 +403,7 @@ mabi.expressions = {
 	    total += damage;
 	}
 	return total;
-    },
-
-    fusedBoltDamage: function(skill0, skill1, options){
-        console.assert(skill0 instanceof mabi.SkillClass);
-        console.assert(skill1 instanceof mabi.SkillClass);
-
-	var character = options.character;
-
-	var damage = 0;
-        damage += this.magicDamage(skill0, options);
-	damage += this.magicDamage(skill1, options);
-	damage *= 1 + character.param('fused_bolt_magic_damage');
-	return damage;
     }
-
 };
 
 // ----------------------------------------------------------------------
