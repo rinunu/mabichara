@@ -230,17 +230,20 @@ mabi.expressions = {
      * @param options {
      *   共通的な引数に加え
      *   damage: ベースとなるダメージ[min, max]
+     *   defense: 防御。 未指定の場合は mob のものを使用する
+     *   extraDamage: 追加ダメージ。 防御保護無視ダメージ(デフォルト0)
+     *   multiplier: 最終ダメージに乗算される係数(デフォルト1)
      * }
      */
     basicDamage: function(options){
-        options = $.extend(this.defaultOptions(), options);
-        
         var character = options.character;
 	var mob = options.mob;
-	var defense = mob.defense();
+	var defense = options.defense !== undefined ? options.defense : mob.defense();
 	var protection = mob.protection();
         var damage = this.generate(options.damage, options);
-	return (damage - defense) * (1 - protection);
+        var extraDamage = options.extraDamage || 0;
+        var multiplier = options.multiplier || 1;
+	return ((damage - defense) * (1 - protection) + extraDamage) * multiplier;
     },
     
     /**
@@ -338,19 +341,18 @@ mabi.expressions = {
 	// 特別改造魔法ダメージボーナス
 	var specialUpgradeBonus = character.sUpgradeMax();
 
-	var damage = character.body().skill(skill).damage();
-        this.multiply(damage, fullChargeBonus);
-	this.add(damage, [wandBonus, wandBonus]);
-        this.multiply(damage, chargeBonus);
-        this.add(damage, [enchantBonus, enchantBonus]);
-        
-        damage = this.generate(damage, options);
-        
-	damage *= (1 - mob.param('protection'));
-	damage += specialUpgradeBonus;
-	damage *= a * b * 1.1;
-	
-	return damage;
+	var baseDamage = character.body().skill(skill).damage();
+        this.multiply(baseDamage, fullChargeBonus);
+	this.add(baseDamage, [wandBonus, wandBonus]);
+        this.multiply(baseDamage, chargeBonus);
+        this.add(baseDamage, [enchantBonus, enchantBonus]);
+
+        return this.basicDamage($.extend({
+            damage: baseDamage,
+            extraDamage: specialUpgradeBonus,
+            multiplier: a * b * 1.1,
+            defense: 0
+        }, options));
     },
 
     thunderDamage: function(skill, options){
