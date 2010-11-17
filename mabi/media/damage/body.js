@@ -8,11 +8,19 @@ mabi.Body = function(options){
 util.extend(mabi.Body, mabi.Element);
 
 /**
- * スキル情報を追加する
+ * スキルを追加する
  */
 mabi.Body.prototype.setSkill = function(skill, rank){
     console.assert(skill instanceof mabi.SkillClass);
     this.addChild(skill.create(rank), skill.name());
+};
+
+/**
+ * スキルを削除する
+ */
+mabi.Body.prototype.removeSkill = function(skill){
+    console.assert(skill instanceof mabi.SkillClass);
+    this.removeChild(skill.name());
 };
 
 /**
