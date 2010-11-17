@@ -1,9 +1,9 @@
 with(mabi.builder){
     describe("各種計算式", function() {
         var character_;
-        var body;
-        var expression;
-        var equipmentSet;
+        var body_;
+        var expression_;
+        var equipmentSet_;
         var mob_;
 
         // ダメージを計算する
@@ -12,15 +12,15 @@ with(mabi.builder){
 	        character: character_,
                 mob: mob_
             };
-            return Math.floor(expression.value(context));
+            return Math.floor(expression_.value(context));
         }
 
         beforeEach(function(){
-	    body = new mabi.Body();
-	    equipmentSet = new mabi.EquipmentSet();
+	    body_ = new mabi.Body();
+	    equipmentSet_ = new mabi.EquipmentSet();
 	    character_ = new mabi.Character();
-	    character_.setBody(body);
-	    character_.setEquipmentSet(equipmentSet);
+	    character_.setBody(body_);
+	    character_.setEquipmentSet(equipmentSet_);
 
             mob_ = mob({protection: 0, defense: 0});
         });
@@ -31,9 +31,9 @@ with(mabi.builder){
 
             it('ダメージがマイナスの場合は1とする', function(){
 	        mob_ = mob({protection: 0.1, defense: 100});
-                equipmentSet.setRightHand(rightHandWeapon({damageMax: 1}));
+                equipmentSet_.setRightHand(rightHandWeapon({damageMax: 1}));
                 
-                expression = mabi.damages.attack();
+                expression_ = mabi.damages.attack();
 	        expect(damage()).toEqual(1);
             });
         });
@@ -53,9 +53,9 @@ with(mabi.builder){
         describe('近接', function(){
 	    beforeEach(function(){
 	        character_.setParam('str', 100);
-                body.setSkill(skill('スマッシュ'), 1);
+                body_.setSkill(skill('スマッシュ'), 1);
 
-                equipmentSet.
+                equipmentSet_.
                     setHead(
                         equipment({}).
                             enchant(prefix({str:10, damageMax:10})));
@@ -65,7 +65,7 @@ with(mabi.builder){
 
 	    describe('片手武器', function(){
 	        beforeEach(function(){
-		    equipmentSet.
+		    equipmentSet_.
                         setRightHand(
                             rightHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10}))).
@@ -75,7 +75,7 @@ with(mabi.builder){
 	        });
 
 	        it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
-		    expression = mabi.damages.attack();
+		    expression_ = mabi.damages.attack();
                     var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10 + 10 + 10; // 最大ダメージ効果
                     var c = 100; // 武器最大ダメージ
@@ -84,7 +84,7 @@ with(mabi.builder){
 	        });
 
                 it('スマッシュのダメージ', function() {
-		    expression = mabi.damages.skill(skill('スマッシュ'));
+		    expression_ = mabi.damages.skill(skill('スマッシュ'));
                     var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10 + 10 + 10; // 最大ダメージ効果
                     var c = 100; // 武器最大ダメージ
@@ -93,7 +93,7 @@ with(mabi.builder){
 	        });
                 
                 it('スキル使用時のクリティカルのダメージ', function() {
-		    expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
+		    expression_ = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                     var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10 + 10 + 10; // 最大ダメージ効果
                     var c = 100; // 武器最大ダメージ
@@ -104,14 +104,14 @@ with(mabi.builder){
 
             describe('両手武器', function(){
 	        beforeEach(function(){
-                    equipmentSet.
+                    equipmentSet_.
                         setRightHand(
                             twoHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10})));
 	        });
 
 	        it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
-                    expression = mabi.damages.attack();
+                    expression_ = mabi.damages.attack();
                         var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 最大ダメージ効果
                     var c = 100 + 10; // 武器最大ダメージ
@@ -120,7 +120,7 @@ with(mabi.builder){
 	        });
 
                 it('スマッシュのダメージは6倍になる', function(){
-		    expression = mabi.damages.skill(skill('スマッシュ'));
+		    expression_ = mabi.damages.skill(skill('スマッシュ'));
                     var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 最大ダメージ効果
                     var c = 100 + 10; // 武器最大ダメージ
@@ -132,14 +132,14 @@ with(mabi.builder){
 
             describe('両手装備(Not 武器)', function(){
 	        beforeEach(function(){
-                    equipmentSet.
+                    equipmentSet_.
                         setRightHand(
                             equipment({damageMax: 100}, ['twoHand']).
                                 enchant(prefix({str:10, damageMax:10})));
 	        });
 
                 it('スマッシュのダメージは5倍', function(){
-		    expression = mabi.damages.skill(skill('スマッシュ'));
+		    expression_ = mabi.damages.skill(skill('スマッシュ'));
                     var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 最大ダメージ効果
                     var c = 100 + 10; // 武器最大ダメージ
@@ -162,7 +162,7 @@ with(mabi.builder){
             // http://wiki.mabinogiworld.com/index.php?title=Dual_Wield
 	    describe('二刀流', function(){
 	        beforeEach(function(){
-                    equipmentSet.
+                    equipmentSet_.
                         setRightHand(
                             rightHandWeapon({damageMax: 100}).
                                 enchant(prefix({str:10, damageMax:10}))).
@@ -175,19 +175,19 @@ with(mabi.builder){
                     var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 最大ダメージ効果
                     
-                    expression = mabi.damages.attack();
+                    expression_ = mabi.damages.attack();
                     var c = 100 + 10; // 武器最大ダメージ
                     var d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 
-                    expression = mabi.damages.attack({weapon: equipmentSet.leftHand()});
+                    expression_ = mabi.damages.attack({weapon: equipmentSet_.leftHand()});
                     c = 50 + 10; // 武器最大ダメージ
                     d = Math.floor(((a + b + c) - 10) * 0.9);
 		    expect(damage()).toEqual(d);
 	        });
 
                 it('スマッシュのダメージは (本体 + 右手 + 左手) * 5', function(){
-		    expression = mabi.damages.skill(skill('スマッシュ'));
+		    expression_ = mabi.damages.skill(skill('スマッシュ'));
                     var a = (100 + 10 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 本体最大ダメージ効果
                     var c = (100 + 10) + (50 + 10); // 武器最大ダメージ
@@ -201,33 +201,33 @@ with(mabi.builder){
         // http://mabinogi.wikiwiki.jp/index.php?%C1%F5%C8%F7%2F%C6%C3%CA%CC%B2%FE%C2%A4
         describe('特別改造', function(){
 	    beforeEach(function(){
-                body.setSkill(skill('スマッシュ'), 1);
+                body_.setSkill(skill('スマッシュ'), 1);
 	        mob_ = mob({protection: 0, defense: 0});
 	    });
 
             describe('R改造', function(){
                 describe('片手武器', function(){
                     beforeEach(function(){
-		        equipmentSet.
+		        equipmentSet_.
                             setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18}));
 	            });
 
                     it('ノンクリのダメージは増加しない', function(){
-                        expression = mabi.damages.attack();
+                        expression_ = mabi.damages.attack();
                         var c = 100; // 武器最大ダメージ
                         var d = Math.floor(c);
 		        expect(damage()).toEqual(d);
                     });
                     
                     it('アタッククリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
-                        expression = mabi.damages.attack({generator: 'maxCritical'});
+                        expression_ = mabi.damages.attack({generator: 'maxCritical'});
                         var c = 100; // 武器最大ダメージ
                         var d = Math.floor(c * (2.5 + 0.18));
 		        expect(damage()).toEqual(d);
                     });
                     
                     it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + X) となる', function(){
-                        expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
+                        expression_ = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                         var c = 100; // 武器最大ダメージ
                         var d = Math.floor(c * 5 * (2.5 + 0.18));
 		        expect(damage()).toEqual(d);
@@ -236,7 +236,7 @@ with(mabi.builder){
                 
                 describe('2刀流', function(){
                     beforeEach(function(){
-		        equipmentSet.
+		        equipmentSet_.
                             setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18})).
                             setLeftHand(rightHandWeapon({damageMax: 50, rUpgrade: 0.18}));
 	            });
@@ -246,7 +246,7 @@ with(mabi.builder){
                     // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1261413038/590
                     // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1276271205/965
                     it('スマッシュクリ時、ベースダメージ * (クリスキル倍率 + 右手R + 左手R) となる', function(){
-                        expression = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
+                        expression_ = mabi.damages.skill(skill('スマッシュ'), {generator: 'maxCritical'});
                         var c = 100 + 50; // 武器最大ダメージ
                         var d = Math.floor(c * 5 * (2.5 + 0.18 * 2));
 		        expect(damage()).toEqual(d);
@@ -260,12 +260,12 @@ with(mabi.builder){
             describe('S改造', function(){
                 describe('片手武器', function(){
                     beforeEach(function(){
-		        equipmentSet.
+		        equipmentSet_.
                             setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13}));
 	            });
 
                     it('ダメージは + X となる', function(){
-                        expression = mabi.damages.attack();
+                        expression_ = mabi.damages.attack();
                         var c = 100 + 13; // 武器最大ダメージ
                         var d = Math.floor(c);
 		        expect(damage()).toEqual(d);
@@ -280,7 +280,7 @@ with(mabi.builder){
                 
                 describe('2刀流', function(){
                     beforeEach(function(){
-		        equipmentSet.
+		        equipmentSet_.
                             setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13})).
                             setLeftHand(rightHandWeapon({damageMax: 50, sUpgradeMax: 13}));
 	            });
@@ -306,8 +306,8 @@ with(mabi.builder){
             // http://www.mabinogi.jp/6th/community/knowledgeContent.asp?ty=&c1=&c2=&lv=0&od=&ix=19117&p=
             describe('期待値', function(){
                 it('バランス80%、クリ30% 時の期待値', function(){
-		    equipmentSet.setRightHand(rightHandWeapon({damageMin: 10, damageMax: 100}));
-                    expression = mabi.damages.attack({generator: 'criticalExpectation'});
+		    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 10, damageMax: 100}));
+                    expression_ = mabi.damages.attack({generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(122); // 結果は上記計算機より(ただし小数点切り捨て)
                 });
                 
@@ -323,22 +323,22 @@ with(mabi.builder){
             // 赤3段：最小60最大110クリ30%の時ダメージ期待値は155.8
             describe('特別改造(両手剣・弓)', function(){
 	        beforeEach(function(){
-                    expression = mabi.damages.attack({generator: 'criticalExpectation'});
+                    expression_ = mabi.damages.attack({generator: 'criticalExpectation'});
 	        });
 
                 it('改造なし', function(){
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110}));
 		    expect(damage()).toEqual(147);
                 });
                 
                 it('S改造', function(){
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, sUpgradeMin: 10, sUpgradeMax: 21}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, sUpgradeMin: 10, sUpgradeMax: 21}));
                     expect(damage()).toEqual(174);
                 });
                 
                 it('R改造', function(){
                     console.log('R改造');
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, rUpgrade: 0.26}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, rUpgrade: 0.26}));
                     expect(damage()).toEqual(155);
                 });
             });
@@ -348,77 +348,77 @@ with(mabi.builder){
             // バランス80%(期待値は約75%)の時、特別改造無しのクリを考えないダメージ期待値272.75(＝最小0最大363)(クリ30%を考慮した期待値で436.1)で赤が1ダメージほど優位になる結果となりました
             describe('特別改造(両手剣・弓)', function(){
 	        beforeEach(function(){
-                    expression = mabi.damages.attack({generator: 'criticalExpectation'});
+                    expression_ = mabi.damages.attack({generator: 'criticalExpectation'});
 	        });
 
                 it('改造なし', function(){
                     // 272.75 * 0.7 + (272.75 + 363 * 1.5) * 0.3 
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363}));
 		    expect(damage()).toEqual(436);
                 });
                 
                 it('R改造', function(){
                     console.log('R改造');
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26}));
 		    expect(damage()).toEqual(464);
                 });
                 
                 it('S改造', function(){
-                    equipmentSet.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, sUpgradeMin: 10, sUpgradeMax: 21}));
+                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, sUpgradeMin: 10, sUpgradeMax: 21}));
 		    expect(damage()).toEqual(463);
                 });
             });
             
             describe('魔法', function(){
 	        beforeEach(function(){
-	            body.setSkill(dam.skills.ICEBOLT, 1);
-	            body.setSkill(dam.skills.FIREBOLT, 1);
-	            body.setSkill(dam.skills.LIGHTNING_BOLT, 1);
-	            body.setSkill(dam.skills.FIREBALL, 1);
-	            body.setSkill(dam.skills.THUNDER, 1);
-	            body.setSkill(dam.skills.ICE_SPEAR, 1);
+	            body_.setSkill(dam.skills.ICEBOLT, 1);
+	            body_.setSkill(dam.skills.FIREBOLT, 1);
+	            body_.setSkill(dam.skills.LIGHTNING_BOLT, 1);
+	            body_.setSkill(dam.skills.FIREBALL, 1);
+	            body_.setSkill(dam.skills.THUNDER, 1);
+	            body_.setSkill(dam.skills.ICE_SPEAR, 1);
 	        });
 
                 
 	        describe('Wiki 例', function(){
 	            beforeEach(function(){
-		        body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
-		        body.setSkill(dam.skills.BOLT_COMPOSER, 1);
-		        body.setParam('int', 600);
+		        body_.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
+		        body_.setSkill(dam.skills.BOLT_COMPOSER, 1);
+		        body_.setParam('int', 600);
 
-		        equipmentSet.setTitle(title('マジックマスター'));
+		        equipmentSet_.setTitle(title('マジックマスター'));
 
 		        mob_ = mob({protection: 0.1, defense: 10});
 	            });
 	            
 	            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	            it('Wiki 例1', function(){
-		        equipmentSet.setRightHand(equipment('クラウンアイスワンド(150式)'));
-		        expression = mabi.damages.skill(dam.skills.ICEBOLT, {charge: 1});
+		        equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式)'));
+		        expression_ = mabi.damages.skill(dam.skills.ICEBOLT, {charge: 1});
 		        expect(damage()).toEqual(181);
 	            });
 	            
 	            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	            it('Wiki 例2', function() {
-		        equipmentSet.setRightHand(equipment('フェニックスファイアワンド(245式)'));
-		        expression = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
+		        equipmentSet_.setRightHand(equipment('フェニックスファイアワンド(245式)'));
+		        expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		        expect(damage()).toEqual(3410);
 	            });
 	            
 	            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	            it('Wiki 例3', function() {
-		        equipmentSet.setRightHand(equipment('フェニックスファイアワンド(245式 S3)'));
-		        expression = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
+		        equipmentSet_.setRightHand(equipment('フェニックスファイアワンド(245式 S3)'));
+		        expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		        expect(damage()).toEqual(3424);
 	            });
 	            
 	            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	            it('Wiki 例4', function() {
-		        equipmentSet.setRightHand(equipment('ファイアワンド(S3)'));
-		        expression = mabi.damages.fusedBolt(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
+		        equipmentSet_.setRightHand(equipment('ファイアワンド(S3)'));
+		        expression_ = mabi.damages.fusedBolt(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
 		        expect(damage()).toEqual(1864);
 	            });
 	        });
@@ -427,25 +427,25 @@ with(mabi.builder){
 	        describe('http://aumiya.jugem.jp/?eid=173', function(){
 	            beforeEach(function(){
 		        character_.setParam('int', 600);
-		        equipmentSet.setTitle(title('マジックマスター'));
+		        equipmentSet_.setTitle(title('マジックマスター'));
 		        mob_ = mob({protection: 0});
 	            });
 
 	            describe('マスタリなし', function(){
 		        it('クリティカル FBL', function() {
-		            equipmentSet.setRightHand(equipment('ファイアワンド'));
-		            expression = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5, generator: 'maxCritical'});
+		            equipmentSet_.setRightHand(equipment('ファイアワンド'));
+		            expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5, generator: 'maxCritical'});
 		            expect(damage()).toEqual(9009);
 		        });
 		        it('クリティカル IS', function() {
-		            equipmentSet.setRightHand(equipment('アイスワンド'));
-		            expression = mabi.damages.skill(dam.skills.ICE_SPEAR, {charge: 5, generator: 'maxCritical'});
+		            equipmentSet_.setRightHand(equipment('アイスワンド'));
+		            expression_ = mabi.damages.skill(dam.skills.ICE_SPEAR, {charge: 5, generator: 'maxCritical'});
 		            expect(damage()).toEqual(5855); // TODO サイトには 5630 とあるが、あわない
 		        });
 
 		        it('クリティカル TH', function() {
-		            equipmentSet.setRightHand(equipment('ライトニングワンド'));
-		            expression = mabi.damages.thunder(dam.skills.THUNDER, {charge: 5, generator: 'maxCritical'});
+		            equipmentSet_.setRightHand(equipment('ライトニングワンド'));
+		            expression_ = mabi.damages.thunder(dam.skills.THUNDER, {charge: 5, generator: 'maxCritical'});
 		            expect(damage()).toEqual(9009); // TODO サイトには 8893 とあるが、あわない
 		        });
 	            });
@@ -455,23 +455,23 @@ with(mabi.builder){
                 // 合わない。。 バランス80で計算してるので、本来はさらにダメージが上がるから、さらにあわない・・
 	        describe('魔法期待値', function(){
 	            beforeEach(function(){
-		        body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
-		        body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
-		        body.setSkill(dam.skills.BOLT_COMPOSER, 1);
-		        body.setParam('int', 700);
-		        // equipmentSet.setTitle(title('マジックマスター'));
+		        body_.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
+		        body_.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
+		        body_.setSkill(dam.skills.BOLT_COMPOSER, 1);
+		        body_.setParam('int', 700);
+		        // equipmentSet_.setTitle(title('マジックマスター'));
                     });
 
                     it('LB S改造', function(){
-                        equipmentSet.setRightHand(equipment('ライトニングワンド(S3)'));
-		        expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
+                        equipmentSet_.setRightHand(equipment('ライトニングワンド(S3)'));
+		        expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		        expect(damage()).toEqual(317.8); // サイトには 317.8 とあるが、あわない
 	            });
                     it('LB R改造', function(){
-                        equipmentSet.setRightHand(equipment('ライトニングワンド(R3)'));
-		        expression = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
+                        equipmentSet_.setRightHand(equipment('ライトニングワンド(R3)'));
+		        expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		        expect(damage()).toEqual(316.6); // サイトには 317.6 とあるが、あわない                   
 	            });
 
@@ -483,12 +483,12 @@ with(mabi.builder){
                         // 39.8 = 18 * (1 + 0.35 + 0.15 + 0.15) * (1 + 0.22) * 1.1
                         // 39.8 * 1.15
                         mob_ = mob({protection: 1, defense: 0});
-                        equipmentSet.setRightHand(equipment('クラウンアイスワンド(150式)'));
-		        expression = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
+                        equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式)'));
+		        expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		        expect(damage()).toEqual(1);
 
-                        equipmentSet.setRightHand(equipment('クラウンアイスワンド(150式 S3)'));
-		        expression = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
+                        equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式 S3)'));
+		        expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		        expect(damage()).toEqual(45);
 	            });
                 });
