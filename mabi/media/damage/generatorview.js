@@ -7,8 +7,8 @@ mabi.GeneratorView = function($element){
     this.$element_.dialog(
 	{
 	    autoOpen: false,
-	    width: 800,
-	    height: 500,
+	    width: 900,
+	    height: 700,
 	    buttons: {"設定する": function() {
 		dam.context.update();
 	    }}

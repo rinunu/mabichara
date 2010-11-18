@@ -50,7 +50,7 @@ h1 span{
 }
 
 /* ---------------------------------------------------------------------- */
-/* table */
+/* Damage Table */
 
 th.damage{
     width: 60px;
@@ -59,3 +59,35 @@ th.damage{
 td.damage{
     text-align: right;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Generator */
+
+.generator .buttons{
+    float: right;
+}
+
+.generator select.character{
+    width: 500px;
+}
+
+.generator .input div{
+    float: left;
+}
+
+.generator .input select{
+    display: block;
+    margin: 5px;
+    height: 100px;
+}
+
+.generator .input a{
+    font-size: 8px;
+    text-decoration: underline;
+}
+
+.generator .input{
+    overflow: hidden;
+}
+
+
