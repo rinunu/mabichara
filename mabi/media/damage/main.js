@@ -1,10 +1,16 @@
 dam.initializeModel = function(){
     mabi.ajax = new mabi.Ajax;
     
-    dam.titles = new mabi.TitleStore;
-    dam.skills = new mabi.SkillStore;
-    dam.enchants = new mabi.EnchantStore;
-    dam.equipments = new mabi.EquipmentStore;
+    mabi.titles = new mabi.TitleStore;
+    mabi.skills = new mabi.SkillStore;
+    mabi.enchants = new mabi.EnchantStore;
+    mabi.equipments = new mabi.EquipmentStore;
+
+    // 過去互換
+    dam.titles = mabi.titles;
+    dam.skills = mabi.skills;
+    dam.enchants = mabi.enchants;
+    dam.equipments = mabi.equipments;
 
     var c = new util.ConcurrentCommand(
 	[

@@ -148,8 +148,9 @@ mabi.expressions = {
     
     /**
      * 本体のダメージ値を取得する
+     * 
      * 以下のものは除外する
-     * - 武器/武器エンチャントの攻撃
+     * - 武器/武器エンチャントのダメージ
      * - str/dex による最大ダメージ上昇
      */
     characterDamage: function(character){
@@ -174,8 +175,13 @@ mabi.expressions = {
     },
 
     add: function(a, b){
-        a[0] += b[0];
-        a[1] += b[1];
+        if(typeof b == 'number'){
+            a[0] += b;
+            a[1] += b;
+        }else{
+            a[0] += b[0];
+            a[1] += b[1];
+        }
     },
     
     multiply: function(a, v){
@@ -266,8 +272,10 @@ mabi.expressions = {
             return this.meleeDamage(skill, options);
         }else if(skill.is('magic')){
             return this.magicDamage(skill, options);
+        }else if(skill.is('alchemy')){
+            return this.alchemyDamage(skill, options);
         }
-        throw 'error';
+        throw 'スキルのカテゴリが不正です: ' + skill.name();
     },
 
     /**
@@ -403,6 +411,68 @@ mabi.expressions = {
 	    total += damage;
 	}
 	return total;
+    },
+
+    // ----------------------------------------------------------------------
+    // 錬金術
+
+    /**
+     * 錬金術ダメージを計算する
+     */
+    alchemyDamage: function(skill, options){
+        var this_ = this;
+        options = $.extend(this.defaultOptions(), options);
+        console.assert(skill instanceof mabi.Skill);
+
+	var character = options.character;
+	var mob = options.mob;
+        var charge = options.charge;
+        var weapon = character.equipmentSet().rightHand();
+        skill = character.body().skill(skill);
+
+        if(!weapon) throw '武器を装備してください';
+
+        var alchemyEfficiency = character.param('alchemyEfficiency');
+	$.each(mabi.Alchemy.ELEMENTS, function(i, v){
+	    if(skill.is(v)){
+                alchemyEfficiency += character.param(v + 'AlchemyEfficiency');
+	    }
+	});
+
+	var baseDamage = skill.damage();
+
+        // todo * 空気抵抗係数
+        
+        // * チャージ補正
+        this.multiply(baseDamage, charge == 5 ? 6 : charge);
+        
+        // + エンチャント補正
+        this.add(baseDamage, this.characterDamage(character));
+        this.add(baseDamage, weapon.enchants().damage());
+        $.each(mabi.Alchemy.ELEMENTS, function(i, v){
+	    if(skill.is(v)){
+                this_.add(baseDamage, character.param(v + 'AlchemyDamage') * charge);
+	    }
+	});
+
+        var extraDamage = skill.param('extraDamage') *
+            alchemyEfficiency / 15;
+
+        // シリンダー補正
+        var multiplier = 1;
+        $.each(mabi.Alchemy.ELEMENTS, function(i, v){
+	    if(skill.is(v)){
+                multiplier += character.param('weapon' + mabi.capitalize(v) + 'AlchemyEfficiency');
+	    }
+	});
+
+        // エレメンタル
+        
+        return this.hit(this.basicDamage($.extend({
+            damage: baseDamage,
+            extraDamage: extraDamage,
+            multiplier: multiplier
+        }, options)));
     }
 };
 

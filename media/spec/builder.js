@@ -6,27 +6,44 @@
 mabi.Builder = function(){
 };
 
+/**
+ * SkillClass を取得する
+ * @param rank 指定された場合は Skill を生成する
+ */
 mabi.Builder.prototype.skill = function(name){
     var a = dam.skills.find({name: name});
-    if(!a) throw 'error';
+    if(!a) throw 'error スキルが存在しません: ' + name;
     return a;
 };
 
 mabi.Builder.prototype.title = function(name){
     var a = dam.titles.find({name: name});
-    if(!a) throw 'error';
+    if(!a) throw 'error タイトルが存在しません: ' + name;
     return a;
 };
 
 // 装備を作成する
-mabi.Builder.prototype.equipment = function(effects, flags){
-    if($.isPlainObject(effects)){
+mabi.Builder.prototype.equipment = function(options, flags){
+    options = options || {};
+    var this_ = this;
+    if($.isPlainObject(options)){
+        var effects = $.extend({}, options);
+        delete effects.prefix;
+        delete effects.suffix;
         var base = new mabi.EquipmentClass({effects: effects, flags: flags});
     }else{
-        var base = dam.equipments.find({name: effects});
-        if(!base) throw 'error' + effects;
+        var base = dam.equipments.find({name: options});
+        if(!base) throw 'error 装備が存在しません: ' + options;
     }
-    return base.create();
+    var equipment = base.create();
+
+    $.each(['prefix'], function(i, v){
+        if(options[v]){
+            equipment.enchant(this_.prefix(options[v]));
+        }
+    });
+
+    return equipment;
 };
 
 // ES を作成する

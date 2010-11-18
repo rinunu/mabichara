@@ -101,6 +101,25 @@ mabi.EquipmentStore.prototype.load = function(){
         {
             name: '両手剣',
             flags: ['weapon', 'twoHand']
+        },
+
+        {
+            name: 'シリンダー',
+            flags: ['weapon', 'rightHand']
+        },
+        {
+            name: 'ウォーターシリンダー',
+            flags: ['weapon', 'rightHand'],
+            effects: {
+                weaponWaterAlchemyEfficiency: 0.15
+            }
+        },
+        {
+            name: 'タワーシリンダー',
+            flags: ['weapon', 'twoHand'],
+            effects: {
+                alchemyEfficiency: 40
+            }
         }
     ];
     $.each(src, function(i, v){

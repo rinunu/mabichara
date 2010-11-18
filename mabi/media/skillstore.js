@@ -75,6 +75,28 @@ mabi.SkillStore.prototype.load = function(){
 	 ['melee'],
 	 [
 	     {damage: 5}
+	 ]],
+
+        // 錬金術
+        ['ウォーターキャノン', '-',
+	 ['alchemy', 'water'],
+	 [
+             {damageMin: 119, damageMax: 136, extraDamage: 67}
+	 ]],
+        ['アルケミマスタリ', '-',
+	 ['alchemy'],
+	 [
+             {alchemyEfficiency: 15}
+	 ]],
+        ['ウォーターアルケミマスタリ', '-',
+	 ['alchemy'],
+	 [
+             {waterAlchemyEfficiency: 10}
+	 ]],
+        ['ファイアアルケミマスタリ', '-',
+	 ['alchemy'],
+	 [
+             {fireAlchemyEfficiency: 10}
 	 ]]
     ];
     $.each(src, function(i, v){

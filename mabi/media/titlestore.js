@@ -2,7 +2,32 @@
  * Title データの管理を行う
  */
 mabi.TitleStore = function(){
+    var this_ = this;
     mabi.Store.call(this, {resourceName: 'titles'});
+
+    // TODO 以下のものもサーバから取得する
+    $.each([
+        {
+            name: 'アルケミマスター',
+            effects: {
+                // 他は省略
+                waterAlchemyDamage: 10,
+                fireAlchemyDamage: 10,
+                windAlchemyDamage: 10,
+                earthAlchemyDamage: 10
+            }
+        },
+        {
+            name: 'ウォーターアルケミマスター',
+            effects: {
+                // 他は省略
+                waterAlchemyEfficiency: 10 * 0.1
+            }
+        }
+    ], function(i, v){
+        var a = new mabi.Title(v);
+        this_.add(a);
+    });
 };
 
 util.extend(mabi.TitleStore, mabi.Store);
