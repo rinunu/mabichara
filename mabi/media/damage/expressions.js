@@ -221,15 +221,16 @@ mabi.expressions = {
     },
 
     /**
-     * 武器による錬金術へのダメージ補正を取得する
+     * 最終ダメージへの錬金術ダメージ補正を取得する
      */
-    weaponAlchemyMultiplier: function(skill, character){
+    lastAlchemyMultiplier: function(skill, character){
         var result = 1;
         $.each(mabi.Alchemy.ELEMENTS, function(i, v){
 	    if(skill.is(v)){
-                result += character.param('weapon' + mabi.capitalize(v) + 'AlchemyEfficiency');
+                result *= 1 + character.param('weapon' + mabi.capitalize(v) + 'AlchemyEfficiency');
 	    }
 	});
+        result *= 1 + character.param(skill.englishName() + 'Damage');
         return result;
     },
 
@@ -485,7 +486,7 @@ mabi.expressions = {
         if(skill.is('extraChargeBonus')) extraDamage *= charge;
 
         // todo エレメンタル
-        var multiplier = this.weaponAlchemyMultiplier(skill, character);        
+        var multiplier = this.lastAlchemyMultiplier(skill, character);        
         return this.hit(this.basicDamage($.extend({
             damage: baseDamage,
             extraDamage: extraDamage,

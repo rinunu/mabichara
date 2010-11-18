@@ -23,7 +23,21 @@ mabi.TitleStore = function(){
                 // 他は省略
                 waterAlchemyEfficiency: 0.10 * 0.1
             }
+        },
+        {
+            name: 'ファイアアルケミマスター',
+            effects: {
+                // 他は省略
+                fireAlchemyEfficiency: 0.10 * 0.1
+            }
+        },
+        {
+            name: 'ヒートバスターマスター',
+            effects: {
+                // 他は省略
+            }
         }
+
     ], function(i, v){
         var a = new mabi.Title(v);
         this_.add(a);

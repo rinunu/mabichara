@@ -111,7 +111,18 @@ mabi.EquipmentStore.prototype.load = function(){
             name: 'ウォーターシリンダー',
             flags: ['weapon', 'rightHand'],
             effects: {
-                weaponWaterAlchemyEfficiency: 0.15
+                weaponWaterAlchemyEfficiency: 0.15,
+                weaponFireAlchemyEfficiency: -0.05,
+                weaponEarthAlchemyEfficiency: -0.05
+            }
+        },
+        {
+            name: 'ファイアシリンダー',
+            flags: ['weapon', 'rightHand'],
+            effects: {
+                weaponWaterAlchemyEfficiency: -0.05,
+                weaponFireAlchemyEfficiency: 0.15,
+                weaponEarthAlchemyEfficiency: -0.05
             }
         },
         {
@@ -119,6 +130,14 @@ mabi.EquipmentStore.prototype.load = function(){
             flags: ['weapon', 'twoHand'],
             effects: {
                 alchemyEfficiency: 0.40
+            }
+        },
+        {
+            name: 'ボルケーノシリンダー',
+            flags: ['weapon', 'twoHand'],
+            effects: {
+                weaponFireAlchemyEfficiency: 0.30
+                // 不明
             }
         }
     ];

@@ -78,12 +78,12 @@ mabi.SkillStore.prototype.load = function(){
 	 ]],
 
         // 錬金術
-        ['ウォーターキャノン', '-',
+        ['ウォーターキャノン', 'waterCannon',
 	 ['alchemy', 'water', 'fullChargeBonus'],
 	 [
              {damageMin: 119, damageMax: 136, extraDamage: 67, extraMultiplier: 1/0.15}
 	 ]],
-        ['フレイマー', '-',
+        ['フレイマー', 'flameBurst',
 	 ['alchemy', 'fire', 'extraChargeBonus'],
 	 [
              {damageMin: 21, damageMax: 42, extraDamage: 10, extraMultiplier: 1/0.15}
@@ -121,12 +121,16 @@ mabi.SkillStore.prototype.load = function(){
         ['ファイアアルケミマスタリ', '-',
 	 ['alchemy'],
 	 [
-             {fireAlchemyEfficiency: 0.10}
+             {fireAlchemyEfficiency: 0.10},
+             {fireAlchemyEfficiency: 0.08},
+             {fireAlchemyEfficiency: 0.075},
+             {fireAlchemyEfficiency: 0.07}
 	 ]]
     ];
     $.each(src, function(i, v){
 	var a = new mabi.SkillClass({
 	    name: v[0],
+            englishName: v[1],
 	    flags: v[2],
 	    ranks: v[3]
 	});

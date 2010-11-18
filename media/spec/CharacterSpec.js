@@ -29,6 +29,7 @@
  * waterAlchemyEfficiency: 水属性錬金術の効率
  * weaponWaterAlchemyEfficiency: 属性シリンダーによるダメージ効果
  * ※fire, earth, wind も同様
+ *
  * 
  * magicDamage: マジックマスター補正
  * fusedBoltMagicDamage: 合体魔法補正
@@ -36,6 +37,10 @@
  * iceMagicDamage
  * lightningMagicDamage
  * boltMagicDamage
+ *
+ * flameBurstDamage: フレイマー強化
+ * waterCannonDamage: ウォーターキャノン強化
+ * lifeDrainDamage: ライフドレイン強化
  *
  * weapon_magic_damage: 武器改造による魔法ダメージ補正
  * 

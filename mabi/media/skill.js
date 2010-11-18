@@ -25,10 +25,9 @@ mabi.Skill.prototype.rank = function(){
     return this.rank_;
 };
 
-
 // 委譲メソッドを作成する
 (function(){
-     $.each(['is'],
+     $.each(['is', 'englishName'],
 	    function(i, name){
 		mabi.Skill.prototype[name] = function(){
 		    return this.base_[name].apply(this.base_, arguments);
@@ -51,6 +50,8 @@ mabi.SkillClass = function(options){
     this.ranks_ = options.ranks;
 
     this.flags_ = options.flags;
+
+    this.englishName_ = options.englishName;
 };
 
 /**
@@ -72,6 +73,12 @@ mabi.SkillClass.prototype.create = function(rank){
  */
 mabi.SkillClass.prototype.name = function(){
     return this.name_;
+};
+
+/**
+ */
+mabi.SkillClass.prototype.englishName = function(){
+    return this.englishName_;
 };
 
 /**

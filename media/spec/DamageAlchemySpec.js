@@ -211,10 +211,7 @@ with(new mabi.DamageSpecHelper){
                 var hit = ((a - 10) * 0.9 + extra);
                 expect(damage()).toEqual(Math.floor(hit));
 	    });
-
-            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/914
-            // これ以降
-            xit('クレシダセット');
+            
             xit('火属性');
         });
 
@@ -328,56 +325,90 @@ with(new mabi.DamageSpecHelper){
         // 効果の意味は ESと同じ
         // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%A2%A5%EB%A5%B1%A5%DF%A5%DE%A5%B9%A5%BF%A5%EA#x07b79ce
         xit('属性シリンダー改造');
-    });
 
 
-
-    describe('具体例', function(){
-        
-        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D5%A5%EC%A5%A4%A5%DE%A1%BC
-        it('フレイマー,ケミマス,火ケミ1で最高57', function(){
+        // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/914-
+        it('クレシダセットは最終ダメージに 0.15 追加になる', function(){
             set({
-                rightHand: equipment('シリンダー'),
-                skills:{
-                    'アルケミマスタリ': 1,
-                    'ファイアアルケミマスタリ': 1,
+                rightHand: equipment('ファイアシリンダー'),
+                leftHand: equipment({flameBurstDamage: 0.15}),
+                skills: {
                     'フレイマー': 1
-                }});
-            mob_ = mob({protection: 0, defense: 1});
+                }
+            });
             expression_ = mabi.damages.skill(skill('フレイマー'));
-            expect(damage()).toEqual(57);
+            var a = 42;
+            var hit = (a - 10) * 0.9 * 1.15 * 1.15;
+            expect(damage()).toEqual(Math.floor(hit));
         });
-
-
-        // フレイマー
-        // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/495
-        // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/496
-        // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/106
-
-        // WC
-        // 式が Wiki と違う
-        // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/325
-
-        // ヒートバスター
-        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D2%A1%BC%A5%C8%A5%D0%A5%B9%A5%BF%A1%BC
         
 
+        describe('具体例', function(){
 
-// 106 ：(*‘ω‘ *)オンライン：2010/08/14(土) 00:23:13 ID:drXo8Q8E0
-// ＳＳの装備・タイトル・スキルの詳細がわからないのであまり役には立たないけど
-// 自分のスペックとどの程度違うか気になったので比較してきた（装備は適当）
-// フレイマー１　火シリ使用　火属性ダメージ＋４３　最大ダメージ＋２２
-// 結果はファイター（ハード）に対して５チャージノンクリ３６０～４００、クリ８５０～１０００
-// 大体１,５倍強化となるとやっぱり集めたくなるな
-// あと気になるのは見た目だけど、このＳＳはローブ装備してるのかな 
+            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D5%A5%EC%A5%A4%A5%DE%A1%BC
+            it('フレイマー,ケミマス,火ケミ1で最高57', function(){
+                set({
+                    rightHand: equipment('シリンダー'),
+                    skills:{
+                        'アルケミマスタリ': 1,
+                        'ファイアアルケミマスタリ': 1,
+                        'フレイマー': 1
+                    }});
+                mob_ = mob({protection: 0, defense: 1});
+                expression_ = mabi.damages.skill(skill('フレイマー'));
+                expect(damage()).toEqual(57);
+            });
+
+            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/914-
+            describe('クレシダセットは最終ダメージに 0.15 追加になる', function(){
+                it('', function(){
+                    mob_ = mob({protection: 0, defense: 1});
+                    var weapon = equipment('ボルケーノシリンダー');
+                    weapon.setParam('fireAlchemyDamage', 7);
+                    set({
+                        rightHand: weapon,
+                        leftHand: equipment({flameBurstDamage: 0.15}), // クレシダ効果
+                        skills: {
+                            'フレイマー': 1,
+                            'ファイアアルケミマスタリ': 4,
+                            'アルケミマスタリ': 1
+                        }
+                    });
+                    
+                    expression_ = mabi.damages.skill(skill('フレイマー'));
+                    expect(damage()).toEqual(93);
+                    
+                    expression_ = mabi.damages.skill(skill('フレイマー'), {generator: 'maxCritical'});
+                    expect(damage()).toEqual(203);
+
+                });
+                xit('LD');
+            });
+
+            // フレイマー
+            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/495
+            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/496
+            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/106
+
+            // WC
+            // 式が Wiki と違う
+            // http://jbbs.livedoor.jp/bbs/read.cgi/game/10417/1280427835/325
+
+            
 
 
-        
+            // 106 ：(*‘ω‘ *)オンライン：2010/08/14(土) 00:23:13 ID:drXo8Q8E0
+            // ＳＳの装備・タイトル・スキルの詳細がわからないのであまり役には立たないけど
+            // 自分のスペックとどの程度違うか気になったので比較してきた（装備は適当）
+            // フレイマー１　火シリ使用　火属性ダメージ＋４３　最大ダメージ＋２２
+            // 結果はファイター（ハード）に対して５チャージノンクリ３６０～４００、クリ８５０～１０００
+            // 大体１,５倍強化となるとやっぱり集めたくなるな
+            // あと気になるのは見た目だけど、このＳＳはローブ装備してるのかな 
 
 
+            // 計算結果が乗ってない
+            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D2%A1%BC%A5%C8%A5%D0%A5%B9%A5%BF%A1%BC
 
-
-
-        
+        });        
     });
 }
