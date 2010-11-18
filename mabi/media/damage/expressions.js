@@ -439,12 +439,15 @@ mabi.expressions = {
 	    }
 	});
 
+        var chargeBonus = charge;
+        if(skill.is('fullChargeBonus') && charge == 5) chargeBonus = 6;
+
 	var baseDamage = skill.damage();
 
         // todo * 空気抵抗係数
         
         // * チャージ補正
-        this.multiply(baseDamage, charge == 5 ? 6 : charge);
+        this.multiply(baseDamage, chargeBonus);
         
         // + エンチャント補正
         this.add(baseDamage, this.characterDamage(character));
@@ -457,6 +460,7 @@ mabi.expressions = {
 
         var extraDamage = skill.param('extraDamage') *
             alchemyEfficiency / 15;
+        if(skill.is('extraChargeBonus')) extraDamage *= charge;
 
         // シリンダー補正
         var multiplier = 1;

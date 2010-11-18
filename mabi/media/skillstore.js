@@ -79,14 +79,19 @@ mabi.SkillStore.prototype.load = function(){
 
         // 錬金術
         ['ウォーターキャノン', '-',
-	 ['alchemy', 'water'],
+	 ['alchemy', 'water', 'fullChargeBonus'],
 	 [
              {damageMin: 119, damageMax: 136, extraDamage: 67}
 	 ]],
         ['フレイマー', '-',
-	 ['alchemy', 'fire'],
+	 ['alchemy', 'fire', 'extraChargeBonus'],
 	 [
              {damageMin: 21, damageMax: 42, extraDamage: 10}
+	 ]],
+        ['ヒートバスター', '-',
+	 ['alchemy', 'fire'],
+	 [
+             {damageMin: 695, damageMax: 1175}
 	 ]],
         
         ['アルケミマスタリ', '-',
