@@ -58,11 +58,13 @@ mabi.SkillClass = function(options){
  * @param rank 1~15(F)
  */
 mabi.SkillClass.prototype.create = function(rank){
+    var effects = this.ranks_[rank - 1];
+    console.assert(effects);
     return new mabi.Skill(
 	{
 	    base: this,
 	    rank: rank,
-	    effects: this.ranks_[rank - 1]
+	    effects: effects
 	});
 };
 

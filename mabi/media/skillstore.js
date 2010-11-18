@@ -83,10 +83,30 @@ mabi.SkillStore.prototype.load = function(){
 	 [
              {damageMin: 119, damageMax: 136, extraDamage: 67}
 	 ]],
+        ['フレイマー', '-',
+	 ['alchemy', 'fire'],
+	 [
+             {damageMin: 21, damageMax: 42, extraDamage: 10}
+	 ]],
+        
         ['アルケミマスタリ', '-',
 	 ['alchemy'],
 	 [
-             {alchemyEfficiency: 15}
+             {alchemyEfficiency: 15},
+             {alchemyEfficiency: 14},
+             {alchemyEfficiency: 13},
+             {alchemyEfficiency: 12},
+             {alchemyEfficiency: 11},
+             {alchemyEfficiency: 10},
+             {alchemyEfficiency: 9},
+             {alchemyEfficiency: 8},
+             {alchemyEfficiency: 7},
+             {alchemyEfficiency: 6},
+             {alchemyEfficiency: 5},
+             {alchemyEfficiency: 4},
+             {alchemyEfficiency: 3},
+             {alchemyEfficiency: 2},
+             {alchemyEfficiency: 1}
 	 ]],
         ['ウォーターアルケミマスタリ', '-',
 	 ['alchemy'],

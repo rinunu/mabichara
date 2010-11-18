@@ -9,6 +9,10 @@ with(new mabi.DamageSpecHelper){
 	    character_.setBody(body_);
 	    character_.setEquipmentSet(equipmentSet_);
 
+            set({
+                rightHand: equipment('シリンダー')
+            });
+
             mob_ = mob({protection: 0.1, defense: 10});
         });
 
@@ -130,9 +134,44 @@ with(new mabi.DamageSpecHelper){
                 expect(damage()).toEqual(Math.floor(hit));
 	    });
 
+            // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%A6%A5%A9%A1%BC%A5%BF%A1%BC%A5%AD%A5%E3%A5%CE%A5%F3%2F%A5%B3%A5%E1%A5%F3%A5%C8
+            // 最終ダメージ * 1.15 らしい
+            xit('クレシダセット');
             xit('空気抵抗');
-            xit('エレメンタル属性');
+            xit('氷属性');
         });
+
+        // 基本情報
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D5%A5%A1%A5%A4%A5%A2%A5%A2%A5%EB%A5%B1%A5%DF%A5%DE%A5%B9%A5%BF%A5%EA
+        //
+        // ダメージ計算は書いてないけど WC と同じかな?
+        // 
+        // 追加ダメージ
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1#sdfca970
+        //
+        // コメントによると R1 で 21-34 なんて話も出てるけど、その後のコメントを読む限り、おそらくバランスが低いだけ
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D5%A5%EC%A5%A4%A5%DE%A1%BC
+        describe('フレイマー', function(){
+            beforeEach(function(){
+                set({
+                    rightHand: equipment('シリンダー'),
+                    skills:{
+                        'フレイマー': 1
+                    }});
+                skill_ = skill('フレイマー');
+                expression_ = mabi.damages.skill(skill_);
+            });
+
+            it('基本', function(){
+                var a = 42;
+                var extra = 0;
+                var hit = ((a - 10) * 0.9 + extra);
+                expect(damage()).toEqual(Math.floor(hit));
+	    });
+
+            xit('クレシダセット');
+            xit('火属性');
+        });        
 
         // 属性アルケミマスターは、そのマスタリの効果 * 10% の模様(つまり、R1までで10あがるので、タイトルで11となる)
         // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%A2%A1%BC%A5%B9%A5%A2%A5%EB%A5%B1%A5%DF%A5%DE%A5%B9%A5%BF%A5%EA
@@ -195,5 +234,24 @@ with(new mabi.DamageSpecHelper){
         // 効果の意味は ESと同じ
         // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%A2%A5%EB%A5%B1%A5%DF%A5%DE%A5%B9%A5%BF%A5%EA#x07b79ce
         xit('属性シリンダー改造');
+    });
+
+
+
+    describe('具体例', function(){
+        
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CF%A3%B6%E2%BD%D1%2F%A5%D5%A5%EC%A5%A4%A5%DE%A1%BC
+        it('フレイマー,ケミマス,火ケミ1で最高57', function(){
+            set({
+                rightHand: equipment('シリンダー'),
+                skills:{
+                    'アルケミマスタリ': 1,
+                    'ファイアアルケミマスタリ': 1,
+                    'フレイマー': 1
+                }});
+            mob_ = mob({protection: 0, defense: 1});
+            expression_ = mabi.damages.skill(skill('フレイマー'));
+            expect(damage()).toEqual(57);
+        });
     });
 }
