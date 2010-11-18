@@ -19,6 +19,9 @@ with(new mabi.DamageSpecHelper){
         // http://mabimaho.exblog.jp/11715223
         xit('ブレイズ');
 
+        // http://bassknoppix.blog94.fc2.com/blog-entry-15.html
+        xit('ヘイルストーム');
+
         describe('具体例', function(){
 	    beforeEach(function(){
 	        body_.setSkill(dam.skills.ICEBOLT, 1);
