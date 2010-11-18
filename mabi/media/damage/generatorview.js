@@ -21,8 +21,8 @@ mabi.GeneratorView = function($element){
 mabi.GeneratorView.prototype.show = function(){
     this.$element_.dialog('open');
 
-    dam.initializeSelect($('select.weapon', this.$element_), dam.weapons);
-    dam.initializeSelect($('select.title', this.$element_), dam.titles);
+    dam.initializeSelect($('select.weapon', this.$element_), mabi.equipments);
+    dam.initializeSelect($('select.title', this.$element_), mabi.titles);
 
     // todo 最初の 1回だけ
     var $vars = [$('.var0', this.$element_),
