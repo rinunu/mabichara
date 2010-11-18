@@ -60,6 +60,8 @@
  *   - steel
  *   - leather
  *   - wood
+ *
+ * dualWielding: 二刀流可能
  * 
  * ※flags は ES の貼りつけ部位から決定した
  * http://mabinogi.wikiwiki.jp/index.php?%A5%A8%A5%F3%A5%C1%A5%E3%A5%F3%A5%C8#b71dfa3f
