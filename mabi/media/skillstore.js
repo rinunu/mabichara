@@ -81,47 +81,47 @@ mabi.SkillStore.prototype.load = function(){
         ['ウォーターキャノン', '-',
 	 ['alchemy', 'water', 'fullChargeBonus'],
 	 [
-             {damageMin: 119, damageMax: 136, extraDamage: 67}
+             {damageMin: 119, damageMax: 136, extraDamage: 67, extraMultiplier: 1/0.15}
 	 ]],
         ['フレイマー', '-',
 	 ['alchemy', 'fire', 'extraChargeBonus'],
 	 [
-             {damageMin: 21, damageMax: 42, extraDamage: 10}
+             {damageMin: 21, damageMax: 42, extraDamage: 10, extraMultiplier: 1/0.15}
 	 ]],
         ['ヒートバスター', '-',
 	 ['alchemy', 'fire'],
 	 [
-             {damageMin: 695, damageMax: 1175}
+             {damageMin: 695, damageMax: 1175, baseMultiplier: 3}
 	 ]],
         
         ['アルケミマスタリ', '-',
 	 ['alchemy'],
 	 [
-             {alchemyEfficiency: 15},
-             {alchemyEfficiency: 14},
-             {alchemyEfficiency: 13},
-             {alchemyEfficiency: 12},
-             {alchemyEfficiency: 11},
-             {alchemyEfficiency: 10},
-             {alchemyEfficiency: 9},
-             {alchemyEfficiency: 8},
-             {alchemyEfficiency: 7},
-             {alchemyEfficiency: 6},
-             {alchemyEfficiency: 5},
-             {alchemyEfficiency: 4},
-             {alchemyEfficiency: 3},
-             {alchemyEfficiency: 2},
-             {alchemyEfficiency: 1}
+             {alchemyEfficiency: 0.15},
+             {alchemyEfficiency: 0.14},
+             {alchemyEfficiency: 0.13},
+             {alchemyEfficiency: 0.12},
+             {alchemyEfficiency: 0.11},
+             {alchemyEfficiency: 0.10},
+             {alchemyEfficiency: 0.9},
+             {alchemyEfficiency: 0.8},
+             {alchemyEfficiency: 0.7},
+             {alchemyEfficiency: 0.6},
+             {alchemyEfficiency: 0.5},
+             {alchemyEfficiency: 0.4},
+             {alchemyEfficiency: 0.3},
+             {alchemyEfficiency: 0.2},
+             {alchemyEfficiency: 0.1}
 	 ]],
         ['ウォーターアルケミマスタリ', '-',
 	 ['alchemy'],
 	 [
-             {waterAlchemyEfficiency: 10}
+             {waterAlchemyEfficiency: 0.10}
 	 ]],
         ['ファイアアルケミマスタリ', '-',
 	 ['alchemy'],
 	 [
-             {fireAlchemyEfficiency: 10}
+             {fireAlchemyEfficiency: 0.10}
 	 ]]
     ];
     $.each(src, function(i, v){

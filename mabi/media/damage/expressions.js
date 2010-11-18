@@ -207,6 +207,32 @@ mabi.expressions = {
         return result;
     },
 
+    /**
+     * 属性込みの錬金術効率を取得する
+     */
+    alchemyEfficiency: function(skill, character){
+        var result = character.param('alchemyEfficiency');
+	$.each(mabi.Alchemy.ELEMENTS, function(i, v){
+	    if(skill.is(v)){
+                result += character.param(v + 'AlchemyEfficiency');
+	    }
+	});
+        return result;
+    },
+
+    /**
+     * 武器による錬金術へのダメージ補正を取得する
+     */
+    weaponAlchemyMultiplier: function(skill, character){
+        var result = 1;
+        $.each(mabi.Alchemy.ELEMENTS, function(i, v){
+	    if(skill.is(v)){
+                result += character.param('weapon' + mabi.capitalize(v) + 'AlchemyEfficiency');
+	    }
+	});
+        return result;
+    },
+
     // ----------------------------------------------------------------------
     // 各種ダメージを計算するための関数群
     //
@@ -432,24 +458,20 @@ mabi.expressions = {
 
         if(!weapon) throw '武器を装備してください';
 
-        var alchemyEfficiency = character.param('alchemyEfficiency');
-	$.each(mabi.Alchemy.ELEMENTS, function(i, v){
-	    if(skill.is(v)){
-                alchemyEfficiency += character.param(v + 'AlchemyEfficiency');
-	    }
-	});
+        var alchemyEfficiency = this.alchemyEfficiency(skill, character);
 
+        // 基本ダメージ
+        var baseDamage = skill.damage();
+        this.multiply(baseDamage, (1 + alchemyEfficiency * skill.param('baseMultiplier')));
+
+        // チャージ補正
         var chargeBonus = charge;
         if(skill.is('fullChargeBonus') && charge == 5) chargeBonus = 6;
-
-	var baseDamage = skill.damage();
-
-        // todo * 空気抵抗係数
-        
-        // * チャージ補正
         this.multiply(baseDamage, chargeBonus);
-        
-        // + エンチャント補正
+
+        // 空気抵抗係数は省略
+
+        // エンチャント補正
         this.add(baseDamage, this.characterDamage(character));
         this.add(baseDamage, weapon.enchants().damage());
         $.each(mabi.Alchemy.ELEMENTS, function(i, v){
@@ -457,21 +479,13 @@ mabi.expressions = {
                 this_.add(baseDamage, character.param(v + 'AlchemyDamage') * charge);
 	    }
 	});
-
+        
         var extraDamage = skill.param('extraDamage') *
-            alchemyEfficiency / 15;
+            alchemyEfficiency * skill.param('extraMultiplier');
         if(skill.is('extraChargeBonus')) extraDamage *= charge;
 
-        // シリンダー補正
-        var multiplier = 1;
-        $.each(mabi.Alchemy.ELEMENTS, function(i, v){
-	    if(skill.is(v)){
-                multiplier += character.param('weapon' + mabi.capitalize(v) + 'AlchemyEfficiency');
-	    }
-	});
-
-        // エレメンタル
-        
+        // todo エレメンタル
+        var multiplier = this.weaponAlchemyMultiplier(skill, character);        
         return this.hit(this.basicDamage($.extend({
             damage: baseDamage,
             extraDamage: extraDamage,

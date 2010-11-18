@@ -118,7 +118,7 @@ mabi.EquipmentStore.prototype.load = function(){
             name: 'タワーシリンダー',
             flags: ['weapon', 'twoHand'],
             effects: {
-                alchemyEfficiency: 40
+                alchemyEfficiency: 0.40
             }
         }
     ];

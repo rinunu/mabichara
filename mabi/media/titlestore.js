@@ -21,7 +21,7 @@ mabi.TitleStore = function(){
             name: 'ウォーターアルケミマスター',
             effects: {
                 // 他は省略
-                waterAlchemyEfficiency: 10 * 0.1
+                waterAlchemyEfficiency: 0.10 * 0.1
             }
         }
     ], function(i, v){
