@@ -1,4 +1,6 @@
 with(new mabi.DamageSpecHelper){
+    // ダメージ計算機
+    // http://lab.lowreal.net/test/mabinogi/damage.html
     describe("基本の計算式", function() {
         beforeEach(function(){
 	    body_ = new mabi.Body();
