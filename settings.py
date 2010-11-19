@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 try:
     from djangoappengine.settings_base import *
     has_djangoappengine = True
@@ -46,6 +47,36 @@ common_js = (
     'util/command.js',
     'util/event.js',
 )
+
+# すべてのアプリケーションで使用するコード
+core_js = common_js + (
+     'mabi.js',
+
+    # mabi.util
+    'ajax.js',
+    'util.js',
+
+    # Model
+    'element.js',
+    'effect.js',
+    'referenceelement.js',
+
+    'elements.js',
+
+    'equipment.js',
+    'equipmentset.js',
+    'skill.js',
+    'enchant.js',
+    'title.js',
+
+    'alchemy.js',
+
+    'store.js',
+    'skillstore.js',
+    'enchantstore.js',
+    'titlestore.js',
+)
+
 main_js = common_js + (
      'mabi.js',
 
@@ -86,42 +117,17 @@ main_js = common_js + (
      'dummy.js',
      )
 
-damage_js = common_js + (
-    'mabi.js',
+damage_js = core_js + (
     'damage/dam.js',
 
-    # mabi.util
-    'ajax.js',
-    'util.js',
     'damage/util.js',
 
-    # Model
-    
-    'element.js',
-    'effect.js',
-    'referenceelement.js',
-
-    'elements.js',
-
-    'equipment.js',
-    'equipmentset.js',
-    'skill.js',
-    'enchant.js',
-    'title.js',
-
-    'alchemy.js',
-
-    'store.js',
-    'skillstore.js',
-    'enchantstore.js',
-    'titlestore.js',
-    'damage/equipmentstore.js',
-    
     'damage/character.js',
     'damage/body.js',
     'damage/expression.js',
     'damage/context.js',
-    
+
+    'damage/equipmentstore.js',
 
     'damage/damagedata.js',
     'damage/combinationdamagedata.js',
