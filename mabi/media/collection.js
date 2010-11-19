@@ -42,6 +42,9 @@ mabi.Collection.prototype.get = function(name){
     return result;
 };
 
+/**
+ * 存在しない場合はエラーとする
+ */
 mabi.Collection.prototype.find = function(options){
     if(options.name){
         var p = function(item){
@@ -63,6 +66,7 @@ mabi.Collection.prototype.find = function(options){
 	return true;
     });
 
+    if(!result) throw '存在しません: ' + options.name + ' ' + options.id;
     return result;
 };
 

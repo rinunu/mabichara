@@ -33,7 +33,7 @@ mabi.Store.prototype.each = function(fn){
 /**
  * ローカルに存在するなら取得する
  */
-mabi.Store.prototype.find = function(options){
+mabi.Store.prototype.has = function(options){
     if(options.name){
         var p = function(element){
             return element.name() == options.name;
@@ -54,6 +54,16 @@ mabi.Store.prototype.find = function(options){
 	return true;
     });
 
+    return result;
+};
+
+/**
+ * ローカルに存在するものを取得する
+ * 存在しない場合はエラーとなる
+ */
+mabi.Store.prototype.find = function(options){
+    var result = this.has(options);
+    if(!result) throw '存在しません' + options;
     return result;
 };
 
@@ -97,7 +107,7 @@ mabi.Store.prototype.load = function(){
 mabi.Store.prototype.loadDetail = function(id){
     id = id.id ? id.id() : id;
 
-    var e = this.find(id);
+    var e = this.has(id);
     if(e && e.loaded()){
 	console.log('loadDetail キャッシュを使用します');
 	return (new util.TimerCommand).execute();
@@ -140,7 +150,7 @@ mabi.Store.prototype.updateElement = function(element, dto){
  * 作成 or 更新したものを返す
  */
 mabi.Store.prototype.create_or_update = function(dto){
-    var e = this.find(dto.id);
+    var e = this.has(dto.id);
     if(e){
 	this.updateElement(e, dto);
     }else{
