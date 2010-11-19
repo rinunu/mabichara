@@ -50,18 +50,18 @@ common_js = (
 
 # すべてのアプリケーションで使用するコード
 core_js = common_js + (
-     'mabi.js',
+    'mabi.js',
 
     # mabi.util
     'ajax.js',
     'util.js',
+    # 'routedevent.js',
+    'collection.js',
 
     # Model
     'element.js',
     'effect.js',
     'referenceelement.js',
-
-    'elements.js',
 
     'equipment.js',
     'equipmentset.js',
@@ -78,28 +78,12 @@ core_js = common_js + (
 )
 
 main_js = common_js + (
-     'mabi.js',
-
-     # mabi.util
-     'ajax.js',
-     # 'routedevent.js',
-
      # Model
-     'element.js',
-     'effect.js',
-     'referenceelement.js',
-     'equipment.js',
-     'enchant.js',
      'character.js',
      'inventory.js',
-     'equipmentset.js',
-     'title.js',
      'upgrade.js',
 
-     'store.js',
-     'enchantstore.js',
      'equipmentstore.js',
-     'titlestore.js',
 
      'contextualelement.js',
 

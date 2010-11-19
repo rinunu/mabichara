@@ -8,7 +8,7 @@ mabi.SkillStore = function(){
     this.super_.constructor.call(this);
 };
 
-util.extend(mabi.SkillStore, mabi.Elements);
+util.extend(mabi.SkillStore, mabi.Collection);
 
 mabi.SkillStore.prototype.load = function(){
     var this_ = this;

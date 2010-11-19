@@ -8,7 +8,7 @@ mabi.EquipmentStore = function(){
     this.super_.constructor.call(this);
 };
 
-util.extend(mabi.EquipmentStore, mabi.Elements);
+util.extend(mabi.EquipmentStore, mabi.Collection);
 
 mabi.EquipmentStore.prototype.load = function(){
     var this_ = this;
