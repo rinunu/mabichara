@@ -2,79 +2,12 @@
 
   <div class="tabs">
     <ul>
-      <li><a href="#tabs1_character">キャラクター一覧</a></li>
+      <li><a href="#tabs1_condition">攻撃条件一覧</a></li>
       <li><a href="#tabs1_mob">MOB一覧</a></li>
     </ul>
 
-    <div class="tab" id="tabs1_character">
-      <div class="guide">
-	<p>キャラクターを設定します。</p>
-	<p>この画面は作成中です</p>
-      </div>
-
-      <h3>追加するキャラクター</h3>
-      <form class="input">
-
-	<div>
-	  <select name="" class="body" multiple>
-	    <option value="">脳筋キャラ(Str300)</option>
-	    <option value="">脳筋キャラ(Str400)</option>
-	    <option value="">弓キャラ(Dex500)</option>
-	    <option value="">錬金キャラ</option>
-	    <option value="">魔法使い</option>
-	  </select>
-	  <a>この一覧を編集する</a>
-	</div>
-
-	<div>
-	  <select name="" class="gear" multiple>
-	    <option value="">ヘボナ装備</option>
-	    <option value="">ねこ装備</option>
-	    <option value="">裸</option>
-	    <option value="">クレシダ装備</option>
-	  </select>
-	  <a>この一覧を編集する</a>
-	</div>
-	<div>
-	  <select name="" class="weapon" multiple>
-	    <option value="">両手剣(最大100)</option>
-	    <option value="">ハイロン(最大100)</option>
-	    <option value="">素手</option>
-	    <option value="">アイスワンド</option>
-	    <option value="">ファイアシリンダー</option>
-	  </select>
-	  <a>この一覧を編集する</a>
-	</div>
-	<div>
-	  <select name="" class="attack" multiple>
-	    <option value="">スマッシュ</option>
-	    <option value="">ファイアボール</option>
-	    <option value="">マグナムショット</option>
-	    <option value="">ウォーターキャノン(1チャージ)</option>
-	    <option value="">ウォーターキャノン(2チャージ)</option>
-	    <option value="">ウォーターキャノン(3チャージ)</option>
-	    <option value="">ウォーターキャノン(4チャージ)</option>
-	    <option value="">ウォーターキャノン(5チャージ)</option>
-	  </select>
-	  <a>この一覧を編集する</a>
-
-	</div>
-      </form>
-      <div class="buttons">
-	<button>選択した組み合わせでキャラクターを追加</button>
-      </div>
-
-      <h3>追加されたキャラクター</h3>
-      <div>
-	<select name="" class="list character" multiple>
-	  <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
-	  <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
-	</select>
-      </div>
-      <div class="buttons">
-	<button>削除</button>
-      </div>
-
+    <div class="tab" id="tabs1_condition">
+      {% include "damage/combination.html" %}
     </div>
 
     <div id="tabs1_mob">  
