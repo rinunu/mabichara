@@ -1,10 +1,12 @@
 
 mabi.EnchantClass = function(options){
-    console.assert(options.rank);
-    console.assert($.inArray(['prefix', 'suffix'], options.type) != -1);
     mabi.Element.call(this, options);
-    this.rank_ = options.rank;
-    this.type_ = options.type;
+    if(options){
+        console.assert(options.rank);
+        console.assert($.inArray(['prefix', 'suffix'], options.type) != -1);
+        this.rank_ = options.rank;
+        this.type_ = options.type;
+    }
 };
 
 util.extend(mabi.EnchantClass, mabi.Element);
@@ -29,21 +31,24 @@ mabi.EnchantClass.prototype.type = function(){
  * コピー時、数値は最大値を使用する。
  */
 mabi.Enchant = function(base){
-    mabi.Element.call(this, {name: base.name()});
-    this.base_ = base;
+    console.log('Enchant');
+    
+    mabi.InstanceElement.call(this, base);
+    
+    if(base){ // clone 時のみ base は未指定となる
+        this.copyEffectsFrom(base);
 
-    this.copyEffectsFrom(base);
-
-    this.eachEffect(
-	function(effect){
-	    effect.min = effect.max;
-	});
+        this.eachEffect(
+            function(effect){
+                effect.min = effect.max;
+            });
+    }
 };
 
-util.extend(mabi.Enchant, mabi.Element);
+util.extend(mabi.Enchant, mabi.InstanceElement);
 
 (function(){
-     // いくつかの移譲メソッドを作成する
+     // 移譲メソッドを作成する
      $.each(['type'], function(i, name){
 		mabi.Enchant.prototype[name] = function(){
 		    return this.base_[name]();

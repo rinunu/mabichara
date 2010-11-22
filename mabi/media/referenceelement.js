@@ -10,8 +10,10 @@
  * TODO イベントは未実装
  */
 mabi.ReferenceElement = function(base){
-    this.super_.constructor.call(this);
+    mabi.Element.call(this);
     this.base_ = base;
+
+    this.addSharedProperties(['base_']);
 };
 
 util.extend(mabi.ReferenceElement, mabi.Element);

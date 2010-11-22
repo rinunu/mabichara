@@ -62,12 +62,14 @@ core_js = common_js + (
     'element.js',
     'effect.js',
     'referenceelement.js',
+    'instanceelement.js',
 
     'equipment.js',
     'equipmentset.js',
     'skill.js',
     'enchant.js',
     'title.js',
+    'mob.js',
 
     'alchemy.js',
 
@@ -151,11 +153,14 @@ MEDIA_BUNDLES = (
      'spec/DamageSpecHelper.js',
      'spec/SpecHelper.js',
 
-     # base
+     # core
      'spec/ElementSpec.js',
+     'spec/ReferenceElementSpec.js',
+     'spec/InstanceElementSpec.js',
      'spec/BodySpec.js',
      'spec/EquipmentSpec.js',
      'spec/SkillSpec.js',
+     'spec/EnchantSpec.js',
 
      # damage
      'spec/ExpressionSpec.js',
