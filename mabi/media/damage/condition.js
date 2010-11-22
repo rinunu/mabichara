@@ -6,8 +6,8 @@ mabi.Condition = function(options){
     });
     
     var equipmentSet = new mabi.EquipmentSet;
-    equipmentSet.addChild(this.weapons_.clone());
-    equipmentSet.addChild(this.protectors_.clone());
+    equipmentSet.copyFrom(this.weapons_.clone());
+    equipmentSet.copyFrom(this.protectors_.clone());
     
     this.character_ =  new mabi.Character;
     this.character_.setBody(this.body_);
