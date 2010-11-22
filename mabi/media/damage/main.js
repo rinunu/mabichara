@@ -23,20 +23,28 @@ dam.initializeModel = function(){
 };
 
 dam.initializeView = function(){
-    $('button').button();
-    $(".tabs").tabs();
+    // ユーザの作成した(もしくはデフォルトの)パーツ
+    dam.parts = {
+        weapons: new mabi.Collection(),
+        protectors: new mabi.Collection(),
+        expressions: new mabi.Collection(),
+        bodies: new mabi.Collection(),
+        mobs: new mabi.Collection()
+    };
+    dam.setDefaultParts();
 
     dam.context = new mabi.Context();
     dam.setDefaultContext(dam.context);
     dam.context.update();
 
+    // ビュー
+    $('button').button();
+    $(".tabs").tabs();
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
     dam.chartView = new mabi.ChartView($('.chart-view'));
     dam.optionsView = new mabi.OptionsView($('.options-view'));
-
     dam.damageTable = new mabi.DamageTable($('table.damage'), dam.context);
-
     dam.menu = new mabi.Menu($('.menu'));
 
     for(var i in dam){

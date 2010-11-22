@@ -2,9 +2,10 @@
  * ビルトインの情報を定義する
  */
 
-dam.setDefaultContext = function(context){
-    var data = new mabi.CombinationDamageData;
-
+/**
+ * デフォルトのパーツを作成する
+ */
+dam.setDefaultParts = function(context){
     // Expression
     // var generator = 'max';
     // var generator = 'maxCritical';
@@ -17,51 +18,39 @@ dam.setDefaultContext = function(context){
     var is = dam.skills.ICE_SPEAR;
     var smash = dam.skills.find({name: 'スマッシュ'});
     $.each([
-        // [mabi.damages.attack({name: 'アタック', generator: generator})],
-        // [mabi.damages.skill(smash, {name: 'スマッシュ', generator: generator})]
-        
-	// [mabi.damages.skill(ib, {name: 'IB', charge: 1, generator: generator})],
-	// [mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, generator: generator})],
-	// [mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, generator: generator})],
-	// [mabi.damages.skill(lb, {name: 'LB', charge: 1, generator: generator})],
-	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, generator: generator})],
+        [mabi.damages.attack({name: 'アタック', generator: generator})],
+        [mabi.damages.skill(smash, {name: 'スマッシュ', generator: generator})],
+	[mabi.damages.skill(ib, {name: 'IB', charge: 1, generator: generator})],
+	[mabi.damages.skill(fb, {name: 'FB(1C)', charge: 1, generator: generator})],
+	[mabi.damages.skill(fb, {name: 'FB(5C)', charge: 5, generator: generator})],
+	[mabi.damages.skill(lb, {name: 'LB', charge: 1, generator: generator})],
+	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(1C)', charge: 1, generator: generator})],
         [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(2C)', charge: 2, generator: generator})],
-        [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(3C)', charge: 3, generator: generator})]
-	// [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, generator: generator})]
-	// [mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, generator: generator})],
-	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, generator: generator})],
-	// [mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, generator: generator})]
-	// [mabi.damages.skill(fbl, {name: 'FBL', charge: 5, generator: generator})]
-	// [mabi.damages.skill(is, {name: 'IS(5C)', charge: 5, generator: generator})],
-	// [mabi.damages.thunder(th, {name: 'TH(5C)', charge: 5, generator: generator})]
+        [mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(3C)', charge: 3, generator: generator})],
+	[mabi.damages.fusedBolt(ib, fb, {name: 'IB+FB(5C)', charge: 5, generator: generator})],
+	[mabi.damages.fusedBolt(ib, lb, {name: 'IB+LB', charge: 1, generator: generator})],
+	[mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(1C)', charge: 1, generator: generator})],
+	[mabi.damages.fusedBolt(fb, lb, {name: 'FB+LB(5C)', charge: 5, generator: generator})],
+	[mabi.damages.skill(fbl, {name: 'FBL', charge: 5, generator: generator})],
+	[mabi.damages.skill(is, {name: 'IS(5C)', charge: 5, generator: generator})]
     ], function(i, v){
-	data.addExpression(v[0]);
+        dam.parts.expressions.push(v[0]);
     });
 
-    // 防具
-    data.addProtectors(new mabi.EquipmentSet);
-
-    // EquipmentSet
+    // weapons
     var weapons = [
-	// 'アイスワンド', 
-	'クラウンアイスワンド(150式)',
-	'クラウンアイスワンド(150式 S3)',
-        'クラウンアイスワンド(150式 R3)'
-	// 'クラウンアイスワンド(205式)',
-	// 'クラウンアイスワンド(205式 S3)'
-	// 'ファイアワンド', 
-	// 'ファイアワンド(S3)',
-        // 'ファイアワンド(R3)'
-	// 'フェニックスファイアワンド(245式)', 
-	// 'フェニックスファイアワンド(245式 S3)',
-	// 'ライトニングワンド',
-	// 'ライトニングワンド(S3)'
+	'アイスワンド',
+	'クラウンアイスワンド',
+	'ファイアワンド',
+	'フェニックスファイアワンド',
+	'ライトニングワンド'
     ];
     $.each(weapons, function(i, v){
-	var equipmentSet = new mabi.EquipmentSet();
-	equipmentSet.setName(v);
-	equipmentSet.setRightHand(dam.equipments.get(v));
-	data.addWeapons(equipmentSet);
+	var weapon = dam.equipments.find({name: v}).create();
+        var weapons = new mabi.EquipmentSet;
+        weapons.setRightHand(weapon);
+        weapons.setName(v);
+        dam.parts.weapons.push(weapons);
     });
 
     // 近接武器
@@ -88,80 +77,100 @@ dam.setDefaultContext = function(context){
     // equipmentSet.setRightHand(e);
     // data.addEquipmentSet(equipmentSet);
 
-    // Character
-    var abbreviations = {
-        'str': 'Str',
-	'int': 'Int',
-	lightning_magic_damage: 'L',
-	fire_magic_damage: 'F',
-	ice_magic_damage: 'I'};
-    var template = {
-    };
-
-    var ints = [400, 500, 600, 700, 800, 900];
-    dam.combination([['int', ints]], function(map){
-        var names = [];
-        $.each(map, function(k, v){
-            if(v > 1){
-        	names.push(abbreviations[k] + v);
-            }else if(v > 0){
-        	names.push(abbreviations[k] + Math.floor(v * 100));
-            }
-            template[k] = v;
-        });
-        template.name = names.join(' ');
-        var body = mabi.ElementBuilder.body(template);
-        body.setSkill(dam.skills.ICEBOLT, 1);
-        body.setSkill(dam.skills.FIREBOLT, 1);
-        body.setSkill(dam.skills.LIGHTNING_BOLT, 1);
-        body.setSkill(dam.skills.FIREBALL, 1);
-        body.setSkill(dam.skills.THUNDER, 1);
-        body.setSkill(dam.skills.ICE_SPEAR, 1);
-
-        body.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
-        body.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
-        body.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
-        body.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
-        body.setSkill(dam.skills.BOLT_COMPOSER, 1);
-
-        data.addBody(body);
+    // protectors
+    var protectors = [
+        {name: '裸'},
+        {name: 'マジックマスター', title: 'マジックマスター'}
+    ];
+    $.each(protectors, function(i, v){
+	var equipmentSet = new mabi.EquipmentSet();
+	equipmentSet.setName(v.name);
+        if(v.title) equipmentSet.setTitle(dam.titles.find({name: v.title}));
+	dam.parts.protectors.push(equipmentSet);
     });
 
-    // 近接
-    // var damages = [200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420];
-    // template = {
-    // };
-    // dam.combination([['damage', damages]], function(map){
-    //     var damage = map['damage'];
-    //     template.str = damage * 2.5 + 10;
-    //     template.name = '最大' + damage;
-    //     var body = mabi.ElementBuilder.body(template);
-    //     body.setSkill(dam.skills.find({name: 'スマッシュ'}), 1);
-    //     data.addBody(body);
-    // });
+    // bodies
+    var stats = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+    var template = {effects:{}};
+    $.each(stats, function(i, v){
+        template.name = 'int' + v;
+        // template.str = v;
+        // template.dex = v;
+        template.effects['int'] = v;
+        
+        var body = new mabi.Body(template);
+        dam.skills.each(function(i, v){
+            body.setSkill(v, 1);
+        });
 
-    // MOB
+        dam.parts.bodies.push(body);
+    });
+
+    // mob
     $.each([
-        // ['防御保護0', 1000, 0, 0],
-        // ['ブロンズボーンアーチャー', 960, 42, 0.19],
-	// ['シルバーボーンアーチャー', 1040, 42, 0.19],
-	// ['ゴールドボーンアーチャー', 1160, 50, 0.22],
+        ['防御保護0', 1000, 0, 0],
+        ['ブロンズボーンアーチャー', 960, 42, 0.19],
+	['シルバーボーンアーチャー', 1040, 42, 0.19],
+	['ゴールドボーンアーチャー', 1160, 50, 0.22],
 	
-	// ['ブロンズボーンランサー', 1320, 46, 0.27],
-	// ['シルバーボーンランサー', 1440, 46, 0.27],
-	// ['ゴールドボーンランサー', 1640, 55, 0.3],
+	['ブロンズボーンランサー', 1320, 46, 0.27],
+	['シルバーボーンランサー', 1440, 46, 0.27],
+	['ゴールドボーンランサー', 1640, 55, 0.3],
 	
-	// ['ブロンズボーンファイター', 1800, 52, 0.27],
-	// ['シルバーボーンファイター', 1960, 52, 0.27],
+	['ブロンズボーンファイター', 1800, 52, 0.27],
+	['シルバーボーンファイター', 1960, 52, 0.27],
 	['ゴールドボーンファイター', 2240, 61, 0.3]
+    ], function(i, v){
+	var mob = new mabi.Mob({
+	    name: v[0],
+	    effects: {
+		defense: v[2],
+		protection: v[3]
+	    }
+        });
+        dam.parts.mobs.push(mob);
+    });
+};
+
+/**
+ * Context にデフォルト値を設定する
+ */
+dam.setDefaultContext = function(context){
+    var data = new mabi.CombinationDamageData;
+
+    $.each([
+        'IB+FB(2C)',
+        'IB+FB(3C)'
+    ], function(i, v){
+        data.addExpression(dam.parts.expressions.find({name: v}));
+    });
+
+    $.each([
+	'クラウンアイスワンド'
+    ], function(i, v){
+	data.addWeapons(dam.parts.weapons.find({name: v}));
+    });
+    
+    $.each([
+	'裸'
+    ], function(i, v){
+	data.addProtectors(dam.parts.protectors.find({name: v}));
+    });
+    
+    $.each([
+        'int500',
+        'int600',
+        'int700',
+        'int800',
+        'int900'
+    ], function(i, v){
+        data.addBody(dam.parts.bodies.find({name: v}));
+    });
+
+    $.each([
+	'ゴールドボーンファイター'
         ], function(i, v){
-	    var mob = new mabi.Element({
-		name: v[0] + '(HP ' + v[1] + ')',
-		effects:[
-		    {param: 'defense', min: v[2]},
-		    {param: 'protection', min: v[3]}
-		]});
-	    data.addMob(mob);
+            data.addMob(dam.parts.mobs.find({name: v}));
 	});
     
     context.setDamageData(data);
