@@ -30,8 +30,15 @@ mabi.CombinationDamageData.prototype.addBody = function(data){
 /**
  * 
  */
-mabi.CombinationDamageData.prototype.addEquipmentSet = function(data){
-    this.addData(dam.fields.EQUIPMENT_SET, data);
+mabi.CombinationDamageData.prototype.addWeapons = function(data){
+    this.addData(dam.fields.WEAPONS, data);
+};
+
+/**
+ * 
+ */
+mabi.CombinationDamageData.prototype.addProtectors = function(data){
+    this.addData(dam.fields.PROTECTORS, data);
 };
 
 /**
@@ -48,17 +55,18 @@ mabi.CombinationDamageData.prototype.records = function(){
     var result = [];
     dam.combination([
 	['body', this.data_[dam.fields.BODY.id]],
-	['equipmentSet', this.data_[dam.fields.EQUIPMENT_SET.id]],
+        ['weapons', this.data_[dam.fields.WEAPONS.id]],
+	['protectors', this.data_[dam.fields.PROTECTORS.id]],
 	['mob', this.data_[dam.fields.MOB.id]],
 	['expression', this.data_[dam.fields.EXPRESSION.id]]], function(map){
-	    result.push({
+	    result.push(new mabi.Condition({
 		body: map['body'],
-		equipmentSet: map['equipmentSet'],
+                weapons: map['weapons'],
+                protectors: map['protectors'],
 		mob: map['mob'],
 		expression: map['expression']
-	    });
+	    }));
 	});
-	
     return result;
 };
 

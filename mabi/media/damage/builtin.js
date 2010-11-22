@@ -38,6 +38,9 @@ dam.setDefaultContext = function(context){
 	data.addExpression(v[0]);
     });
 
+    // 防具
+    data.addProtectors(new mabi.EquipmentSet);
+
     // EquipmentSet
     var weapons = [
 	// 'アイスワンド', 
@@ -58,8 +61,7 @@ dam.setDefaultContext = function(context){
 	var equipmentSet = new mabi.EquipmentSet();
 	equipmentSet.setName(v);
 	equipmentSet.setRightHand(dam.equipments.get(v));
-	equipmentSet.setTitle(dam.titles.find({name: 'マジックマスター'}));
-	data.addEquipmentSet(equipmentSet);
+	data.addWeapons(equipmentSet);
     });
 
     // 近接武器
@@ -164,5 +166,5 @@ dam.setDefaultContext = function(context){
     
     context.setDamageData(data);
     context.setRowFields([dam.fields.BODY]);
-    context.setColumnFields([dam.fields.EQUIPMENT_SET, dam.fields.EXPRESSION, dam.fields.MOB]);
+    context.setColumnFields([dam.fields.WEAPONS, dam.fields.PROTECTORS, dam.fields.EXPRESSION, dam.fields.MOB]);
 };

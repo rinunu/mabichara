@@ -1,11 +1,8 @@
 
 /**
- * ダメージデータを保持する
+ * Condition の集合
  *
  * 実装はサブクラスにて行う
- *
- * 各レコードは以下の形式とする
- * {character:, equipmentSet:, expression:, mob:}
  */
 mabi.DamageData = function(){
 };

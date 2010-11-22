@@ -1,10 +1,3 @@
-
-/**
- * アプリの文脈を表す
- * 
- * ビューの表示は Context を元に行う。
- * Context を共有するビューは同じデータを表示することとなる。
- */
 mabi.Context = function(options){
     options = options || {};
     this.columnFields_ = [];
@@ -74,7 +67,7 @@ mabi.Context.prototype.update = function(){
     var rowMap = {}; // Row への高速アクセス用{ID: Row}
     var columnMap = {}; // Column への高速アクセス用{ID: Column}
     $.each(records, function(i, record){
-	var value = Math.floor(this_.calculate(record));
+	var value = Math.floor(record.value());
 	var rowId = getRowId(record);
 	var columnId = getColumnId(record);
 	var row = rowMap[rowId];
@@ -124,7 +117,7 @@ mabi.Context.prototype.updateGetter = function(){
     function getId(record, fieldIds){
 	var ids = [];
 	for(var i = 0; i < fieldIds.length; i++){
-	    ids.push(record[fieldIds[i]].id());
+	    ids.push(record[fieldIds[i]]().id());
 	}
 	return ids.join('_');
     }
@@ -132,7 +125,7 @@ mabi.Context.prototype.updateGetter = function(){
     function getFields(record, fieldIds){
 	var fields = [];
 	for(var i = 0; i < fieldIds.length; i++){
-	    fields.push(record[fieldIds[i]]);
+	    fields.push(record[fieldIds[i]]());
 	}
 	return fields;
     }
@@ -189,21 +182,6 @@ mabi.Context.prototype.each_ = function(fields, fn){
     impl(0, []);
 };
 
-/**
- * セルの値を計算する
- */
-mabi.Context.prototype.calculate = function(record){
-    var character =  new mabi.Character;
-    character.setBody(record.body);
-    character.setEquipmentSet(record.equipmentSet);
-    var c = {
-	character: character,
-	mob: record.mob
-    };
-    var expression = record.expression;
-    return expression.value(c);
-};
-
 // ----------------------------------------------------------------------
 
 
@@ -224,7 +202,12 @@ dam.fields.MOB = {
     label: 'MOB'
 };
 
-dam.fields.EQUIPMENT_SET = {
-    id: 'equipmentSet',
-    label: '装備'
+dam.fields.PROTECTORS = {
+    id: 'protectors',
+    label: '防具'
+};
+
+dam.fields.WEAPONS = {
+    id: 'weapons',
+    label: '武器'
 };
