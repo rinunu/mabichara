@@ -31,8 +31,6 @@ mabi.EnchantClass.prototype.type = function(){
  * コピー時、数値は最大値を使用する。
  */
 mabi.Enchant = function(base){
-    console.log('Enchant');
-    
     mabi.InstanceElement.call(this, base);
     
     if(base){ // clone 時のみ base は未指定となる
