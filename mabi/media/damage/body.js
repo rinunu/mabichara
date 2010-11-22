@@ -2,7 +2,7 @@
  * キャラクター本体
  */
 mabi.Body = function(options){
-    this.super_.constructor.call(this, options);
+    mabi.Element.call(this, options);
 };
 
 util.extend(mabi.Body, mabi.Element);
