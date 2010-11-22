@@ -22,14 +22,13 @@ mabi.ReferenceElement.prototype.base = function(enchant){
     return this.base_;
 };
 
-// 透過メソッドを作成する
-(function(){
-     $.each(['name', 'setName', 'child', 'childrenLength', 'eachChild', 
-	     'addChild', 'removeChild', 'addEffect', 'eachEffect'], 
-	    function(i, name){
-		mabi.ReferenceElement.prototype[name] = function(){
-		    return this.base_[name].apply(this.base_, arguments);
-		};
-	    });
-})();
+// 透過メソッドを作成する(todo clone できなくなるため、別の方法を使用する)
+// (function(){
+//      $.each(['name', 'setName', 'child', 'childrenLength', 'eachChild'], 
+// 	    function(i, name){
+// 		mabi.ReferenceElement.prototype[name] = function(){
+// 		    return this.base_[name].apply(this.base_, arguments);
+// 		};
+// 	    });
+// })();
 
