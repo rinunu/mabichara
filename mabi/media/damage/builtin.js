@@ -2,6 +2,19 @@
  * ビルトインの情報を定義する
  */
 
+dam.name = function(name, proficiency, special){
+    var options = [];
+    if(proficiency) options.push(proficiency + '式');
+    if(special) options.push(special);
+    
+    if(options.length >= 1){
+	name += '(';
+	name += options.join(' ');
+	name += ')';
+    }
+    return name;
+};
+
 /**
  * デフォルトのパーツを作成する
  */
@@ -39,19 +52,67 @@ dam.setDefaultParts = function(context){
 
     // weapons
     var weapons = [
-	'アイスワンド',
-	'クラウンアイスワンド',
-	'ファイアワンド',
-	'フェニックスファイアワンド',
-	'ライトニングワンド'
+	{
+	    name: 'アイスワンド',
+	    upgrades: [{}]
+	}, {
+	    name: 'ファイアワンド',
+	    upgrades: [{}]
+	}, {
+	    name: 'ライトニングワンド',
+	    upgrades: [{}]
+	}, {
+	    name: 'クラウンアイスワンド',
+	    upgrades: [
+		{}, {
+		    proficiency: 150,
+		    effects: {weapon_magic_damage: 0.22}
+		}, {
+		    proficiency: 205,
+		    effects: {weapon_magic_damage: 0.28}
+		}
+	    ]
+	}, {
+	    name: 'フェニックスファイアワンド',
+	    upgrades: [
+		{},
+		{
+		    proficiency: 245,
+		    effects: {weapon_magic_damage: -0.06}
+		}]
+	}, {
+            name: '両手剣', upgrades: [{}]
+        }, {
+            name: 'ウォーターシリンダー', upgrades: [{}]
+        }, {
+            name: 'ファイアシリンダー', upgrades: [{}]
+        }, {
+            name: 'ボルケーノシリンダー', upgrades: [{}]
+        }, {
+            name: 'タワーシリンダー', upgrades: [{}]
+        }
     ];
-    $.each(weapons, function(i, v){
-	var weapon = dam.equipments.find({name: v}).create();
-        var weapons = new mabi.EquipmentSet;
-        weapons.setRightHand(weapon);
-        weapons.setName(v);
-        dam.parts.weapons.push(weapons);
+    var specials = [
+        {},
+        {name: 'S3', effects: {sUpgradeMax: 9}},
+        {name: 'R3', effects: {rUpgrade: 0.26}}
+    ];
+    dam.combination([['weapon', weapons], ['special', specials]], function(map){
+    	var dto = map['weapon'];
+	var special = map['special'];
+	$.each(dto.upgrades, function(i, upgrade){
+            var base = dam.equipments.find({name: dto.name});
+            var weapon = base.create();
+            weapon.addChild(new mabi.Element(upgrade), 'upgrade');
+            weapon.addChild(new mabi.Element(special), 'special');
+
+            var weapons = new mabi.EquipmentSet;
+            weapons.setRightHand(weapon);
+            weapons.setName(dam.name(base.name(), upgrade.proficiency, special.name));
+            dam.parts.weapons.push(weapons);
+        });
     });
+
 
     // 近接武器
     // var weaponBase = dam.equipments.find({name: '両手剣'});
@@ -79,18 +140,25 @@ dam.setDefaultParts = function(context){
 
     // protectors
     var protectors = [
-        {name: '裸'},
-        {name: 'マジックマスター', title: 'マジックマスター'}
+        {name: '裸', effects: {}},
+        {name: 'マジックマスター', title: 'マジックマスター', effects: {}},
+        {name: '最大100', effects: {damageMax: 100}},
+        {name: '最大150', effects: {damageMax: 150}},
+        {name: '最大200', effects: {damageMax: 200}},
+        {name: '最大250', effects: {damageMax: 250}},
+        {name: '最大300', effects: {damageMax: 300}},
+        {name: '最大350', effects: {damageMax: 350}},
+        {name: '最大400', effects: {damageMax: 400}}
     ];
     $.each(protectors, function(i, v){
-	var equipmentSet = new mabi.EquipmentSet();
+	var equipmentSet = new mabi.EquipmentSet({effects: v.effects});
 	equipmentSet.setName(v.name);
         if(v.title) equipmentSet.setTitle(dam.titles.find({name: v.title}));
 	dam.parts.protectors.push(equipmentSet);
     });
 
     // bodies
-    var values = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+    var values = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900];
     var names = ['str', 'dex', 'int'];
     var template = {effects:{}};
     dam.combination([['name', names], ['value', values]], function(map){
