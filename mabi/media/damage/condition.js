@@ -1,9 +1,9 @@
 mabi.Condition = function(options){
     var this_ = this;
     $.each(mabi.Condition.NAMES, function(i, name){
+        console.assert(options[name]);
         this_[name + '_'] = options[name];
     });
-
     
     var equipmentSet = new mabi.EquipmentSet;
     equipmentSet.addChild(this.weapons_.clone());
