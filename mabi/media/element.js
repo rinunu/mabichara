@@ -32,7 +32,7 @@ mabi.Element = function(options){
     }
 
     // clone 時にインスタンスを共有するプロパティ
-    this.sharedProperties_ = {children_: true};
+    this.sharedProperties_ = {sharedProperties_: true};
 };
 
 /**
@@ -43,7 +43,7 @@ mabi.Element = function(options){
 mabi.Element.prototype.clone = function(){
     var this_ = this;
     var clone = new (this.constructor);
-    var skip = {id_: true, parent_: true};
+    var skip = {id_: true, parent_: true, children_: true};
     
     for(var p in this){
         if(!this.hasOwnProperty(p) || skip[p])continue;
@@ -240,7 +240,18 @@ mabi.Element.prototype.param = function(param, character){
 };
 
 // ----------------------------------------------------------------------
-// utility
+// protected
+
+/**
+ * clone 時に clone 元と先で共有するプロパティを設定する
+ */
+mabi.Element.prototype.addSharedProperties = function(properties){
+    var this_ = this;
+    console.assert(properties instanceof Array);
+    $.each(properties, function(i, v){
+        this_.sharedProperties_[v] = true;
+    });
+};
 
 /**
  * source から Effect をコピーする

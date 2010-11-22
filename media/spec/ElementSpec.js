@@ -22,6 +22,8 @@ describe('Element', function() {
             var child;
             beforeEach(function(){
                 source = new mabi.Element({name: 'test', effects: {str: 100}});
+                source.shared = {};
+                source.addSharedProperties(['shared']);
                 child = new mabi.Element({effects: {dex: 100}});
                 source.addChild(child, 'child');
                 clone = source.clone();
@@ -49,6 +51,9 @@ describe('Element', function() {
             });
             it('同じ Child を持っていること', function(){
                 expect(clone.child('child').param('dex')).toEqual(100);
+            });
+            it('共有プロパティは複製しないこと', function(){
+                expect(clone.shared).toBe(source.shared);
             });
         });
     });
