@@ -60,24 +60,17 @@ mabi.EquipmentClass.prototype.is = function(flag){
 // NoEnchantedEquipment
 
 mabi.NoEnchantedEquipment = function(base){
-    mabi.Element.call(this);
+    mabi.InstanceElement.call(this, base);
     if(base){
 	this.setBase(base);
     }
 };
 
-util.extend(mabi.NoEnchantedEquipment, mabi.Element);
-
-/**
- * EquipmentClass を取得する
- */
-mabi.NoEnchantedEquipment.prototype.base = function(base){
-    return this.child('equipment').base();
-};
+util.extend(mabi.NoEnchantedEquipment, mabi.InstanceElement);
 
 mabi.NoEnchantedEquipment.prototype.setBase = function(base){
-    var baseElement = new mabi.ReferenceElement(base);
-    this.addChild(baseElement, 'equipment');
+    mabi.InstanceElement.prototype.setBase.call(this, base);
+    this.addChild(base.clone(), 'equipment');
     this.updateName();
 };
 

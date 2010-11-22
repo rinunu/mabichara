@@ -23,3 +23,10 @@ util.extend(mabi.InstanceElement, mabi.Element);
 mabi.InstanceElement.prototype.base = function(){
     return this.base_;
 };
+
+/**
+ * クラスを取得する
+ */
+mabi.InstanceElement.prototype.setBase = function(base){
+    this.base_ = base;
+};
