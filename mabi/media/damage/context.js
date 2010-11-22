@@ -40,6 +40,13 @@ mabi.Context.prototype.rowFields = function(){
 /**
  * 
  */
+mabi.Context.prototype.damageData = function(damageData){
+    return this.damageData_;
+};
+
+/**
+ * 
+ */
 mabi.Context.prototype.setDamageData = function(damageData){
     this.damageData_ = damageData;
 };
