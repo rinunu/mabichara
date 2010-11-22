@@ -39,16 +39,18 @@
             var settings = {
             };
             options = $.extend(settings, options);
+
+            methods.destroy.call(this);
+            
             return this.each(function(){
                 var $this = $(this),
                     data = $this.data('binding');
-                if(!data){
-                    $this.data('binding', {
-                        source: options.source
-                    });
-                    $(options.source).bind('change.binding', function(){update($this);});
-                    update($this);
-                }
+
+                $this.data('binding', {
+                    source: options.source
+                });
+                $(options.source).bind('change.binding', function(){update($this);});
+                update($this);
             });
         },
 
@@ -61,7 +63,7 @@
             });
         },
         
-        destroy: function( ) {
+        destroy: function(){
             return this.each(function(){
                 var $this = $(this),
                     data = $this.data('binding');
