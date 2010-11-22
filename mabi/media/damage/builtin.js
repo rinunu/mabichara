@@ -136,42 +136,37 @@ dam.setDefaultParts = function(context){
  * Context にデフォルト値を設定する
  */
 dam.setDefaultContext = function(context){
-    var data = new mabi.CombinationDamageData;
+    var data = new mabi.OffenseDefenseDamageData;
 
-    $.each([
-        'IB+FB(2C)',
-        'IB+FB(3C)'
-    ], function(i, v){
-        data.addExpression(dam.parts.expressions.find({name: v}));
+    var bodies = ['int500', 'int600'];
+    var weapons = ['クラウンアイスワンド'];
+    var protectors = ['裸'];
+    var expressions = ['IB+FB(2C)', 'IB+FB(3C)'];
+    var offenses = [];
+    dam.combination([
+        ['body', bodies],
+        ['weapons', weapons],
+        ['protectors', protectors],
+        ['expression', expressions]
+    ], function(map){
+        offenses.push({
+            body: dam.parts.bodies.find({name: map['body']}),
+            weapons: dam.parts.weapons.find({name: map['weapons']}),
+            protectors: dam.parts.protectors.find({name: map['protectors']}),
+            expression: dam.parts.expressions.find({name: map['expression']})
+        });
     });
+    data.setOffenses(offenses);
 
-    $.each([
-	'クラウンアイスワンド'
-    ], function(i, v){
-	data.addWeapons(dam.parts.weapons.find({name: v}));
-    });
-    
-    $.each([
-	'裸'
-    ], function(i, v){
-	data.addProtectors(dam.parts.protectors.find({name: v}));
-    });
-    
-    $.each([
-        'int500',
-        'int600',
-        'int700',
-        'int800',
-        'int900'
-    ], function(i, v){
-        data.addBody(dam.parts.bodies.find({name: v}));
-    });
-
+    var defenses = [];
     $.each([
 	'ゴールドボーンファイター'
         ], function(i, v){
-            data.addMob(dam.parts.mobs.find({name: v}));
+            defenses.push({
+                mob: dam.parts.mobs.find({name: v})
+            });
 	});
+    data.setDefenses(defenses);
     
     context.setDamageData(data);
     context.setRowFields([dam.fields.BODY]);
