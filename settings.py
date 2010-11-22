@@ -107,6 +107,7 @@ damage_js = core_js + (
     'damage/dam.js',
 
     'damage/util.js',
+    'damage/jquery.binding.js',
 
     # Model
     'damage/character.js',
@@ -123,6 +124,8 @@ damage_js = core_js + (
     'damage/expressions.js',
 
     # View
+    'damage/offensesview.js',
+
     'damage/damagetable.js',
     'damage/menu.js',
     'damage/help.js',

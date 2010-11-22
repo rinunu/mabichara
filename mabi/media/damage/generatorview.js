@@ -1,6 +1,10 @@
 
 /**
- * Condition を自動生成するためのビュー
+ * ダメージデータ設定用のビュー
+ *
+ * データは offenses と defenses からなる。
+ * defenses は body, 防具(equipmentSet), 武器(equipment), expression からなる。
+ * それぞれ OffensesView, MobsView にて設定を行う。
  */
 mabi.GeneratorView = function($element){
     this.$element_ = $element;
@@ -9,65 +13,43 @@ mabi.GeneratorView = function($element){
 	    autoOpen: false,
 	    width: 900,
 	    height: 700,
-	    buttons: {"設定する": function() {
-		dam.context.update();
-	    }}
+	    buttons: {"設定する": util.bind(this, this.apply)}
 	});
 
-    // $(':checkbox', this.$element_).button();
-    $('.flags', this.$element_).buttonset();
+    this.offensesView_ = new mabi.OffensesView($('#tabs1_offenses'));
 };
 
-mabi.GeneratorView.prototype.show = function(){
+mabi.GeneratorView.prototype.show = function(context){
+    this.context_ = context;
+    this.offensesView_.show(this.createOffenses());
     this.$element_.dialog('open');
-
-    dam.initializeSelect($('select.weapon', this.$element_), mabi.equipments);
-    dam.initializeSelect($('select.title', this.$element_), mabi.titles);
-
-    // todo 最初の 1回だけ
-    var $vars = [$('.var0', this.$element_),
-		$('.var1', this.$element_)];
-    $.each($vars, function(i, $var){
-	       new mabi.VariableControl($var);
-	   });
 };
-
 
 // ----------------------------------------------------------------------
-// 可変部編集コントロール
+// private
 
 /**
- * 可変部を編集するためのコントロール
+ * DamageData をもとに offenses を作成する
  */
-mabi.VariableControl = function($element){
-    this.$element_ = $element;
-    var $type = $('select.type', this.$element_);
+mabi.GeneratorView.prototype.createOffenses = function(){
+    var damageData = this.context_.damageData();
+    console.assert(damageData instanceof mabi.OffenseDefenseDamageData);
 
-    var types = {};
-    $.each([{id: '', label: ''},
-	    {id: 'weapon', label: '武器', type: 'select', items: dam.weapons},
-	    {id: 'int', label: 'Int', type: 'number'}], 
-	   function(i, v){
-	       types[v.id] = v;
-	   });
+    var offenses = new mabi.Collection;
+    var map = []; // 重複チェック用
+    $.each(damageData.offenses(), function(i, offense){
+        offenses.push(offense);
+    });
+    return offenses;
+};
 
-    $type.empty();
-    $.each(types, function(i, v){
-	       $('<option />').val(v.id).text(v.label).data('model', v).appendTo($type);
-	   });
-
-    $type.change(function(){
-		     var type = types[$(this).val()];
-		     console.log(type);
-		     var $detail = $('.detail', $element);
-		     $detail.empty();
-		     if(type.type == 'select'){
-			 var $select = $('<select multiple size="5"/>').appendTo($detail);
-			 dam.initializeSelect($select, type.items);
-		     }
-		});
-    
-    // var $select = $('<select multiple size="5"/>').appendTo($element_);
-    // dami.initializeSelect($select, dam.weapons);
+/**
+ * 設定を確定する
+ */
+mabi.GeneratorView.prototype.apply = function(){
+    var damageData = this.context_.damageData();
+    damageData.setOffenses(this.offensesView_.data());
+    this.context_.update();
+    this.$element_.dialog('close');
 };
 

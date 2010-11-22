@@ -27,7 +27,7 @@ mabi.ElementBuilder.mob = function(options){
 };
 
 /**
- * Body を作成する
+ * deprecated Body を作成する
  */
 mabi.ElementBuilder.body = function(dto){
     var body = new mabi.Body(dto);

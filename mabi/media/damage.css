@@ -61,33 +61,31 @@ td.damage{
 }
 
 /* ---------------------------------------------------------------------- */
-/* Generator */
+/* Conditions */
 
-.generator .buttons{
+.conditions .buttons{
     float: right;
 }
 
-.generator select.character{
+.conditions select.condition{
     width: 500px;
 }
 
-.generator .input div{
+.conditions .input div{
     float: left;
 }
 
-.generator .input select{
+.conditions .input select{
     display: block;
     margin: 5px;
     height: 100px;
 }
 
-.generator .input a{
+.conditions .input a{
     font-size: 8px;
     text-decoration: underline;
 }
 
-.generator .input{
+.conditions .input{
     overflow: hidden;
 }
-
-

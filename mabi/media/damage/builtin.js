@@ -90,13 +90,14 @@ dam.setDefaultParts = function(context){
     });
 
     // bodies
-    var stats = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+    var values = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+    var names = ['str', 'dex', 'int'];
     var template = {effects:{}};
-    $.each(stats, function(i, v){
-        template.name = 'int' + v;
-        // template.str = v;
-        // template.dex = v;
-        template.effects['int'] = v;
+    dam.combination([['name', names], ['value', values]], function(map){
+        var name = map['name'];
+        var value = map['value'];
+        template.name = name + value;
+        template.effects[name] = value;
         
         var body = new mabi.Body(template);
         dam.skills.each(function(i, v){
