@@ -70,10 +70,28 @@
  * 特別改造は武器によって異なる
  */
 describe('Equipment', function() {
+    var base;
+
+    beforeEach(function(){
+        base = new mabi.EquipmentClass({ug: 5, flags: ['weapon']});
+    });
+    
     it('装備種別を取得できる', function(){
-        var equipment = new mabi.EquipmentClass({flags: ['weapon']}).create();
+        var equipment = base.create();
         expect(equipment.is('weapon')).toBeTruthy();
         expect(equipment.is('foo')).toBeFalsy();
+    });
+    
+    describe('clone 時', function(){
+        var source, clone;
+        beforeEach(function(){
+            source = base.create();
+            clone = source.clone();
+        });
+
+        it('base を共有すること', function(){
+            expect(clone.base()).toBe(base);
+        });
     });
 
 });

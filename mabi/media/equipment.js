@@ -4,8 +4,10 @@
  */
 mabi.EquipmentClass = function(options){
     mabi.Element.call(this, options);
-    this.ug_ = options.ug || 5;
-    this.flags_ = options.flags || [];
+    if(options){
+        this.ug_ = options.ug || 5;
+        this.flags_ = options.flags || [];
+    }
 };
 
 util.extend(mabi.EquipmentClass, mabi.Element);
@@ -120,7 +122,6 @@ mabi.NoEnchantedEquipment.prototype.updateName = function(){
 // Equipment
 
 mabi.Equipment = function(base){
-    console.assert(base);
     mabi.Element.call(this);
 
     var noEnchant = new mabi.NoEnchantedEquipment;
