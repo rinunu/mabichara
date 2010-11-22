@@ -55,11 +55,7 @@ mabi.Element.prototype.clone = function(){
     }
 
     // Element は parent によって相互参照が発生しているため、それをケアする
-    clone.children_ = [];
-    this.eachChild(function(element, slot){
-        clone.addChild(element.clone(), slot);
-    });
-    
+    clone.copyFrom(this);
     return clone;
 };
 
@@ -240,17 +236,21 @@ mabi.Element.prototype.param = function(param, character){
 };
 
 // ----------------------------------------------------------------------
-// protected
 
 /**
- * clone 時に clone 元と先で共有するプロパティを設定する
+ * source から child をコピーする
+ *
+ * child は clone される
+ *
+ * 以下の制限がある
+ * - 同じスロットをもつ child がある場合の挙動は未定義
  */
-mabi.Element.prototype.addSharedProperties = function(properties){
+mabi.Element.prototype.copyFrom = function(source){
     var this_ = this;
-    console.assert(properties instanceof Array);
-    $.each(properties, function(i, v){
-        this_.sharedProperties_[v] = true;
+    source.eachChild(function(element, slot){
+        this_.addChild(element.clone(), slot);
     });
+    return this;
 };
 
 /**
@@ -262,6 +262,20 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 	function(effect){
 	    this_.addEffect(effect);
 	});
+};
+
+// ----------------------------------------------------------------------
+// protected
+
+/**
+ * clone 時に clone 元と先で共有するプロパティを設定する
+ */
+mabi.Element.prototype.addSharedProperties = function(properties){
+    var this_ = this;
+    console.assert(properties instanceof Array);
+    $.each(properties, function(i, v){
+        this_.sharedProperties_[v] = true;
+    });
 };
 
 /**

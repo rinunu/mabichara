@@ -15,6 +15,29 @@ describe('Element', function() {
         });
     });
 
+    describe('copyFrom', function(){
+        var element;
+        var copy;
+        var slot1;
+        beforeEach(function(){
+            slot1 = new mabi.Element({name: 'slot1!'});
+            element = new mabi.Element;
+            element.addChild(slot1, 'slot1');
+            copy = new mabi.Element;
+            copy.copyFrom(element);
+        });
+
+        it('child がコピーされる', function(){
+            expect(copy.child('slot1').name()).toEqual('slot1!');
+            expect(copy.child('slot1').name()).toEqual('slot1!');
+        });
+        it('child は別のインスタンスになる', function(){
+            expect(copy.child('slot1')).not.toBe(slot1);
+        });
+
+    });
+
+
     describe('clone', function(){
         describe('複製時', function(){
             var clone;
