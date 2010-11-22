@@ -3,6 +3,9 @@
  * - addChild
  * - addEffect
  * - update
+ *
+ * サブクラスへの制限
+ * - 引数なしでも構築できること(clone で使用する)
  */
 mabi.Element = function(options){
     var this_ = this;
@@ -27,6 +30,37 @@ mabi.Element = function(options){
             });
         }
     }
+
+    // clone 時にインスタンスを共有するプロパティ
+    this.sharedProperties_ = {children_: true};
+};
+
+/**
+ * 深い複製を作成する
+ *
+ * parent は null とする
+ */
+mabi.Element.prototype.clone = function(){
+    var this_ = this;
+    var clone = new (this.constructor);
+    var skip = {id_: true, parent_: true};
+    
+    for(var p in this){
+        if(!this.hasOwnProperty(p) || skip[p])continue;
+        if(this.sharedProperties_[p]){
+            clone[p] = this[p];    
+        }else{
+            clone[p] = util.clone(this[p]);
+        }
+    }
+
+    // Element は parent によって相互参照が発生しているため、それをケアする
+    clone.children_ = [];
+    this.eachChild(function(element, slot){
+        clone.addChild(element.clone(), slot);
+    });
+    
+    return clone;
 };
 
 // ----------------------------------------------------------------------
@@ -93,6 +127,7 @@ mabi.Element.prototype.child = function(slotOrIndex){
 
 /**
  * この Element のもつ子供を列挙する
+ * @param fn function(element, slot)
  */
 mabi.Element.prototype.eachChild = function(fn){
     $.each(this.children_, function(i, v){

@@ -39,18 +39,6 @@ mabi.Effect.prototype.max = function(){
     return this.max_;
 };
 
-mabi.Effect.prototype.clone = function(){
-    new mabi.Effect(
-	{
-	    condition: this.condition_,
-	    op: this.op_,
-	    param: this.param_,
-	    min: this.min_,
-	    max: this.max_
-	});
-};
-
-
 mabi.Effect.prototype.paramText = function(){
     return this.param_;
 };
