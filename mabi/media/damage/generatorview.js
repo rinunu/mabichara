@@ -13,15 +13,19 @@ mabi.GeneratorView = function($element){
 	    autoOpen: false,
 	    width: 900,
 	    height: 700,
-	    buttons: {"設定する": util.bind(this, this.apply)}
+	    buttons: {
+                '全て削除': util.bind(this, this.reset),
+                '決定': util.bind(this, this.apply)}
 	});
 
     this.offensesView_ = new mabi.OffensesView($('#tabs1_offenses'));
+    this.defensesView_ = new mabi.DefensesView($('#tabs1_defenses'));
 };
 
 mabi.GeneratorView.prototype.show = function(context){
     this.context_ = context;
-    this.offensesView_.show(this.createOffenses());
+    this.offensesView_.show(context.damageData().offenses());
+    this.defensesView_.show(context.damageData().defenses());
     this.$element_.dialog('open');
 };
 
@@ -29,27 +33,24 @@ mabi.GeneratorView.prototype.show = function(context){
 // private
 
 /**
- * DamageData をもとに offenses を作成する
- */
-mabi.GeneratorView.prototype.createOffenses = function(){
-    var damageData = this.context_.damageData();
-    console.assert(damageData instanceof mabi.OffenseDefenseDamageData);
-
-    var offenses = new mabi.Collection;
-    var map = []; // 重複チェック用
-    $.each(damageData.offenses(), function(i, offense){
-        offenses.push(offense);
-    });
-    return offenses;
-};
-
-/**
  * 設定を確定する
  */
 mabi.GeneratorView.prototype.apply = function(){
     var damageData = this.context_.damageData();
     damageData.setOffenses(this.offensesView_.data());
+    damageData.setDefenses(this.defensesView_.data());
+    
     this.context_.update();
     this.$element_.dialog('close');
+};
+
+/**
+ * 全て削除
+ */
+mabi.GeneratorView.prototype.reset = function(){
+    var damageData = this.context_.damageData();
+
+    this.offensesView_.show([]);
+    this.defensesView_.show([]);
 };
 

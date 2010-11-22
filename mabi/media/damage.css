@@ -89,3 +89,22 @@ td.damage{
 .conditions .input{
     overflow: hidden;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Conditions */
+
+.defenses-view{
+    overflow: hidden;
+}
+
+.defenses-view .buttons{
+    float: right;
+}
+
+.defenses-view select{
+    display: block;
+    margin: 5px;
+    height: 100px;
+    min-width: 400px;
+}
+

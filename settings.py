@@ -125,6 +125,7 @@ damage_js = core_js + (
 
     # View
     'damage/offensesview.js',
+    'damage/defensesview.js',
 
     'damage/damagetable.js',
     'damage/menu.js',

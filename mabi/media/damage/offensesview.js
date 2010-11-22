@@ -13,6 +13,10 @@ mabi.OffensesView = function($element){
     this.$expression_ = $element.find('select.expression');
     this.$offenses_ = $element.find('select.condition');
 
+    $element.find('a.edit').click(function(){
+        alert('未実装');
+    });
+
     $element.find('button.add').click(function(){
         this_.addOffenses();
     });
@@ -29,7 +33,10 @@ mabi.OffensesView = function($element){
 mabi.OffensesView.prototype.show = function(offenses){
     var this_ = this;
     var $element = this.$element_;
-    this.offenses_ = offenses;
+    this.offenses_ = new mabi.Collection;
+    $.each(offenses, function(i, offense){
+        this_.offenses_.push(offense);
+    });
 
     $.each([
         [this.$body_, dam.parts.bodies],
