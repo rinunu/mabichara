@@ -3,19 +3,13 @@
  * スキル
  */
 mabi.Skill = function(options){
-    this.super_.constructor.call(this, options);
-    this.base_ = options.base;
-    this.rank_ = options.rank;
+    mabi.InstanceElement.call(this, options.base, options);
+    if(options){
+        this.rank_ = options.rank;
+    }
 };
 
-util.extend(mabi.Skill, mabi.Element);
-
-/**
- * SkillClass を取得する
- */
-mabi.Skill.prototype.base = function(){
-    return this.base_;
-};
+util.extend(mabi.Skill, mabi.InstanceElement);
 
 /**
  * ランクを取得する

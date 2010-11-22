@@ -58,6 +58,10 @@ describe('Skill', function() {
             skill2 = base.create(2);
         });
         
+        it('base を取得できること', function(){
+            expect(skill1.base()).toBe(base);
+        });
+        
         it('ランクを取得できること', function(){
             expect(skill1.rank()).toEqual(1);
             expect(skill2.rank()).toEqual(2);

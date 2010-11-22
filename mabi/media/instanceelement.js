@@ -5,8 +5,8 @@
  *
  * base にクラスを保持する
  */
-mabi.InstanceElement = function(base){
-    mabi.Element.call(this);
+mabi.InstanceElement = function(base, options){
+    mabi.Element.call(this, options);
     if(base){
         this.setName(base.name());
         this.base_ = base;
