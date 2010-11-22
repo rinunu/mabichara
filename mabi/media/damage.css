@@ -63,35 +63,35 @@ td.damage{
 /* ---------------------------------------------------------------------- */
 /* Conditions */
 
-.conditions .buttons{
+.offenses-view .buttons{
     float: right;
 }
 
-.conditions select.condition{
-    width: 500px;
+.offenses-view select.condition{
+    width: 800px;
 }
 
-.conditions .input div{
+.offenses-view .input div{
     float: left;
 }
 
-.conditions .input select{
+.offenses-view select{
     display: block;
     margin: 5px;
-    height: 100px;
+    height: 150px;
 }
 
-.conditions .input a{
+.offenses-view .input a{
     font-size: 8px;
     text-decoration: underline;
 }
 
-.conditions .input{
+.offenses-view .input{
     overflow: hidden;
 }
 
 /* ---------------------------------------------------------------------- */
-/* Conditions */
+/* defenses-view */
 
 .defenses-view{
     overflow: hidden;

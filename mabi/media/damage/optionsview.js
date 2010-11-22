@@ -10,7 +10,7 @@ mabi.OptionsView = function($element){
 	    autoOpen: false,
 	    width: 500,
 	    height: 500,
-	    buttons: {'設定する': util.bind(this, this.submit)}
+	    buttons: {'決定': util.bind(this, this.submit)}
 	});
 
     this.source_ = [];
