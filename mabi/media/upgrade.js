@@ -32,19 +32,20 @@ mabi.UpgradeClass.prototype.proficiency = function(){
 // Upgrade
 
 mabi.Upgrade = function(base){
-    mabi.Element.call(this, {name: base.name()});
-    this.base_ = base;
+    mabi.InstanceElement.call(this, base);
 
-    this.copyEffectsFrom(base);
+    if(base){
+        this.copyEffectsFrom(base);
+    }
 };
 
-util.extend(mabi.Upgrade, mabi.Element);
+util.extend(mabi.Upgrade, mabi.InstanceElement);
 
 (function(){
      // いくつかの移譲メソッドを作成する
      $.each(['ug', 'proficiency', 'cost'], function(i, name){
 		mabi.Upgrade.prototype[name] = function(){
-		    return this.base_[name]();
+		    return this.base()[name]();
 		};
 	    });
 })();

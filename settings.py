@@ -70,7 +70,8 @@ core_js = common_js + (
     'enchant.js',
     'title.js',
     'mob.js',
-
+    'upgrade.js',
+    
     'alchemy.js',
 
     'store.js',
@@ -83,7 +84,6 @@ main_js = common_js + (
      # Model
      'character.js',
      'inventory.js',
-     'upgrade.js',
 
      'equipmentstore.js',
 
@@ -161,6 +161,7 @@ MEDIA_BUNDLES = (
      'spec/EquipmentSpec.js',
      'spec/SkillSpec.js',
      'spec/EnchantSpec.js',
+     'spec/UpgradeSpec.js',
 
      # damage
      'spec/ExpressionSpec.js',
