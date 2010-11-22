@@ -3,6 +3,7 @@
  * Character, Attack 等の組み合わせを作成するビュー
  */
 mabi.OffensesView = function($element){
+    var this_ = this;
     console.assert($element instanceof jQuery);
     this.$element_ = $element;
 
@@ -11,6 +12,13 @@ mabi.OffensesView = function($element){
     this.$weapons_ = $element.find('select.weapon');
     this.$expression_ = $element.find('select.expression');
     this.$offenses_ = $element.find('select.condition');
+
+    $element.find('button.add').click(function(){
+        this_.addOffenses();
+    });
+    $element.find('button.remove').click(function(){
+        this_.offenses_.remove(this_.$offenses_.binding('selectedItems'));
+    });
 };
 
 /**
@@ -25,21 +33,13 @@ mabi.OffensesView.prototype.show = function(offenses){
 
     $.each([
         [this.$body_, dam.parts.bodies],
-        [this.$protectors_,  dam.parts.protectors],
+        [this.$protectors_, dam.parts.protectors],
         [this.$weapons_, dam.parts.weapons],
         [this.$expression_, dam.parts.expressions]
     ], function(i, v){
         v[0].binding({source: v[1]});
     });
-
     this.$offenses_.binding({source: this.offenses_});
-
-    $element.find('button.add').click(function(){
-        this_.addOffenses();
-    });
-    $element.find('button.remove').click(function(){
-        this_.offenses_.remove(this_.$offenses_.binding('selectedItems'));
-    });
 
     // 見た目の定義
     $('select', $element).binding('itemTemplate', function(item){
