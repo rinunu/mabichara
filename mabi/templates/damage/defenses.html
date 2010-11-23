@@ -1,31 +1,35 @@
 <div class="defenses-view">
   <div class="guide">
-    <p>攻撃対象となる MOB を設定します</p>
+    <p>ここでは攻撃対象となるモンスターを設定します。</p>
+    <p>攻撃条件画面で設定した攻撃は、ここで設定したモンスターに対して実行されます。</p>
   </div>
 
   <div>
-    <h3>追加する MOB </h3>
-    <div class="input">
-      <select class="mob" multiple>
-	<option value="">ガストさん</option>
-	<option value="">グールさん</option>
-      </select>
-    </div>
-  </div>
-  <div class="buttons">
-    <button class="add">追加</button>
-  </div>
-
-  <div>
-    <h3>追加された MOB </h3>
+    <h3>使用中のモンスター</h3>
     <div>
       <select class="defenses" multiple>
 	<option value="">ガストさん</option>
 	<option value="">グールさん</option>
       </select>
       <div class="buttons">
-	<button class="remove">削除</button>
+	<button class="remove">取り除く</button>
       </div>
     </div>
   </div>
+
+  <div>
+    <h3>追加するモンスター</h3>
+    <div class="input">
+      <select class="mob" multiple>
+	<option value="">ガストさん</option>
+	<option value="">グールさん</option>
+      </select>
+    </div>
+    <a class="edit">この一覧を編集</a>
+    <div class="buttons">
+      <button class="add">追加</button>
+    </div>
+
+  </div>
+
 </div>

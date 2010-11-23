@@ -191,8 +191,6 @@ mabi.Context.prototype.each_ = function(fields, fn){
 
 // ----------------------------------------------------------------------
 
-
-
 dam.fields = {};
 dam.fields.BODY = {
     id: 'body',
@@ -212,6 +210,11 @@ dam.fields.MOB = {
 dam.fields.PROTECTORS = {
     id: 'protectors',
     label: '防具'
+};
+
+dam.fields.TITLE = {
+    id: 'title',
+    label: 'タイトル'
 };
 
 dam.fields.WEAPONS = {

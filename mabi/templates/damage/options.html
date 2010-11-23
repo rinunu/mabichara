@@ -1,41 +1,54 @@
 
-<div class="options-view">
+<div class="options-view" title="表示設定">
   <div class="guide">
-    <p> ここでは表の表示設定を行ないます。</p>
+    <p>表・グラフの表示設定を行ないます</p>
   </div>
 
-  <select class="source" multiple>
-    <option>キャラクター</option>
-    <option>装備</option>
-    <option>Mob</option>
-    <option>攻撃種別</option>
-  </select>
+  <h3>軸の表示項目</h3>
+  <div class="axis">
+    <div class="source">
+      <label>未使用の項目</label>
+      <select class="source" multiple>
+	<option>キャラクター</option>
+	<option>装備</option>
+	<option>Mob</option>
+	<option>攻撃種別</option>
+      </select>
+    </div>
 
-  <div>
-    <button class="add-row">縦軸へ追加</button>
-    <button class="add-column">横軸へ追加</button>
+    <div class="rows">
+      <label>縦軸の項目</label>
+      <button class="add-row">縦軸へ追加</button>
+      <select class="rows" multiple>
+	<option value="">装備</option>
+	<option value="">攻撃種別</option>
+	<option value=""></option>
+	<option value=""></option>
+	<option value=""></option>
+      </select>
+    </div>
+
+    <div class="columns">
+      <label>横軸の項目</label>
+      <button class="add-column">横軸へ追加</button>
+      <select class="columns" multiple>
+	<option value="">キャラクター</option>
+	<option value="">MOB</option>
+	<option value=""></option>
+	<option value=""></option>
+	<option value=""></option>
+      </select>
+    </div>
   </div>
 
+  <h3>計算内容(未実装)</h3>
   <div>
-    <select class="rows" multiple>
-      <option value="">装備</option>
-      <option value="">攻撃種別</option>
-      <option value=""></option>
-      <option value=""></option>
-      <option value=""></option>
+    <select>
+      <option value="">期待値</option>
+      <option value="">最大値</option>
+      <option value="">最小値</option>
+      <option value="">期待値/秒</option>
     </select>
-
-    <select class="columns" multiple>
-      <option value="">キャラクター</option>
-      <option value="">MOB</option>
-      <option value=""></option>
-      <option value=""></option>
-      <option value=""></option>
-    </select>
   </div>
 
-  <div>
-    <button class="reset">リセット</button>
-  </div>
-  
 </div>

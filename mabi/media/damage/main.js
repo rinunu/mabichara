@@ -29,6 +29,7 @@ dam.initializeView = function(){
         protectors: new mabi.Collection(),
         expressions: new mabi.Collection(),
         bodies: new mabi.Collection(),
+        titles: new mabi.Collection(),
         mobs: new mabi.Collection()
     };
     dam.setDefaultParts();
@@ -37,9 +38,6 @@ dam.initializeView = function(){
     dam.setDefaultContext(dam.context);
     dam.context.update();
 
-    // ビュー
-    $('button').button();
-    $(".tabs").tabs();
     dam.help = new mabi.Help($('div.help'));
     dam.generatorView = new mabi.GeneratorView($('div.generator'));
     dam.chartView = new mabi.ChartView($('.chart-view'));
@@ -55,6 +53,11 @@ dam.initializeView = function(){
 };
 
 dam.initialize = function(){
+    // 読込中に見苦しくない程度に表示を整える
+    $('button').button();
+    $(".tabs").tabs();
+
+    
     dam.initializeModel().success(function(){
         console.log('initialized model');
         dam.initializeView();        

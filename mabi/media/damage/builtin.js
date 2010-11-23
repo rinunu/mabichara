@@ -110,7 +110,7 @@ dam.setDefaultParts = function(context){
             specials: wandSpecials
         },
         {
-            name: '両手剣',
+            name: '一般両手剣',
             upgrades: [null],
             specials: [
                 null,
@@ -129,6 +129,11 @@ dam.setDefaultParts = function(context){
         },
         {
             name: 'ファイアシリンダー',
+            upgrades: [null],
+            specials: [null]
+        },
+        {
+            name: 'タイダルウェーブシリンダー',
             upgrades: [null],
             specials: [null]
         },
@@ -162,8 +167,6 @@ dam.setDefaultParts = function(context){
     // protectors
     var protectors = [
         {name: '防具なし', effects: {}},
-        {name: 'マジックマスター', title: 'マジックマスター', effects: {}},
-        {name: 'アルケミマスター', title: 'アルケミマスター', effects: {}},
         {name: '最大100', effects: {damageMax: 100}},
         {name: '最大150', effects: {damageMax: 150}},
         {name: '最大200', effects: {damageMax: 200}},
@@ -178,8 +181,19 @@ dam.setDefaultParts = function(context){
 	var equipmentSet = new mabi.EquipmentSet();
 	equipmentSet.setName(v.name);
         equipmentSet.setHead(new mabi.EquipmentClass({effects: v.effects}).create());
-        if(v.title) equipmentSet.setTitle(dam.titles.find({name: v.title}));
 	dam.parts.protectors.push(equipmentSet);
+    });
+
+    // titles
+    dam.parts.titles.push(new mabi.Title({name: '一般タイトル'}));
+    var titles = [
+        'マジックマスター',
+        'アルケミマスター',
+        'ウォーターアルケミマスター',
+        'ファイアアルケミマスター'
+    ];
+    $.each(titles, function(i, v){
+	dam.parts.titles.push(dam.titles.find({name: v}));
     });
 
     // bodies
@@ -215,6 +229,9 @@ dam.setDefaultParts = function(context){
 	['シルバーボーンファイター', 1960, 52, 0.27],
 	['ゴールドボーンファイター', 2240, 61, 0.3],
 
+        ['グール(白色・強化)', 0, 13, 0.5],
+        ['ホローナイト(強化)', 0, 33, 0.5],
+        ['レッドゴーストキング', 0, 100, 0.7],
         ['ガスト', 12000, 800, 0.20],
         ['レッドガスト', 15000, 500, 0.20],
         ['ブルーガスト', 12000, 1000, 0.20]
@@ -236,37 +253,62 @@ dam.setDefaultParts = function(context){
 dam.setDefaultContext = function(context){
     var data = new mabi.OffenseDefenseDamageData;
 
-    var bodies = ['int500', 'int600'];
-    var weapons = ['クラウンアイスワンド'];
-    var protectors = ['防具なし'];
-    var expressions = ['IB+FB合体(2チャージ)', 'IB+FB合体(3チャージ)'];
     var offenses = [];
-    dam.combination([
-        ['body', bodies],
-        ['weapons', weapons],
-        ['protectors', protectors],
-        ['expression', expressions]
-    ], function(map){
-        offenses.push({
-            body: dam.parts.bodies.find({name: map['body']}),
-            weapons: dam.parts.weapons.find({name: map['weapons']}),
-            protectors: dam.parts.protectors.find({name: map['protectors']}),
-            expression: dam.parts.expressions.find({name: map['expression']})
-        });
-    });
+    // var bodies = ['int500', 'int600'];
+    // var weapons = ['クラウンアイスワンド'];
+    // var protectors = ['防具なし'];
+    // var titles = ['マジックマスター'];
+    // var expressions = ['IB+FB合体(2チャージ)', 'IB+FB合体(3チャージ)'];
+    // dam.combination([
+    //     ['body', bodies],
+    //     ['weapons', weapons],
+    //     ['protectors', protectors],
+    //     ['title', titles],
+    //     ['expression', expressions]
+    // ], function(map){
+    //     offenses.push({
+    //         body: dam.parts.bodies.find({name: map['body']}),
+    //         weapons: dam.parts.weapons.find({name: map['weapons']}),
+    //         protectors: dam.parts.protectors.find({name: map['protectors']}),
+    //         title: dam.parts.titles.find({name: map['title']}),
+    //         expression: dam.parts.expressions.find({name: map['expression']})
+    //     });
+    // });
+    $.each([['str0', 'スマッシュ', '最大400', '一般タイトル', '一般両手剣'],
+            ['str0', 'スマッシュ', '最大400', '一般タイトル', '一般両手剣(S3)'],
+            ['str0', 'スマッシュ', '最大400', '一般タイトル', '一般両手剣(R3)'],
+            ['int700', 'IB+FB合体(5チャージ)', '防具なし', 'マジックマスター',
+             'クラウンアイスワンド(R3)'],
+            ['int700', 'FBL', '防具なし', 'マジックマスター', 'クラウンアイスワンド(R3)']],
+           function(i, v){
+               offenses.push({
+                   body: dam.parts.bodies.find({name: v[0]}),
+                   weapons: dam.parts.weapons.find({name: v[4]}),
+                   protectors: dam.parts.protectors.find({name: v[2]}),
+                   title: dam.parts.titles.find({name: v[3]}),
+                   expression: dam.parts.expressions.find({name: v[1]})
+               });
+           });
+    
     data.setOffenses(offenses);
 
     var defenses = [];
     $.each([
-	'ゴールドボーンファイター'
-        ], function(i, v){
-            defenses.push({
-                mob: dam.parts.mobs.find({name: v})
-            });
-	});
+        'グール(白色・強化)',
+        'ホローナイト(強化)',
+        'レッドゴーストキング',
+        'ガスト',
+        'レッドガスト',
+        'ブルーガスト'
+    ], function(i, v){
+        defenses.push({
+            mob: dam.parts.mobs.find({name: v})
+        });
+    });
     data.setDefenses(defenses);
     
     context.setDamageData(data);
-    context.setRowFields([dam.fields.BODY, dam.fields.PROTECTORS]);
-    context.setColumnFields([dam.fields.WEAPONS, dam.fields.EXPRESSION, dam.fields.MOB]);
+    context.setRowFields([dam.fields.MOB]);
+    context.setColumnFields([dam.fields.BODY, dam.fields.PROTECTORS, dam.fields.TITLE,
+                             dam.fields.WEAPONS, dam.fields.EXPRESSION]);
 };

@@ -6,6 +6,7 @@ describe('Condition', function() {
     var weapons;
     var protectors;
     var body;
+    var title;
     var expression;
     var mob;
     
@@ -17,16 +18,18 @@ describe('Condition', function() {
         protectors.addChild(new mabi.EquipmentClass({effects: {str:3}}).create());
         
         body = new mabi.Body({effects: {str: 5}});
+        title = new mabi.Title({effects: {str: 7}});
         expression = new mabi.Expression(function(c){
             console.log('value!', c.character, c.mob);
             return c.character.str() + c.mob.str();
         });
-        mob = new mabi.Mob({effects: {str:7}});
+        mob = new mabi.Mob({effects: {str:11}});
 
         condition = new mabi.Condition({
             weapons: weapons,
             protectors: protectors,
             body: body,
+            title: title,
             expression: expression,
             mob: mob
         });
@@ -43,6 +46,10 @@ describe('Condition', function() {
     it('body を取得できること', function(){
         expect(condition.body()).toBe(body);
     });
+    
+    it('title を取得できること', function(){
+        expect(condition.title()).toBe(title);
+    });
 
     it('expression を取得できること', function(){
         expect(condition.expression()).toBe(expression);
@@ -53,7 +60,7 @@ describe('Condition', function() {
     });
 
     it('設定された条件から、ダメージを計算できること', function(){
-        expect(condition.value()).toEqual(1 + 3 + 5 + 7);
+        expect(condition.value()).toEqual(1 + 3 + 5 + 7 + 11);
     });
 
 });

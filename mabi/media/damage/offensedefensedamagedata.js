@@ -46,6 +46,7 @@ mabi.OffenseDefenseDamageData.prototype.records = function(){
 	    body: offense.body,
             weapons: offense.weapons,
             protectors: offense.protectors,
+            title: offense.title,
 	    expression: offense.expression,
             mob: defense.mob
 	}));

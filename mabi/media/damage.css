@@ -16,6 +16,10 @@ h1 span{
     display: none;
 }
 
+.buttons{
+    float: right;
+}
+
 /* ---------------------------------------------------------------------- */
 .app.menu{
     height: 40px;
@@ -61,11 +65,16 @@ td.damage{
 }
 
 /* ---------------------------------------------------------------------- */
-/* Conditions */
+/* Generator */
 
-.offenses-view .buttons{
-    float: right;
+.generator a.edit{
+    font-size: 8px;
+    text-decoration: underline;
+    cursor: pointer;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Conditions */
 
 .offenses-view select.condition{
     width: 800px;
@@ -79,11 +88,6 @@ td.damage{
     display: block;
     margin: 5px;
     height: 150px;
-}
-
-.offenses-view .input a{
-    font-size: 8px;
-    text-decoration: underline;
 }
 
 .offenses-view .input{
@@ -104,7 +108,37 @@ td.damage{
 .defenses-view select{
     display: block;
     margin: 5px;
-    height: 100px;
-    min-width: 400px;
+    height: 150px;
+    min-width: 600px;
 }
 
+/* ---------------------------------------------------------------------- */
+/* options-view */
+
+.options-view select{
+    min-width: 200px;
+    height: 100px;
+}
+
+.options-view .axis{
+    overflow: hidden;
+}
+
+.options-view div{
+    margin: 5px;
+}
+
+.options-view div.columns, .options-view div.rows{
+    float: left;
+}
+
+.options-view .axis select{
+    display: block;
+}
+
+/* ---------------------------------------------------------------------- */
+/* help */
+
+.help ul{
+    margin: 10px;
+}

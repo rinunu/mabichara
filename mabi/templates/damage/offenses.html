@@ -1,8 +1,29 @@
 <div class="offenses-view">
   <div class="guide">
-    <p>攻撃条件を設定します</p>
-    <p>(各セレクトボックスは、複数の項目を選択することができます)</p>
+    <p>ここではダメージを計算する攻撃条件を設定します。</p>
+    <p>下にある「追加する攻撃条件」欄で条件の組み合わせを選択し、追加ボタンを押してください。
+    (各セレクトボックスでは、複数の項目を選択することができます)</p>
+    <p>セレクトボックスにない条件を使用したいときは、「この一覧を編集」をクリックし、項目を追加してください
+      (でも、この機能は未実装なんです)</p>
   </div>
+
+
+  <h3>使用中の攻撃条件</h3>
+  <div>
+    <select name="" class="list condition" multiple>
+      <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
+      <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
+    </select>
+  </div>
+  <div class="buttons">
+    <button class="remove">取り除く</button>
+  </div>
+
+
+
+
+
+
 
   <h3>追加する攻撃条件</h3>
   <form class="input">
@@ -16,18 +37,18 @@
 	<option value="">錬金キャラ</option>
 	<option value="">魔法使い</option>
       </select>
-      <a class="edit">この一覧を編集する</a>
+      <a class="edit">この一覧を編集</a>
     </div>
 
     <div>
-      <h4>防具+タイトル</h4>
+      <h4>防具</h4>
       <select name="" class="protector" multiple>
 	<option value="">ヘボナ装備</option>
 	<option value="">ねこ装備</option>
 	<option value="">裸</option>
 	<option value="">クレシダ装備</option>
       </select>
-      <a class="edit">この一覧を編集する</a>
+      <a class="edit">この一覧を編集</a>
     </div>
     <div>
       <h4>武器</h4>
@@ -38,7 +59,13 @@
 	<option value="">アイスワンド</option>
 	<option value="">ファイアシリンダー</option>
       </select>
-      <a class="edit">この一覧を編集する</a>
+      <a class="edit">この一覧を編集</a>
+    </div>
+    <div>
+      <h4>タイトル</h4>
+      <select name="" class="title" multiple>
+      </select>
+      <a class="edit">この一覧を編集</a>
     </div>
     <div>
       <h4>攻撃手段</h4>
@@ -52,22 +79,12 @@
 	<option value="">ウォーターキャノン(4チャージ)</option>
 	<option value="">ウォーターキャノン(5チャージ)</option>
       </select>
-      <a class="edit">この一覧を編集する</a>
+      <a class="edit">この一覧を編集</a>
 
     </div>
   </form>
   <div class="buttons">
-    <button class="add">選択した組み合わせで攻撃条件を追加</button>
+    <button class="add">追加</button>
   </div>
 
-  <h3>追加された攻撃条件</h3>
-  <div>
-    <select name="" class="list condition" multiple>
-      <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
-      <option value="">脳筋キャラ(Str300) ヘボナ装備</option>
-    </select>
-  </div>
-  <div class="buttons">
-    <button class="remove">削除</button>
-  </div>
 </div>

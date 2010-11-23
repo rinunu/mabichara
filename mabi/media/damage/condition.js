@@ -8,13 +8,14 @@ mabi.Condition = function(options){
     var equipmentSet = new mabi.EquipmentSet;
     equipmentSet.copyFrom(this.weapons_.clone());
     equipmentSet.copyFrom(this.protectors_.clone());
+    equipmentSet.addChild(this.title_, 'title');
     
     this.character_ =  new mabi.Character;
     this.character_.setBody(this.body_);
     this.character_.setEquipmentSet(equipmentSet);
 };
 
-mabi.Condition.NAMES = ['weapons', 'protectors', 'body', 'expression', 'mob'];
+mabi.Condition.NAMES = ['weapons', 'protectors', 'body', 'title', 'expression', 'mob'];
 
 /**
  * ダメージを計算する

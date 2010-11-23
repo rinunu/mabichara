@@ -10,12 +10,9 @@ mabi.OffensesView = function($element){
     this.$body_ = $element.find('select.body');
     this.$protectors_ = $element.find('select.protector');
     this.$weapons_ = $element.find('select.weapon');
+    this.$title_ = $element.find('select.title');
     this.$expression_ = $element.find('select.expression');
     this.$offenses_ = $element.find('select.condition');
-
-    $element.find('a.edit').click(function(){
-        alert('未実装');
-    });
 
     $element.find('button.add').click(function(){
         this_.addOffenses();
@@ -42,6 +39,7 @@ mabi.OffensesView.prototype.show = function(offenses){
         [this.$body_, dam.parts.bodies],
         [this.$protectors_, dam.parts.protectors],
         [this.$weapons_, dam.parts.weapons],
+        [this.$title_, dam.parts.titles],
         [this.$expression_, dam.parts.expressions]
     ], function(i, v){
         v[0].binding({source: v[1]});
@@ -56,7 +54,7 @@ mabi.OffensesView.prototype.show = function(offenses){
             return item.name();
         }else{ // item = offense
             var a = [];
-            $.each(['body', 'protectors', 'weapons', 'expression'], function(i, v){
+            $.each(['body', 'protectors', 'weapons', 'title', 'expression'], function(i, v){
                 a.push(item[v].name());
             });
             return a.join('/');
@@ -83,7 +81,7 @@ mabi.OffensesView.prototype.data = function(){
  */
 mabi.OffensesView.prototype.addOffenses = function(){
     var this_ = this;
-    var names = ['body', 'protectors', 'weapons', 'expression'];
+    var names = ['body', 'protectors', 'weapons', 'title', 'expression'];
 
     var source = []; // combination 作成用ソース
     try{

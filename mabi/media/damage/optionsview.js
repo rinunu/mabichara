@@ -9,8 +9,10 @@ mabi.OptionsView = function($element){
 	{
 	    autoOpen: false,
 	    width: 500,
-	    height: 500,
-	    buttons: {'決定': util.bind(this, this.submit)}
+	    height: 600,
+	    buttons: {
+                'リセット': util.bind(this, this.reset),
+                '決定': util.bind(this, this.submit)}
 	});
 
     this.source_ = [];
@@ -21,12 +23,6 @@ mabi.OptionsView = function($element){
     $.each(['rows', 'columns'], function(i, v){
 	var $select = $('select.' + v, this_.$element_);
 	$select.data('source', function(){return this_[v + '_'];});
-    });
-
-    $('.reset', $element).click(function(){
-	this_.columns_ = [];
-	this_.rows_ = [];
-	this_.updateUi();
     });
 
     $source = $('select.source', $element);
@@ -67,6 +63,15 @@ mabi.OptionsView.prototype.submit = function(){
     this.context_.update();
 
     this.$element_.dialog('close');
+};
+
+/**
+ * 
+ */
+mabi.OptionsView.prototype.reset = function(){
+    this.columns_ = [];
+    this.rows_ = [];
+    this.updateUi();
 };
 
 /**

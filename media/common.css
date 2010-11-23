@@ -181,6 +181,14 @@ table.selectable tr:hover{
     background-color: #fee;
 }
 
+.hidden{
+    display: none;
+}
+
+p{
+    margin: 5px;
+}
+
 /* ---------------------------------------------------------------------- */
 /* form 
  *

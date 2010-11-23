@@ -99,7 +99,7 @@ mabi.EquipmentStore.prototype.load = function(){
             flags: ['cooking']
         },
         {
-            name: '両手剣',
+            name: '一般両手剣',
             flags: ['weapon', 'twoHand']
         },
 
@@ -134,9 +134,17 @@ mabi.EquipmentStore.prototype.load = function(){
         },
         {
             name: 'ボルケーノシリンダー',
-            flags: ['weapon', 'twoHand'],
+            flags: ['weapon', 'rightHand'],
             effects: {
                 weaponFireAlchemyEfficiency: 0.30
+                // 不明
+            }
+        },
+        {
+            name: 'タイダルウェーブシリンダー',
+            flags: ['weapon', 'rightHand'],
+            effects: {
+                weaponWaterAlchemyEfficiency: 0.30
                 // 不明
             }
         }

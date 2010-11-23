@@ -11,12 +11,16 @@ mabi.GeneratorView = function($element){
     this.$element_.dialog(
 	{
 	    autoOpen: false,
-	    width: 900,
-	    height: 750,
+	    width: 1000,
+	    height: 800,
 	    buttons: {
                 '全て削除': util.bind(this, this.reset),
                 '決定': util.bind(this, this.apply)}
 	});
+
+    $element.find('a.edit').click(function(){
+        alert('まだ未実装なんです');
+    });
 
     this.offensesView_ = new mabi.OffensesView($('#tabs1_offenses'));
     this.defensesView_ = new mabi.DefensesView($('#tabs1_defenses'));

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load media %}
 
-{% block title %}マビノギ ダメージ計算{% endblock %}
+{% block title %}マビノギ ダメージけいさんき{% endblock %}
 
 {% block logo %}
 <img>
@@ -23,7 +23,7 @@
 <ul class="app menu">
   <li><a class="generator">ダメージデータの設定</a>
   <li><a class="options">表示設定</a>
-  <li><a class="chart">チャート表示</a>
+  <li><a class="chart">グラフの表示</a>
   <li><a class="help">ヘルプ</a>
 </ul>
 
@@ -33,11 +33,12 @@
     <tbody class=""></tbody>
   </table>
   
-  {% include "damage/options.html" %}
-  {% include "damage/generator.html" %}
-  {% include "damage/chart_view.html" %}
-  {% include "damage/help.html" %}
-
+  <div class="hidden">
+    {% include "damage/options.html" %}
+    {% include "damage/generator.html" %}
+    {% include "damage/chart_view.html" %}
+    {% include "damage/help.html" %}
+  </div>
 </div>
 
 
