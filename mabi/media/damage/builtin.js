@@ -21,8 +21,8 @@ dam.name = function(name, upgrade, special){
 dam.setDefaultParts = function(context){
     // Expression
     // var generator = 'max';
-    // var generator = 'maxCritical';
-    var generator = 'criticalExpectation';
+    var generator = 'maxCritical';
+    // var generator = 'criticalExpectation';
     var ib = dam.skills.ICEBOLT;
     var fb = dam.skills.FIREBOLT;
     var lb = dam.skills.LIGHTNING_BOLT;
@@ -167,6 +167,34 @@ dam.setDefaultParts = function(context){
     // protectors
     var protectors = [
         {name: '防具なし', effects: {}},
+        {name: '火練金ダメ59', effects: {fireAlchemyDamage:
+                                         13 // シリンダー改造
+                                         + 12 // シリンダーp: シナジー
+                                         + 8 // 足p: 熱い
+                                         + 6 * 2 // アクセp 加熱された
+                                         + 6 // 頭s: 火炎
+                                         + 5 // 手p: スパーク
+                                         + 3 // 盾p: スチーム
+                                        }},
+        {name: '水練金133', effects: {waterAlchemyDamage:
+                                      27 // シリンダー改造
+                                      + 27 + 7 // シリンダー: 湿った/リプル
+                                      + 7 // 足: /リプル
+                                      + (9 + 10) * 2 // アクセp 透明な/タイダル
+                                      + 7 // 頭: /リプル
+                                      + 7 // 手: /リプル
+                                      + 6 + 7 // 盾: スチーム/リプル
+                                     }},
+        {name: 'クレシダ+火練金59', effects: {
+            fireAlchemyDamage: 13 + 12 + 8 + 6 * 2 + 6 + 5 + 3,
+            waterCannonDamage: 0.15,
+            flameBurstDamage: 0.15
+        }},
+        {name: 'クレシダ+水練金133', effects: {
+            waterAlchemyDamage: 133,
+            waterCannonDamage: 0.15,
+            flameBurstDamage: 0.15
+        }},
         {name: '最大100', effects: {damageMax: 100}},
         {name: '最大150', effects: {damageMax: 150}},
         {name: '最大200', effects: {damageMax: 200}},
@@ -279,7 +307,8 @@ dam.setDefaultContext = function(context){
             ['str0', 'スマッシュ', '最大400', '一般タイトル', '一般両手剣(R3)'],
             ['int700', 'IB+FB合体(5チャージ)', '防具なし', 'マジックマスター',
              'クラウンアイスワンド(R3)'],
-            ['int700', 'FBL', '防具なし', 'マジックマスター', 'クラウンアイスワンド(R3)']],
+            ['int700', 'FBL', '防具なし', 'マジックマスター', 'クラウンアイスワンド(R3)'],
+            ['str0', 'ヒートバスター', '防具なし', 'アルケミマスター', 'タワーシリンダー']],
            function(i, v){
                offenses.push({
                    body: dam.parts.bodies.find({name: v[0]}),
