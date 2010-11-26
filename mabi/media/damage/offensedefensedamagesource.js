@@ -1,4 +1,4 @@
-mabi.OffenseDefenseDamageData = function(){
+mabi.OffenseDefenseDamageSource = function(){
     this.offenses_ = [];
     this.defenses_ = [];
 };
@@ -6,35 +6,35 @@ mabi.OffenseDefenseDamageData = function(){
 /**
  * 
  */
-mabi.OffenseDefenseDamageData.prototype.offenses = function(){
+mabi.OffenseDefenseDamageSource.prototype.offenses = function(){
    return this.offenses_; 
 };
 
 /**
  * 
  */
-mabi.OffenseDefenseDamageData.prototype.setOffenses = function(value){
+mabi.OffenseDefenseDamageSource.prototype.setOffenses = function(value){
    this.offenses_ = value;
 };
 
 /**
  * 
  */
-mabi.OffenseDefenseDamageData.prototype.defenses = function(){
+mabi.OffenseDefenseDamageSource.prototype.defenses = function(){
    return this.defenses_; 
 };
 
 /**
  * 
  */
-mabi.OffenseDefenseDamageData.prototype.setDefenses = function(value){
+mabi.OffenseDefenseDamageSource.prototype.setDefenses = function(value){
    this.defenses_ = value;
 };
 
 // ----------------------------------------------------------------------
 // override
 
-mabi.OffenseDefenseDamageData.prototype.records = function(){
+mabi.OffenseDefenseDamageSource.prototype.records = function(){
     var result = [];
     dam.combination([
 	['offense', this.offenses_],

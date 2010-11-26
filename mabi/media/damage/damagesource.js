@@ -4,12 +4,12 @@
  *
  * 実装はサブクラスにて行う
  */
-mabi.DamageData = function(){
+mabi.DamageSource = function(){
 };
 
 /**
  * ダメージデータを取得する
  */
-mabi.DamageData.prototype.records = function(){
+mabi.DamageSource.prototype.records = function(){
     
 };

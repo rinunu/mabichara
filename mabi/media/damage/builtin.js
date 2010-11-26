@@ -279,7 +279,7 @@ dam.setDefaultParts = function(context){
  * Context にデフォルト値を設定する
  */
 dam.setDefaultContext = function(context){
-    var data = new mabi.OffenseDefenseDamageData;
+    var data = new mabi.OffenseDefenseDamageSource;
 
     var offenses = [];
     // var bodies = ['int500', 'int600'];

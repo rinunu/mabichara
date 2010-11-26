@@ -118,8 +118,8 @@ damage_js = core_js + (
 
     'damage/equipmentstore.js',
 
-    'damage/damagedata.js',
-    'damage/offensedefensedamagedata.js',
+    'damage/damagesource.js',
+    'damage/offensedefensedamagesource.js',
 
     'damage/expressions.js',
 
