@@ -68,7 +68,7 @@ td.damage{
 /* Generator */
 
 .generator a.edit{
-    font-size: 8px;
+    font-size: 10px;
     text-decoration: underline;
     cursor: pointer;
 }
@@ -87,7 +87,7 @@ td.damage{
 .offenses-view select{
     display: block;
     margin: 5px;
-    height: 150px;
+    height: 120px;
 }
 
 .offenses-view .input{
@@ -115,9 +115,10 @@ td.damage{
 /* ---------------------------------------------------------------------- */
 /* options-view */
 
-.options-view select{
+.options-view .axis select{
     min-width: 200px;
     height: 100px;
+    display: block;
 }
 
 .options-view .axis{
@@ -132,9 +133,6 @@ td.damage{
     float: left;
 }
 
-.options-view .axis select{
-    display: block;
-}
 
 /* ---------------------------------------------------------------------- */
 /* help */

@@ -12,7 +12,7 @@ mabi.GeneratorView = function($element){
 	{
 	    autoOpen: false,
 	    width: 1100,
-	    height: 800,
+	    height: 700,
 	    buttons: {
                 '全て削除': util.bind(this, this.reset),
                 '決定': util.bind(this, this.apply)}
