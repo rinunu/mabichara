@@ -22,6 +22,9 @@ with(new mabi.DamageSpecHelper){
         // http://bassknoppix.blog94.fc2.com/blog-entry-15.html
         xit('ヘイルストーム');
 
+        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1%2F%A5%A2%A5%A4%A5%B9%A5%DE%A5%B9%A5%BF%A5%EA
+        xit('属性マスタリタイトル');
+
         describe('具体例', function(){
 	    beforeEach(function(){
 	        body_.setSkill(dam.skills.ICEBOLT, 1);
