@@ -279,7 +279,7 @@ dam.setDefaultParts = function(context){
  * Context にデフォルト値を設定する
  */
 dam.setDefaultContext = function(context){
-    var data = new mabi.OffenseDefenseDamageSource;
+    var source = new mabi.OffenseDefenseDamageSource;
 
     var offenses = [];
     // var bodies = ['int500', 'int600'];
@@ -319,7 +319,7 @@ dam.setDefaultContext = function(context){
                });
            });
     
-    data.setOffenses(offenses);
+    source.setOffenses(offenses);
 
     var defenses = [];
     $.each([
@@ -334,10 +334,15 @@ dam.setDefaultContext = function(context){
             mob: dam.parts.mobs.find({name: v})
         });
     });
-    data.setDefenses(defenses);
-    
-    context.setDamageData(data);
-    context.setRowFields([dam.fields.MOB]);
-    context.setColumnFields([dam.fields.BODY, dam.fields.PROTECTORS, dam.fields.TITLE,
-                             dam.fields.WEAPONS, dam.fields.EXPRESSION]);
+    source.setDefenses(defenses);
+
+    // damageData
+    var damageData = new mabi.DamageData;
+    damageData.setRowFields([dam.fields.MOB]);
+    damageData.setColumnFields([dam.fields.BODY, dam.fields.PROTECTORS, dam.fields.TITLE,
+                                dam.fields.WEAPONS, dam.fields.EXPRESSION]);
+    damageData.setDamageSource(source);
+
+    // context
+    context.setDamageData(damageData);
 };

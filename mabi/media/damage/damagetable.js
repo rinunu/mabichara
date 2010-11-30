@@ -7,7 +7,7 @@ mabi.DamageTable = function($table, context){
     this.$table_ = $table;
     this.context_ = context;
 
-    util.Event.bind(this.context_, this, {update: this.tableUpdate});
+    $(this.context_).bind('change', util.bind(this, this.tableUpdate));
 };
 
 mabi.DamageTable.prototype.initialize = function(){
@@ -28,7 +28,7 @@ mabi.DamageTable.prototype.update = function(){
 
     this.appendHeader();
 
-    var table = this.context_.table();
+    var table = this.context_.damageData().table();
     for(var i = 0; i < table.getNumberOfRows(); i++){
 	this.appendRow(table, i);
     }
@@ -42,9 +42,10 @@ mabi.DamageTable.prototype.update = function(){
  */
 mabi.DamageTable.prototype.appendHeader = function(){
     var $thead = $('thead', this.$table_);
+    var damageData = this.context_.damageData();
 
-    var columnFields = this.context_.columnFields();
-    var rowFields = this.context_.rowFields();
+    var columnFields = damageData.columnFields();
+    var rowFields = damageData.rowFields();
 
     var $trs = [];
 
@@ -60,7 +61,7 @@ mabi.DamageTable.prototype.appendHeader = function(){
 	$trs.push($('<tr />').appendTo($thead));
     });
     
-    var table = this.context_.table();
+    var table = damageData.table();
     for(i = 1; i < table.getNumberOfColumns(); i++){
 	$.each(table.getColumnProperty(i, 'idFields'), function(i, field){
     	    $('<th class="damage"/>').text(field.name()).appendTo($trs[i]);

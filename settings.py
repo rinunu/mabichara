@@ -119,6 +119,7 @@ damage_js = core_js + (
     'damage/equipmentstore.js',
 
     'damage/damagesource.js',
+    'damage/damagedata.js',
     'damage/offensedefensedamagesource.js',
 
     'damage/expressions.js',
@@ -173,6 +174,7 @@ MEDIA_BUNDLES = (
      'spec/ExpressionSpec.js',
      'spec/ContextSpec.js',
      'spec/ConditionSpec.js',
+     'spec/DamageDataSpec.js',
      'spec/OffenseDefenseDamageDataSpec.js',
 
      # 'spec/BuiltInEquipmentSpec.js',

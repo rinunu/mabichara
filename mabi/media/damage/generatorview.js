@@ -28,8 +28,8 @@ mabi.GeneratorView = function($element){
 
 mabi.GeneratorView.prototype.show = function(context){
     this.context_ = context;
-    this.offensesView_.show(context.damageData().offenses());
-    this.defensesView_.show(context.damageData().defenses());
+    this.offensesView_.show(context.damageData().damageSource().offenses());
+    this.defensesView_.show(context.damageData().damageSource().defenses());
     this.$element_.dialog('open');
 };
 
@@ -40,10 +40,11 @@ mabi.GeneratorView.prototype.show = function(context){
  * 設定を確定する
  */
 mabi.GeneratorView.prototype.apply = function(){
-    var damageData = this.context_.damageData();
-    damageData.setOffenses(this.offensesView_.data());
-    damageData.setDefenses(this.defensesView_.data());
-    
+    var damageSource = new mabi.OffenseDefenseDamageSource;
+    damageSource.setOffenses(this.offensesView_.data());
+    damageSource.setDefenses(this.defensesView_.data());
+
+    this.context_.damageData().setDamageSource(damageSource);
     this.context_.update();
     this.$element_.dialog('close');
 };
@@ -52,8 +53,6 @@ mabi.GeneratorView.prototype.apply = function(){
  * 全て削除
  */
 mabi.GeneratorView.prototype.reset = function(){
-    var damageData = this.context_.damageData();
-
     this.offensesView_.show([]);
     this.defensesView_.show([]);
 };

@@ -40,9 +40,10 @@ mabi.OptionsView = function($element){
 
 mabi.OptionsView.prototype.show = function(context){
     this.context_ = context;
+    var damageData = context.damageData();
 
-    this.columns_ = context.columnFields().slice(0);
-    this.rows_ = context.rowFields().slice(0);
+    this.columns_ = damageData.columnFields().slice(0);
+    this.rows_ = damageData.rowFields().slice(0);
 
     this.updateUi();
 
@@ -58,8 +59,9 @@ mabi.OptionsView.prototype.submit = function(){
 	return;
     }
 
-    this.context_.setColumnFields(this.columns_);
-    this.context_.setRowFields(this.rows_);
+    var damageData = this.context_.damageData();
+    damageData.setColumnFields(this.columns_);
+    damageData.setRowFields(this.rows_);
     this.context_.update();
 
     this.$element_.dialog('close');

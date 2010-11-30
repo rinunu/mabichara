@@ -42,5 +42,5 @@ mabi.ChartView.prototype.updateChart = function(){
  * DataTable を生成する
  */
 mabi.ChartView.prototype.createDataTable = function(){
-    return this.context_.table();
+    return this.context_.damageData().table();
 };
