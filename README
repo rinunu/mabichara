@@ -1,6 +1,5 @@
 * デプロイ
-- media を更新したら MEDIA_VERSION を更新する
-- manage.py update
+- manage.py deploy
 
 * データ更新
 - HTML キャッシュをクリアする
