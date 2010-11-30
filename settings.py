@@ -39,6 +39,7 @@ ROOT_URLCONF = 'urls'
 common_js = (
     'jquery.dataTables.min.js',
     'jquery.jsonp-2.1.2.min.js',
+    'jquery.json-2.2.min.js',
 
     # util
     'util/console.js',
@@ -138,6 +139,8 @@ damage_js = core_js + (
     # helper
     'damage/elementbuilder.js',
 
+    'damage/serializer.js',
+
     'damage/builtin.js',
 
     'damage/main.js',
@@ -161,8 +164,10 @@ MEDIA_BUNDLES = (
      'spec/SpecHelper.js',
      'spec/Builder.js',
      'spec/DamageSpecHelper.js',
+     'spec/AjaxSpecHelper.js',
 
      # core
+     'spec/EffectSpec.js',
      'spec/ElementSpec.js',
      'spec/ReferenceElementSpec.js',
      'spec/InstanceElementSpec.js',
@@ -176,6 +181,8 @@ MEDIA_BUNDLES = (
      'spec/StoreSpec.js',
 
      # damage
+     'spec/SerializerSpec.js',
+
      'spec/ExpressionSpec.js',
      'spec/ContextSpec.js',
      'spec/ConditionSpec.js',

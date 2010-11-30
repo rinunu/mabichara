@@ -5,6 +5,39 @@ mabi.Ajax = function(){
 };
 
 /**
+ * @param options {
+ *   type: method,
+ *   url,
+ *   data,
+ *   contentType: JSON で送信する場合は 'json'、それ以外の時は指定しない
+ *   success: 成功時に実行する処理。 戻り値が Command のリスナに渡される
+ * }
+ */
+mabi.Ajax.prototype.ajax = function(options){
+    var this_ =  this;
+    var url = options.url;
+    var data = options.contentType == 'json' ? $.toJSON(options.data) : options.data;
+    var cmd = new util.AsyncCommand(function(){
+	var ajaxOpt = {
+            type: options.type,
+	    url: url,
+	    data: data,
+	    success: function(json){
+		var result = options.success(json);
+		cmd.onSuccess(result);
+	    },
+	    error: function(){alert('データの読み込みに失敗しました');}
+	};
+	$.ajax(ajaxOpt);
+    }, {
+	id: options.id
+    });
+
+    cmd.execute();
+    return cmd;
+};
+
+/**
  * サーバからデータを取得する
  * 
  * 同じ URL へのリクエストは同時に実行することは出来ない。

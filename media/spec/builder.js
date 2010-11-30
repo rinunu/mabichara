@@ -46,6 +46,18 @@ mabi.Builder.prototype.equipment = function(options, flags){
     return equipment;
 };
 
+mabi.Builder.prototype.equipmentSet = function(options, flags){
+    var equipmentSet = new mabi.EquipmentSet;
+    var this_ = this;
+    $.each(['title', 'head', 'rightHand', 'leftHand', 'body'], function(i, slot){
+        var equipment = options[slot];
+        if(equipment){
+            equipmentSet.addChild(equipment, slot);
+        }
+    });
+    return equipmentSet;
+};
+
 // ES を作成する
 mabi.Builder.prototype.prefix = function(effects){
     var base = new mabi.EnchantClass({effects: effects, rank: 1, type: 'prefix'});
