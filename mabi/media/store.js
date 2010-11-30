@@ -1,13 +1,3 @@
-/**
- * マスタデータの管理を行う
- * 
- * データは以下のメソッドを持っていること
- * - id:
- * 
- * データ取得は以下の URL にて行えること
- * - 全件取得: /resourceName.json
- * - 詳細取得: /resourceName/id.json
- */
 mabi.Store = function(options){
     console.assert(options);
     this.elements_ = [];
@@ -108,7 +98,7 @@ mabi.Store.prototype.loadDetail = function(id){
     id = id.id ? id.id() : id;
 
     var e = this.has(id);
-    if(e && e.loaded()){
+    if(e && (!e.loaded || e.loaded())){
 	console.log('loadDetail キャッシュを使用します');
 	return (new util.TimerCommand).execute();
     };
@@ -132,7 +122,7 @@ mabi.Store.prototype.loadDetail = function(id){
  */
 mabi.Store.prototype.createElement = function(dto){
     console.assert(false);
-    return json;
+    return dto;
 };
 
 /**

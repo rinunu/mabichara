@@ -156,19 +156,24 @@ MEDIA_BUNDLES = (
     ('damagemain.js',) + damage_js,
 
     ('spec.js',
+     'spec/mock-ajax.js',
+
+     'spec/SpecHelper.js',
      'spec/Builder.js',
      'spec/DamageSpecHelper.js',
-     'spec/SpecHelper.js',
 
      # core
      'spec/ElementSpec.js',
      'spec/ReferenceElementSpec.js',
      'spec/InstanceElementSpec.js',
+
      'spec/BodySpec.js',
      'spec/EquipmentSpec.js',
      'spec/SkillSpec.js',
      'spec/EnchantSpec.js',
      'spec/UpgradeSpec.js',
+
+     'spec/StoreSpec.js',
 
      # damage
      'spec/ExpressionSpec.js',
