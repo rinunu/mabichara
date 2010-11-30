@@ -52,7 +52,6 @@ mabi.DamageData.prototype.table = function(){
 
 mabi.DamageData.prototype.update = function(){
     var this_ = this;
-    console.log('update');
 
     this.updateGetter();
     var getRowId = this.getRowId;

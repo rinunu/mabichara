@@ -53,7 +53,6 @@ describe('OffenseDefenseDamageSource', function(){
         source.setDefenses([{mob: mob}, {mob: mob2}]);
 
         var records = source.records();
-        console.log(records);
 
         expect(records[0]).toEqualRecord(body, weapons, protectors, title, expression, mob);
         expect(records[1]).toEqualRecord(body, weapons, protectors, title, expression, mob2);

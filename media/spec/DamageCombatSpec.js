@@ -272,7 +272,6 @@ with(new mabi.DamageSpecHelper){
                 });
                 
                 it('R改造', function(){
-                    console.log('R改造');
                     equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, rUpgrade: 0.26}));
                     expect(damage()).toEqual(155);
                 });
@@ -293,7 +292,6 @@ with(new mabi.DamageSpecHelper){
                 });
                 
                 it('R改造', function(){
-                    console.log('R改造');
                     equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26}));
 		    expect(damage()).toEqual(464);
                 });
