@@ -1,9 +1,9 @@
-// ダメージデータを offense と defense の形で保持する DamageData
+// ダメージデータを offense と defense の形で保持する DamageSource
 //
 // offense は body, 武器(equipmentSet), 防具(equipmentSet), expression からなる。
 //
 // defense は mob からなる。
-describe('OffenseDefenseDamageData', function(){
+describe('OffenseDefenseDamageSource', function(){
     beforeEach(function(){
         this.addMatchers({
             toEqualRecord: function(body, weapons, protectors, title, expression, mob){
@@ -33,8 +33,8 @@ describe('OffenseDefenseDamageData', function(){
         var mob = new mabi.Mob;
         var mob2 = new mabi.Mob;
 
-        var data = new mabi.OffenseDefenseDamageData;
-        data.setOffenses([
+        var source = new mabi.OffenseDefenseDamageSource;
+        source.setOffenses([
             {
                 body: body,
                 weapons: weapons,
@@ -50,9 +50,9 @@ describe('OffenseDefenseDamageData', function(){
                 expression: expression2
             }
         ]);
-        data.setDefenses([{mob: mob}, {mob: mob2}]);
+        source.setDefenses([{mob: mob}, {mob: mob2}]);
 
-        var records = data.records();
+        var records = source.records();
         console.log(records);
 
         expect(records[0]).toEqualRecord(body, weapons, protectors, title, expression, mob);
