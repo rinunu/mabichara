@@ -2,7 +2,7 @@
  * @param options {
  *   condition: 発動条件
  *     条件がない場合は省略
- *   op:
+ *   op: デフォルトは + 
  *   param:
  *   min:
  *   max: ゆらぎ幅が無い場合は省略する
@@ -13,7 +13,7 @@ mabi.Effect = function(options){
     };
 
     this.condition = options.condition;
-    this.op_ = options.op;
+    this.op_ = options.op || '+';
     this.param_ = options.param;
     this.min_ = options.min;
     this.max_ = options.max;

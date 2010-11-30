@@ -1,6 +1,8 @@
 
 describe('Element', function() {
+    var subject;
     beforeEach(function(){
+        subject = new mabi.Element;
     });
 
     describe('構築時', function(){
@@ -80,5 +82,71 @@ describe('Element', function() {
             });
         });
     });
+
+    describe('effects', function(){
+        describe('addEffect で Effect を追加できる', function(){
+            xit('Effect オブジェクトを指定して追加できる', function(){
+            });
+            xit('JSON を指定して追加できる', function(){
+            });
+        });
+
+        describe('eachEffect で Effect を列挙できる', function(){
+            it('自分と子供の Effect を列挙する', function(){
+                var source = [
+                    new mabi.Effect({param: 'str', min: 1}),
+                    new mabi.Effect({param: 'str', min: 3}),
+                    new mabi.Effect({param: 'dex', min: 5})
+                ];
+                subject.addEffect(source[0]);
+                subject.addEffect(source[1]);
+
+                var child = new mabi.Element();
+                child.addEffect(source[2]);
+                subject.addChild(child);
+                
+                var effects = [];
+                subject.eachEffect(function(e){effects.push(e);});
+
+                // 現状、順番は 子供 => 親となる
+                expect(effects[0]).toEqual(source[2]);
+                expect(effects[1]).toEqual(source[0]);
+                expect(effects[2]).toEqual(source[1]);
+            });
+        });
+
+    });
+
+
+    describe('flatten で子供を削除し、子供の Effect を親にマージした新しい Element を生成する', function(){
+        var parent, flat;
+        beforeEach(function(){
+            parent = new mabi.Element({name: '親'});
+            parent.addEffect({op: '+', param: 'str', min: 1});
+            
+            var child0 = new mabi.Element({name: '子供0'});
+            child0.addEffect({op: '+', param: 'str', min: 3});
+            child0.addEffect({op: '+', param: 'dex', min: 5});
+
+            var child1 = new mabi.Element({name: '子供1'});
+            child1.addEffect({op: '+', param: 'dex', min: 7});
+            parent.addChild(child0);
+            parent.addChild(child1);
+
+            flat = parent.flatten();
+        });
+
+        it('子供が削除される', function(){
+            expect(flat.childrenLength()).toEqual(0);
+        });
+        it('子供の効果が親にコピーされる', function(){
+            expect(flat.param('str')).toEqual(4);
+            expect(flat.param('dex')).toEqual(12);
+        });
+        it('ソースオブジェクトは変更されない', function(){
+            expect(parent.childrenLength()).toEqual(2);
+        });
+    });
+
 
 });

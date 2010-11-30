@@ -36,11 +36,12 @@ mabi.Element = function(options){
 };
 
 /**
- * 深い複製を作成する
+ * 複製を作成する
  *
  * parent は null とする
  */
-mabi.Element.prototype.clone = function(){
+mabi.Element.prototype.clone = function(options){
+    options = $.extend({deep: true}, options);
     var this_ = this;
     var clone = new (this.constructor);
     var skip = {id_: true, parent_: true, children_: true};
@@ -54,8 +55,11 @@ mabi.Element.prototype.clone = function(){
         }
     }
 
-    // Element は parent によって相互参照が発生しているため、それをケアする
-    clone.copyFrom(this);
+    // Element は parent によって相互参照が発生しているため、それを考慮するために、
+    // 別途コピーする
+    if(options.deep){
+        clone.copyFrom(this);
+    }
     return clone;
 };
 
@@ -171,9 +175,9 @@ mabi.Element.prototype.removeChild = function(child){
     util.Event.trigger(this, 'removeChild', [{element: node.element, slot: node.slot}]);
 };
 
-/**
- * Effect を追加する
- */
+// ----------------------------------------------------------------------
+// effects
+
 mabi.Element.prototype.addEffect = function(effect){
     if(!(effect instanceof mabi.Effect)){
         effect = new mabi.Effect(effect);
@@ -194,10 +198,6 @@ mabi.Element.prototype.eachEffect = function(fn){
 	fn(this.effects_[i]);
     }
 };
-
-// mabi.Element.prototype.children = function(){
-//     return this.children_;
-// };
 
 // ----------------------------------------------------------------------
 
@@ -262,6 +262,16 @@ mabi.Element.prototype.copyEffectsFrom = function(source){
 	function(effect){
 	    this_.addEffect(effect);
 	});
+};
+
+mabi.Element.prototype.flatten = function(){
+    var this_ = this;
+    var result = this.clone({deep: false});
+    result.effects_ = [];
+    this.eachEffect(function(effect){
+        result.effects_.push(util.clone(effect));
+    });
+    return result;
 };
 
 // ----------------------------------------------------------------------
