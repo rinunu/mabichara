@@ -215,6 +215,8 @@ mabi.Element.prototype.eachEffect = function(fn){
  * 指定したパラメータの値を設定する
  * 
  * このメソッドは addEffect のラッパーである
+ *
+ * todo 現在複数回同じ param に対して呼び出すことは出来ない
  */
 mabi.Element.prototype.setParam = function(param, value){
     this.addEffect(new mabi.Effect(
@@ -232,21 +234,22 @@ mabi.Element.prototype.setParam = function(param, value){
  */
 mabi.Element.prototype.param = function(param, character){
     var result = 0;
-    this.eachEffect(
-	function(effect){
-	    if(effect.param() == param){
-		if(effect.op() == '-'){
-		    result -= effect.min();
-		}else{
-		    result += effect.min();
-		}
+    this.eachEffect(function(effect){
+	if(effect.param() == param){
+	    if(effect.op() == '+'){
+		result += effect.min();
 	    }
-	});
+	}
+    });
     return result;
 };
 
 mabi.Element.prototype.is = function(flag){
     return this.param(flag) > 0;
+};
+
+mabi.Element.prototype.addFlag = function(flag){
+    this.setParam(flag, 1);
 };
 
 // ----------------------------------------------------------------------
