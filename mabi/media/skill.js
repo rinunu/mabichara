@@ -5,19 +5,11 @@
 mabi.Skill = function(options){
     mabi.InstanceElement.call(this, options.base, options);
     if(options){
-        this.rank_ = options.rank;
+        this.addEffect({param: 'rank', min: options.rank});
     }
 };
 
 util.extend(mabi.Skill, mabi.InstanceElement);
-
-/**
- * ランクを取得する
- * @return 1~15
- */
-mabi.Skill.prototype.rank = function(){
-    return this.rank_;
-};
 
 // 委譲メソッドを作成する
 (function(){
