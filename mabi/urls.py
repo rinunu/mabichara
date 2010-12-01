@@ -6,10 +6,8 @@ urlpatterns = patterns(
     '',
     (url(r'^simulator$', 'django.views.generic.simple.direct_to_template', {'template': 'simulator.html'}, name='simulator')),
 
-    (url(r'^damage$', 'django.views.generic.simple.direct_to_template', {'template': 'damage/damage.html'}, name='damage')),
+    (url(r'^damage$', 'django.views.generic.simple.direct_to_template', {'template': 'damage/main.html'}, name='damage')),
 
-    (url(r'^enchants$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants_ajax.html'}, name='enchants_ajax')),
-    # (r'^enchants$', 'mabi.views.enchants'),
 
     # 静的
     (url(r'^about$', 'django.views.generic.simple.direct_to_template', {'template': 'about.html'}, name='about')),
@@ -25,6 +23,4 @@ urlpatterns = patterns(
 
     (r'^titles.json$', 'mabi.views_api.titles_json'),
 
-    # 一時的なもの
-    (url(r'^enchants2$', 'django.views.generic.simple.direct_to_template', {'template': 'enchants2.html'}, name='enchants2')),
 )
