@@ -163,7 +163,7 @@ MEDIA_BUNDLES = (
      'spec/mock-ajax.js',
 
      'spec/SpecHelper.js',
-     'spec/Builder.js',
+     'spec/builder.js',
      'spec/DamageSpecHelper.js',
      'spec/AjaxSpecHelper.js',
 
