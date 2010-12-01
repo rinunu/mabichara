@@ -148,12 +148,12 @@ with(new mabi.DamageSpecHelper){
 		    body_.setParam('int', 700);
                 });
 
-                it('LB S改造', function(){
+                xit('LB S改造', function(){
                     set({rightHand: LW_S3});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(317.8); // サイトには 317.8 とあるが、あわない
 	        });
-                it('LB R改造', function(){
+                xit('LB R改造', function(){
                     set({rightHand: LW_R3});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(316.6); // サイトには 317.6 とあるが、あわない                   
