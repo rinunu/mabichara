@@ -21,16 +21,7 @@ mabi.Element = function(options){
 
     this.parent_ = null;
     if(options.effects){
-        var effects = options.effects;
-        if(effects instanceof Array){
-            $.each(effects, function(i, v){
-	        this_.addEffect(v);
-            });
-        }else{
-            $.each(effects, function(k, v){
-	        this_.setParam(k, v);
-            });
-        }
+        this.setEffects(options.effects);
     }
 
     if(options.flags){
@@ -195,6 +186,19 @@ mabi.Element.prototype.addEffect = function(effect){
         effect = new mabi.Effect(effect);
     }
     this.effects_.push(effect);
+};
+
+mabi.Element.prototype.setEffects = function(effects){
+    var this_ = this;
+    if(effects instanceof Array){
+        $.each(effects, function(i, v){
+	    this_.addEffect(v);
+        });
+    }else{
+        $.each(effects, function(k, v){
+	    this_.setParam(k, v);
+        });
+    }
 };
 
 /**

@@ -49,6 +49,19 @@ describe('Element', function() {
             });
         });
 
+        describe('setEffects で複数の effect を一度に設定できる', function(){
+            it('基本', function(){
+                subject.setEffects({
+                    str: 1,
+                    dex: 3
+                });
+                expect(subject.str()).toEqual(1);
+                expect(subject.dex()).toEqual(3);
+            });
+            xit('複数回呼び出し時の挙動');
+        });
+
+
         describe('eachEffect で Effect を列挙できる', function(){
             it('自分と子供の Effect を列挙する', function(){
                 var source = [
@@ -72,7 +85,6 @@ describe('Element', function() {
                 expect(effects[2]).toEqual(source[1]);
             });
         });
-
     });
 
     describe('flags(effects のラッパー)', function(){
