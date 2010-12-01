@@ -199,6 +199,7 @@ mabi.Element.prototype.setEffects = function(effects){
 	    this_.setParam(k, v);
         });
     }
+    return this;
 };
 
 /**

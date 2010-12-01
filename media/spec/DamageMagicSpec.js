@@ -3,10 +3,34 @@ with(new mabi.DamageSpecHelper){
     // todo 魔法とエンチャント
     // http://mbng.at.webry.info/201005/article_10.html
     describe("魔法ダメージ計算式", function() {
+        var FFW, FFW_S3, FFW245, FFW245_S3,
+            CIW, CIW150, CIW150_S3,
+            LW, LW_S3, LW_R3;
+        
         beforeEach(function(){
 	    body_ = new mabi.Body();
 	    equipmentSet_ = new mabi.EquipmentSet();
             mob_ = mob({protection: 0, defense: 0});
+
+            FFW = equipment('フェニックスファイアワンド');
+            FFW_S3 = FFW.clone().
+                setEffects({sUpgradeMax: 9});
+            FFW245 = FFW.clone().
+                setEffects({weapon_magic_damage: -0.06});
+            FFW245_S3 = FFW245.clone().
+                setEffects({sUpgradeMax: 9});
+
+            CIW = equipment('クラウンアイスワンド');
+            CIW150 = CIW.clone().
+                setEffects({weapon_magic_damage: 0.22});
+            CIW150_S3 = CIW150.clone().
+                setEffects({sUpgradeMax: 9});
+
+            LW = equipment('ライトニングワンド');
+            LW_S3 = LW.clone().
+                setEffects({sUpgradeMax: 9});
+            LW_R3 = LW.clone().
+                setEffects({rUpgrade: 0.26});
         });
 
         xit('特別改造');
@@ -53,28 +77,28 @@ with(new mabi.DamageSpecHelper){
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例1', function(){
-                    set({rightHand: equipment('クラウンアイスワンド(150式)')});
+                    set({rightHand: CIW150});
 		    expression_ = mabi.damages.skill(dam.skills.ICEBOLT, {charge: 1});
 		    expect(damage()).toEqual(181);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例2', function() {
-		    set({rightHand: equipment('フェニックスファイアワンド(245式)')});
+		    set({rightHand: FFW245});
 		    expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		    expect(damage()).toEqual(3410);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例3', function() {
-		    set({rightHand: equipment('フェニックスファイアワンド(245式 S3)')});
+		    set({rightHand: FFW245_S3});
 		    expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		    expect(damage()).toEqual(3424);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例4', function() {
-		    set({rightHand: equipment('ファイアワンド(S3)')});
+		    set({rightHand: FFW_S3});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
 		    expect(damage()).toEqual(1864);
 	        });
@@ -125,12 +149,12 @@ with(new mabi.DamageSpecHelper){
                 });
 
                 it('LB S改造', function(){
-                    set({rightHand: equipment('ライトニングワンド(S3)')});
+                    set({rightHand: LW_S3});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(317.8); // サイトには 317.8 とあるが、あわない
 	        });
                 it('LB R改造', function(){
-                    set({rightHand: equipment('ライトニングワンド(R3)')});
+                    set({rightHand: LW_R3});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(316.6); // サイトには 317.6 とあるが、あわない                   
 	        });
@@ -143,11 +167,11 @@ with(new mabi.DamageSpecHelper){
                     // 39.8 = 18 * (1 + 0.35 + 0.15 + 0.15) * (1 + 0.22) * 1.1
                     // 39.8 * 1.15
                     mob_ = mob({protection: 1, defense: 0});
-                    set({rightHand: equipment('クラウンアイスワンド(150式)')});
+                    set({rightHand: CIW150});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		    expect(damage()).toEqual(1);
 
-                    set({rightHand: equipment('クラウンアイスワンド(150式 S3)')});
+                    set({rightHand: CIW150_S3});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		    expect(damage()).toEqual(45);
 	        });

@@ -192,7 +192,6 @@ MEDIA_BUNDLES = (
      'spec/OffenseDefenseDamageDataSpec.js',
 
      # 'spec/BuiltInEquipmentSpec.js',
-     'spec/BuiltInWeaponsSpec.js',
 
      'spec/DamageBasicSpec.js',
      'spec/DamageMagicSpec.js',
