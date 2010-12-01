@@ -199,8 +199,6 @@ mabi.Element.prototype.eachEffect = function(fn){
     }
 };
 
-// ----------------------------------------------------------------------
-
 /**
  * 指定したパラメータの値を設定する
  * 
@@ -233,6 +231,10 @@ mabi.Element.prototype.param = function(param, character){
 	    }
 	});
     return result;
+};
+
+mabi.Element.prototype.is = function(flag){
+    return this.param(flag) > 0;
 };
 
 // ----------------------------------------------------------------------

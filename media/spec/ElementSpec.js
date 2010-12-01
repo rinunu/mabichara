@@ -1,5 +1,16 @@
-
 describe('Element', function() {
+    // Element は様々なデータの基底になるクラスです。
+    // 例えば Equipment、Enchant 等がこのクラスのサブクラスとなります。
+    //
+    // ■Element とサブクラスの役割分担
+    // Element: 様々なデータを統一的に処理したい場合に、このインタフェースを使用します。
+    // また、データを保持するのもこのクラスの役目です。 サブクラスは独自のデータを保持しないようにします。
+    // これはシリアライズ、DB 処理などを Element に対してのみ実装すれば済むようにするためです。
+    // (現在は統一できていません)
+    //
+    // サブクラス: 利用者がサブクラス特有の処理を行う際に、このサブクラスのインタフェースを使用します。
+    // Element の保持しているデータへアクセスしやすくするためのヘルパーメソッドなどを持ちます。
+    
     var subject;
     beforeEach(function(){
         subject = new mabi.Element;
@@ -14,6 +25,92 @@ describe('Element', function() {
         it('effects を配列で指定できる', function(){
             var element = new mabi.Element({effects: [{param: 'str', min: 100}]});
             expect(element.param('str')).toEqual(100);
+        });
+    });
+
+    describe('effects', function(){
+        describe('addEffect で Effect を追加できる', function(){
+            xit('Effect オブジェクトを指定して追加できる', function(){
+            });
+            xit('JSON を指定して追加できる', function(){
+            });
+        });
+
+        describe('eachEffect で Effect を列挙できる', function(){
+            it('自分と子供の Effect を列挙する', function(){
+                var source = [
+                    new mabi.Effect({param: 'str', min: 1}),
+                    new mabi.Effect({param: 'str', min: 3}),
+                    new mabi.Effect({param: 'dex', min: 5})
+                ];
+                subject.addEffect(source[0]);
+                subject.addEffect(source[1]);
+
+                var child = new mabi.Element();
+                child.addEffect(source[2]);
+                subject.addChild(child);
+                
+                var effects = [];
+                subject.eachEffect(function(e){effects.push(e);});
+
+                // 現状、順番は 子供 => 親となる
+                expect(effects[0]).toEqual(source[2]);
+                expect(effects[1]).toEqual(source[0]);
+                expect(effects[2]).toEqual(source[1]);
+            });
+        });
+
+    });
+
+    describe('flags(effects のラッパー)', function(){
+        describe('is でフラグをチェックできる', function(){
+            beforeEach(function(){
+                subject = new mabi.Element({effects: {
+                    flag0: 1,
+                    flag1: 0,
+                    flag2: -1
+                }});
+            });
+
+            it('数値が 0 より大きい場合、フラグを持っているとみなす', function(){
+                expect(subject.is('flag0')).toBeTruthy();
+            });
+            it('数値が 0 以下の場合、フラグを持っていないとみなす', function(){
+                expect(subject.is('flag1')).toBeFalsy();
+                expect(subject.is('flag2')).toBeFalsy();
+                expect(subject.is('flag3')).toBeFalsy();
+            });
+        });
+    });
+
+
+    describe('flatten で子供を削除し、子供の Effect を親にマージした新しい Element を生成する', function(){
+        var parent, flat;
+        beforeEach(function(){
+            parent = new mabi.Element({name: '親'});
+            parent.addEffect({op: '+', param: 'str', min: 1});
+            
+            var child0 = new mabi.Element({name: '子供0'});
+            child0.addEffect({op: '+', param: 'str', min: 3});
+            child0.addEffect({op: '+', param: 'dex', min: 5});
+
+            var child1 = new mabi.Element({name: '子供1'});
+            child1.addEffect({op: '+', param: 'dex', min: 7});
+            parent.addChild(child0);
+            parent.addChild(child1);
+
+            flat = parent.flatten();
+        });
+
+        it('子供が削除される', function(){
+            expect(flat.childrenLength()).toEqual(0);
+        });
+        it('子供の効果が親にコピーされる', function(){
+            expect(flat.param('str')).toEqual(4);
+            expect(flat.param('dex')).toEqual(12);
+        });
+        it('ソースオブジェクトは変更されない', function(){
+            expect(parent.childrenLength()).toEqual(2);
         });
     });
 
@@ -80,71 +177,6 @@ describe('Element', function() {
             it('共有プロパティは複製しないこと', function(){
                 expect(clone.shared).toBe(source.shared);
             });
-        });
-    });
-
-    describe('effects', function(){
-        describe('addEffect で Effect を追加できる', function(){
-            xit('Effect オブジェクトを指定して追加できる', function(){
-            });
-            xit('JSON を指定して追加できる', function(){
-            });
-        });
-
-        describe('eachEffect で Effect を列挙できる', function(){
-            it('自分と子供の Effect を列挙する', function(){
-                var source = [
-                    new mabi.Effect({param: 'str', min: 1}),
-                    new mabi.Effect({param: 'str', min: 3}),
-                    new mabi.Effect({param: 'dex', min: 5})
-                ];
-                subject.addEffect(source[0]);
-                subject.addEffect(source[1]);
-
-                var child = new mabi.Element();
-                child.addEffect(source[2]);
-                subject.addChild(child);
-                
-                var effects = [];
-                subject.eachEffect(function(e){effects.push(e);});
-
-                // 現状、順番は 子供 => 親となる
-                expect(effects[0]).toEqual(source[2]);
-                expect(effects[1]).toEqual(source[0]);
-                expect(effects[2]).toEqual(source[1]);
-            });
-        });
-
-    });
-
-
-    describe('flatten で子供を削除し、子供の Effect を親にマージした新しい Element を生成する', function(){
-        var parent, flat;
-        beforeEach(function(){
-            parent = new mabi.Element({name: '親'});
-            parent.addEffect({op: '+', param: 'str', min: 1});
-            
-            var child0 = new mabi.Element({name: '子供0'});
-            child0.addEffect({op: '+', param: 'str', min: 3});
-            child0.addEffect({op: '+', param: 'dex', min: 5});
-
-            var child1 = new mabi.Element({name: '子供1'});
-            child1.addEffect({op: '+', param: 'dex', min: 7});
-            parent.addChild(child0);
-            parent.addChild(child1);
-
-            flat = parent.flatten();
-        });
-
-        it('子供が削除される', function(){
-            expect(flat.childrenLength()).toEqual(0);
-        });
-        it('子供の効果が親にコピーされる', function(){
-            expect(flat.param('str')).toEqual(4);
-            expect(flat.param('dex')).toEqual(12);
-        });
-        it('ソースオブジェクトは変更されない', function(){
-            expect(parent.childrenLength()).toEqual(2);
         });
     });
 
