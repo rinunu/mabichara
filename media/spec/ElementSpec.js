@@ -28,6 +28,19 @@ describe('Element', function() {
         });
     });
 
+    describe('基本プロパティ', function(){
+        it('name で名前を取得できる', function(){
+            subject = new mabi.Element({name: 'name0'});
+            expect(subject.name()).toEqual('name0');
+        });
+        it('englishName で英語名を取得できる', function(){
+            subject = new mabi.Element({englishName: 'name0'});
+            expect(subject.englishName()).toEqual('name0');
+        });
+        xit('複数の名前');
+    });
+
+
     describe('effects', function(){
         describe('addEffect で Effect を追加できる', function(){
             xit('Effect オブジェクトを指定して追加できる', function(){

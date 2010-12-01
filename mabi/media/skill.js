@@ -36,8 +36,6 @@ mabi.SkillClass = function(options){
 
     // 0 オリジン
     this.ranks_ = options.ranks;
-
-    this.englishName_ = options.englishName;
 };
 util.extend(mabi.SkillClass, mabi.Element);
 
@@ -55,10 +53,3 @@ mabi.SkillClass.prototype.create = function(rank){
 	    effects: effects
 	});
 };
-
-/**
- */
-mabi.SkillClass.prototype.englishName = function(){
-    return this.englishName_;
-};
-

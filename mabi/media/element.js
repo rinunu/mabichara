@@ -17,6 +17,8 @@ mabi.Element = function(options){
     this.children_ = [];
     this.effects_ = [];
     this.name_ = options.name || '';
+    this.englishName_ = options.englishName;
+
     this.parent_ = null;
     if(options.effects){
         var effects = options.effects;
@@ -83,6 +85,10 @@ mabi.Element.prototype.name = function(){
 
 mabi.Element.prototype.setName = function(name){
     this.name_ = name;
+};
+
+mabi.Element.prototype.englishName = function(){
+    return this.englishName_;
 };
 
 mabi.Element.prototype.parent = function(){
