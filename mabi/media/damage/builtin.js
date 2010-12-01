@@ -213,7 +213,7 @@ dam.setDefaultParts = function(context){
     });
 
     // titles
-    dam.parts.titles.push(new mabi.Title({name: '一般タイトル'}));
+    dam.parts.titles.push((new mabi.TitleClass({name: '一般タイトル'})).create());
     var titles = [
         'マジックマスター',
         'アルケミマスター',
@@ -221,7 +221,7 @@ dam.setDefaultParts = function(context){
         'ファイアアルケミマスター'
     ];
     $.each(titles, function(i, v){
-	dam.parts.titles.push(dam.titles.find({name: v}));
+	dam.parts.titles.push(dam.titles.find({name: v}).create());
     });
 
     // bodies

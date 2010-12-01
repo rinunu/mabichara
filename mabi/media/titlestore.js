@@ -39,7 +39,7 @@ mabi.TitleStore = function(){
         }
 
     ], function(i, v){
-        var a = new mabi.Title(v);
+        var a = new mabi.TitleClass(v);
         this_.add(a);
     });
 };
@@ -50,7 +50,7 @@ util.extend(mabi.TitleStore, mabi.Store);
 // override
 
 mabi.TitleStore.prototype.createElement = function(dto){
-    var e = new mabi.Title(
+    var e = new mabi.TitleClass(
 	{
 	    id: dto.id,
 	    name: dto.name,

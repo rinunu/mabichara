@@ -18,7 +18,7 @@ describe('Condition', function() {
         protectors.addChild(new mabi.EquipmentClass({effects: {str:3}}).create());
         
         body = new mabi.Body({effects: {str: 5}});
-        title = new mabi.Title({effects: {str: 7}});
+        title = new mabi.TitleClass({effects: {str: 7}}).create();
         expression = new mabi.Expression(function(c){
             console.log('value!', c.character, c.mob);
             return c.character.str() + c.mob.str();
