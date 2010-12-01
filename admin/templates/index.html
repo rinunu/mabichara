@@ -10,9 +10,10 @@ mabi.Track.setVar("no_report");
 <a href="{% url admin.views.titles %}">タイトル一覧</a>
 <a href="{% url admin.views.enchants %}">エンチャント一覧</a>
 
+<h2>何度実行してもOK</h2>
 <form action="{% url admin.views.setup %}" method="post">
   {% csrf_token %}
-  <input type="submit" value="初期ソースセットアップ"/>
+  <input type="submit" value="初期セットアップ"/>
 </form>
 
 <form action="{% url admin.views.delete_source_caches %}" method="post">
@@ -20,6 +21,7 @@ mabi.Track.setVar("no_report");
   <input type="submit" value="HTML キャッシュクリア"/>
 </form>
 
+<h2>削除</h2>
 <form action="{% url admin.views.delete_all %}" method="post">
   {% csrf_token %}
   <input type="submit" value="エンチャント全て削除"/>

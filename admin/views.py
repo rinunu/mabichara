@@ -23,8 +23,18 @@ from mabi.title import Title
 from mabi.upgrade_class import UpgradeClass
 from mabi.element import Element
 
+from mabi.list import List
+
 def setup(request):
     Importer().setup()
+
+    # damages 用のデータ
+    List.create_or_update('bodies')
+    List.create_or_update('weapons')
+    List.create_or_update('protectors')
+    List.create_or_update('titles')
+    List.create_or_update('expressions')
+    List.create_or_update('mobs')
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
