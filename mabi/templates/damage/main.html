@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load media %}
+
+{% block title %}マビノギ ダメージけいさんき{% endblock %}
+
+{% block logo %}
+<img>
+{% endblock %}
+
+{% block js %}
+{% include_media 'damagemain.js' %}
+{% include_media 'damage.css' %}
+
+<script type="text/javascript">
+  google.load('visualization', '1', {'packages':['corechart']});
+  google.setOnLoadCallback(dam.initialize);
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<ul class="app menu">
+  <li><a class="generator">ダメージデータの設定</a>
+  <li><a class="options">表示設定</a>
+  <li><a class="chart">グラフの表示</a>
+  <li><a class="help">ヘルプ</a>
+</ul>
+
+<div class="main">
+  <table class="damage">
+    <thead class=""></thead>
+    <tbody class=""></tbody>
+  </table>
+  
+  <div class="hidden">
+    {% include "damage/options.html" %}
+    {% include "damage/generator.html" %}
+    {% include "damage/chart_view.html" %}
+    {% include "damage/help.html" %}
+  </div>
+</div>
+
+
+{% endblock %}
+
