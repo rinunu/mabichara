@@ -31,6 +31,12 @@ mabi.Element = function(options){
         }
     }
 
+    if(options.flags){
+        $.each(options.flags, function(i, flag){
+            this_.addEffect({param: flag, min:1});
+        });
+    }
+
     // clone 時にインスタンスを共有するプロパティ
     this.sharedProperties_ = {sharedProperties_: true};
 };

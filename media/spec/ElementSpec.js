@@ -65,11 +65,14 @@ describe('Element', function() {
     describe('flags(effects のラッパー)', function(){
         describe('is でフラグをチェックできる', function(){
             beforeEach(function(){
-                subject = new mabi.Element({effects: {
-                    flag0: 1,
-                    flag1: 0,
-                    flag2: -1
-                }});
+                subject = new mabi.Element({
+                    effects: {
+                        flag0: 1,
+                        flag1: 0,
+                        flag2: -1
+                    },
+                    flags: ['flag3']
+                });
             });
 
             it('数値が 0 より大きい場合、フラグを持っているとみなす', function(){
@@ -78,7 +81,10 @@ describe('Element', function() {
             it('数値が 0 以下の場合、フラグを持っていないとみなす', function(){
                 expect(subject.is('flag1')).toBeFalsy();
                 expect(subject.is('flag2')).toBeFalsy();
-                expect(subject.is('flag3')).toBeFalsy();
+                expect(subject.is('flag10')).toBeFalsy();
+            });
+            it('flags 引数を使用して指定することもできる', function(){
+                expect(subject.is('flag3')).toBeTruthy();
             });
         });
     });
