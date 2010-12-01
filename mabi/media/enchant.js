@@ -1,11 +1,9 @@
-
 mabi.EnchantClass = function(options){
     mabi.Element.call(this, options);
     if(options){
-        console.assert(options.rank);
         console.assert($.inArray(['prefix', 'suffix'], options.type) != -1);
-        this.rank_ = options.rank;
-        this.type_ = options.type;
+        this.addFlag(options.type);
+        this.addEffect({param: 'rank', min: options.rank});
     }
 };
 
@@ -19,7 +17,7 @@ mabi.EnchantClass.prototype.create = function(){
 };
 
 mabi.EnchantClass.prototype.type = function(){
-    return this.type_;
+    return this.is('prefix') ? 'prefix' : 'suffix';
 };
 
 // ----------------------------------------------------------------------
