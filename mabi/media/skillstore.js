@@ -131,9 +131,11 @@ mabi.SkillStore.prototype.load = function(){
 	var a = new mabi.SkillClass({
 	    name: v[0],
             englishName: v[1],
-	    flags: v[2],
 	    ranks: v[3]
 	});
+        $.each(v[2], function(i, flag){
+            a.addEffect({param: flag, min: 1});
+        });
 	this_.push(a);
 	this_[v[1]] = a;
     });

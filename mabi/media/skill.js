@@ -31,22 +31,15 @@ mabi.Skill.prototype.rank = function(){
 
 // ----------------------------------------------------------------------
 
-/**
- * スキルクラス
- *
- * flags
- * - charge_bonus: 複数チャージ時にダメージボーナスが発生するか
- */
 mabi.SkillClass = function(options){
-    this.name_ = options.name;
+    mabi.Element.call(this, options);
 
     // 0 オリジン
     this.ranks_ = options.ranks;
 
-    this.flags_ = options.flags;
-
     this.englishName_ = options.englishName;
 };
+util.extend(mabi.SkillClass, mabi.Element);
 
 /**
  * 指定したランクの Skill を生成する
@@ -65,20 +58,7 @@ mabi.SkillClass.prototype.create = function(rank){
 
 /**
  */
-mabi.SkillClass.prototype.name = function(){
-    return this.name_;
-};
-
-/**
- */
 mabi.SkillClass.prototype.englishName = function(){
     return this.englishName_;
-};
-
-/**
- * フラグを調査する
- */
-mabi.SkillClass.prototype.is = function(flag){
-    return $.inArray(flag, this.flags_) != -1;
 };
 
