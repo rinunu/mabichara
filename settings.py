@@ -193,7 +193,6 @@ MEDIA_BUNDLES = (
 
      # 'spec/BuiltInEquipmentSpec.js',
      'spec/BuiltInWeaponsSpec.js',
-     'spec/BuiltInSkillsSpec.js',
 
      'spec/DamageBasicSpec.js',
      'spec/DamageMagicSpec.js',
