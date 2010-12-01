@@ -4,35 +4,31 @@ with(new mabi.DamageSpecHelper){
         beforeEach(function(){
 	    body_ = new mabi.Body();
 	    equipmentSet_ = new mabi.EquipmentSet();
-	    character_ = new mabi.Character();
-	    character_.setBody(body_);
-	    character_.setEquipmentSet(equipmentSet_);
             body_.setSkill(skill('スマッシュ'), 1);
-
             mob_ = mob({protection: 0, defense: 0});
         });
 
         describe('基本', function(){
 	    beforeEach(function(){
-	        character_.setParam('str', 100);
+	        body_.setParam('str', 100);
 
-                equipmentSet_.
-                    setHead(
-                        equipment({}).
-                            enchant(prefix({str:10, damageMax:10})));
+                set({
+                    head: equipment({prefix: {str:10, damageMax:10}})
+                });
                 
 	        mob_ = mob({protection: 0.1, defense: 10});
 	    });
 
 	    describe('片手武器', function(){
 	        beforeEach(function(){
-		    equipmentSet_.
-                        setRightHand(
-                            rightHandWeapon({damageMax: 100}).
-                                enchant(prefix({str:10, damageMax:10}))).
-                        setLeftHand(
-                            equipment({}).
-                                enchant(prefix({str:10, damageMax:10})));
+                    set({
+                        rightHand: rightHandWeapon({
+                            damageMax: 100,
+                            prefix: {str:10, damageMax:10}
+                        }),
+                        leftHand: equipment({
+                            prefix: {str:10, damageMax:10}})
+                    });
 	        });
 
 	        it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
@@ -65,15 +61,17 @@ with(new mabi.DamageSpecHelper){
 
             describe('両手武器', function(){
 	        beforeEach(function(){
-                    equipmentSet_.
-                        setRightHand(
-                            twoHandWeapon({damageMax: 100}).
-                                enchant(prefix({str:10, damageMax:10})));
+                    set({
+                        rightHand: twoHandWeapon({
+                            damageMax: 100,
+                            prefix: {str:10, damageMax:10}
+                        })
+                    });
 	        });
 
 	        it('アタックのダメージは本体性能 + 武器性能で計算される', function() {
                     expression_ = mabi.damages.attack();
-                        var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
+                    var a = (100 + 10 + 10 - 10) / 2.5; // str による最大ダメージ
                     var b = 10; // 最大ダメージ効果
                     var c = 100 + 10; // 武器最大ダメージ
                     var d = Math.floor(((a + b + c) - 10) * 0.9);
@@ -93,10 +91,11 @@ with(new mabi.DamageSpecHelper){
 
             describe('両手装備(Not 武器)', function(){
 	        beforeEach(function(){
-                    equipmentSet_.
-                        setRightHand(
-                            equipment({damageMax: 100}, ['twoHand']).
-                                enchant(prefix({str:10, damageMax:10})));
+                    set({
+                        rightHand: equipment({
+                            damageMax: 100,
+                            prefix: {str:10, damageMax:10}}, ['twoHand'])
+                    });
 	        });
 
                 it('スマッシュのダメージは5倍', function(){
@@ -123,13 +122,15 @@ with(new mabi.DamageSpecHelper){
             // http://wiki.mabinogiworld.com/index.php?title=Dual_Wield
 	    describe('二刀流', function(){
 	        beforeEach(function(){
-                    equipmentSet_.
-                        setRightHand(
-                            rightHandWeapon({damageMax: 100}).
-                                enchant(prefix({str:10, damageMax:10}))).
-                        setLeftHand(
-                            rightHandWeapon({damageMax: 50}).
-                                enchant(prefix({str:10, damageMax:10})));
+                    set({
+                        rightHand: rightHandWeapon({
+                            damageMax: 100,
+                            prefix: {str:10, damageMax:10}}),
+                        leftHand: rightHandWeapon({
+                            damageMax: 50,
+                            prefix: {str:10, damageMax:10}})
+                    });
+                                
 	        });
 
 	        it('アタックのダメージは右手・左手で別々に計算される', function() {
@@ -164,8 +165,9 @@ with(new mabi.DamageSpecHelper){
             describe('R改造', function(){
                 describe('片手武器', function(){
                     beforeEach(function(){
-		        equipmentSet_.
-                            setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18}));
+                        set({
+                            rightHand: rightHandWeapon({damageMax: 100, rUpgrade: 0.18})
+                        });
 	            });
 
                     it('ノンクリのダメージは増加しない', function(){
@@ -192,9 +194,10 @@ with(new mabi.DamageSpecHelper){
                 
                 describe('2刀流', function(){
                     beforeEach(function(){
-		        equipmentSet_.
-                            setRightHand(rightHandWeapon({damageMax: 100, rUpgrade: 0.18})).
-                            setLeftHand(rightHandWeapon({damageMax: 50, rUpgrade: 0.18}));
+                        set({
+                            rightHand: rightHandWeapon({damageMax: 100, rUpgrade: 0.18}),
+                            leftHand: rightHandWeapon({damageMax: 50, rUpgrade: 0.18})
+                        });
 	            });
 
                     xit('アタック時は・・わかりませんでした');
@@ -216,8 +219,9 @@ with(new mabi.DamageSpecHelper){
             describe('S改造', function(){
                 describe('片手武器', function(){
                     beforeEach(function(){
-		        equipmentSet_.
-                            setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13}));
+                        set({
+                            rightHand: rightHandWeapon({damageMax: 100, sUpgradeMax: 13})
+                        });
 	            });
 
                     it('ダメージは + X となる', function(){
@@ -236,9 +240,10 @@ with(new mabi.DamageSpecHelper){
                 
                 describe('2刀流', function(){
                     beforeEach(function(){
-		        equipmentSet_.
-                            setRightHand(rightHandWeapon({damageMax: 100, sUpgradeMax: 13})).
-                            setLeftHand(rightHandWeapon({damageMax: 50, sUpgradeMax: 13}));
+                        set({
+                            rightHand: rightHandWeapon({damageMax: 100, sUpgradeMax: 13}),
+                            leftHand: rightHandWeapon({damageMax: 50, sUpgradeMax: 13})
+                        });
 	            });
 
                     xit('アタック時は・・わかりませんでした');
@@ -262,17 +267,19 @@ with(new mabi.DamageSpecHelper){
 	        });
 
                 it('改造なし', function(){
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110}));
+                    set({rightHand: rightHandWeapon({damageMin: 60, damageMax: 110})});
 		    expect(damage()).toEqual(147);
                 });
                 
                 it('S改造', function(){
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, sUpgradeMin: 10, sUpgradeMax: 21}));
+                    set({rightHand: rightHandWeapon({
+                        damageMin: 60, damageMax: 110, sUpgradeMin: 10, sUpgradeMax: 21})});
                     expect(damage()).toEqual(174);
                 });
                 
                 it('R改造', function(){
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 60, damageMax: 110, rUpgrade: 0.26}));
+                    set({rightHand: rightHandWeapon({
+                        damageMin: 60, damageMax: 110, rUpgrade: 0.26})});
                     expect(damage()).toEqual(155);
                 });
             });
@@ -287,17 +294,17 @@ with(new mabi.DamageSpecHelper){
 
                 it('改造なし', function(){
                     // 272.75 * 0.7 + (272.75 + 363 * 1.5) * 0.3 
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363}));
+                    set({rightHand: rightHandWeapon({damageMin: 0, damageMax: 363})});
 		    expect(damage()).toEqual(436);
                 });
                 
                 it('R改造', function(){
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26}));
+                    set({rightHand: rightHandWeapon({damageMin: 0, damageMax: 363, rUpgrade: 0.26})});
 		    expect(damage()).toEqual(464);
                 });
                 
                 it('S改造', function(){
-                    equipmentSet_.setRightHand(rightHandWeapon({damageMin: 0, damageMax: 363, sUpgradeMin: 10, sUpgradeMax: 21}));
+                    set({rightHand: rightHandWeapon({damageMin: 0, damageMax: 363, sUpgradeMin: 10, sUpgradeMax: 21})});
 		    expect(damage()).toEqual(463);
                 });
             });

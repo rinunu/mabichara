@@ -6,10 +6,6 @@ with(new mabi.DamageSpecHelper){
         beforeEach(function(){
 	    body_ = new mabi.Body();
 	    equipmentSet_ = new mabi.EquipmentSet();
-	    character_ = new mabi.Character();
-	    character_.setBody(body_);
-	    character_.setEquipmentSet(equipmentSet_);
-
             mob_ = mob({protection: 0, defense: 0});
         });
 
@@ -27,53 +23,58 @@ with(new mabi.DamageSpecHelper){
 
         describe('具体例', function(){
 	    beforeEach(function(){
-	        body_.setSkill(dam.skills.ICEBOLT, 1);
-	        body_.setSkill(dam.skills.FIREBOLT, 1);
-	        body_.setSkill(dam.skills.LIGHTNING_BOLT, 1);
-	        body_.setSkill(dam.skills.FIREBALL, 1);
-	        body_.setSkill(dam.skills.THUNDER, 1);
-	        body_.setSkill(dam.skills.ICE_SPEAR, 1);
+                set({
+                    skills:{
+                        'アイスボルト': 1,
+                        'ファイアボルト': 1,
+                        'ライトニングボルト': 1,
+                        'ファイアボール': 1,
+                        'サンダー': 1,
+                        'アイススピア': 1
+                    }
+                });
 	    });
-
             
 	    describe('Wiki 例', function(){
 	        beforeEach(function(){
-		    body_.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
-		    body_.setSkill(dam.skills.BOLT_COMPOSER, 1);
+                    set({
+                        title: 'マジックマスター',
+                        skills:{
+                            'アイスマスタリ': 1,
+                            'ファイアマスタリ': 1,
+                            'ライトニングマスタリ': 1,
+                            'ボルト魔法の合体': 1,
+                            'ボルトマスタリ': 1
+                        }
+                    });
 		    body_.setParam('int', 600);
-
-		    equipmentSet_.setTitle(title('マジックマスター'));
-
 		    mob_ = mob({protection: 0.1, defense: 10});
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例1', function(){
-		    equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式)'));
+                    set({rightHand: equipment('クラウンアイスワンド(150式)')});
 		    expression_ = mabi.damages.skill(dam.skills.ICEBOLT, {charge: 1});
 		    expect(damage()).toEqual(181);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例2', function() {
-		    equipmentSet_.setRightHand(equipment('フェニックスファイアワンド(245式)'));
+		    set({rightHand: equipment('フェニックスファイアワンド(245式)')});
 		    expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		    expect(damage()).toEqual(3410);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例3', function() {
-		    equipmentSet_.setRightHand(equipment('フェニックスファイアワンド(245式 S3)'));
+		    set({rightHand: equipment('フェニックスファイアワンド(245式 S3)')});
 		    expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5});
 		    expect(damage()).toEqual(3424);
 	        });
 	        
 	        // http://mabinogi.wikiwiki.jp/index.php?%A5%B9%A5%AD%A5%EB%2F%CB%E2%CB%A1#vc1353e4
 	        it('Wiki 例4', function() {
-		    equipmentSet_.setRightHand(equipment('ファイアワンド(S3)'));
+		    set({rightHand: equipment('ファイアワンド(S3)')});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.FIREBOLT, dam.skills.LIGHTNING_BOLT, {charge: 5});
 		    expect(damage()).toEqual(1864);
 	        });
@@ -82,25 +83,25 @@ with(new mabi.DamageSpecHelper){
             
 	    describe('http://aumiya.jugem.jp/?eid=173', function(){
 	        beforeEach(function(){
-		    character_.setParam('int', 600);
-		    equipmentSet_.setTitle(title('マジックマスター'));
+		    body_.setParam('int', 600);
+		    set({title: 'マジックマスター'});
 		    mob_ = mob({protection: 0});
 	        });
 
 	        describe('マスタリなし', function(){
 		    it('クリティカル FBL', function() {
-		        equipmentSet_.setRightHand(equipment('ファイアワンド'));
+		        set({rightHand: equipment('ファイアワンド')});
 		        expression_ = mabi.damages.skill(dam.skills.FIREBALL, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(9009);
 		    });
 		    it('クリティカル IS', function() {
-		        equipmentSet_.setRightHand(equipment('アイスワンド'));
+		        set({rightHand: equipment('アイスワンド')});
 		        expression_ = mabi.damages.skill(dam.skills.ICE_SPEAR, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(5855); // TODO サイトには 5630 とあるが、あわない
 		    });
 
 		    it('クリティカル TH', function() {
-		        equipmentSet_.setRightHand(equipment('ライトニングワンド'));
+		        set({rightHand: equipment('ライトニングワンド')});
 		        expression_ = mabi.damages.thunder(dam.skills.THUNDER, {charge: 5, generator: 'maxCritical'});
 		        expect(damage()).toEqual(9009); // TODO サイトには 8893 とあるが、あわない
 		    });
@@ -111,22 +112,25 @@ with(new mabi.DamageSpecHelper){
             // 合わない。。 バランス80で計算してるので、本来はさらにダメージが上がるから、さらにあわない・・
 	    describe('魔法期待値', function(){
 	        beforeEach(function(){
-		    body_.setSkill(dam.skills.MAGIC_ICE_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_FIRE_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_LIGHTNING_MASTERY, 1);
-		    body_.setSkill(dam.skills.MAGIC_BOLT_MASTERY, 1);
-		    body_.setSkill(dam.skills.BOLT_COMPOSER, 1);
+                    set({
+                        skills:{
+                            'アイスマスタリ': 1,
+                            'ファイアマスタリ': 1,
+                            'ライトニングマスタリ': 1,
+                            'ボルト魔法の合体': 1,
+                            'ボルトマスタリ': 1
+                        }
+                    });
 		    body_.setParam('int', 700);
-		    // equipmentSet_.setTitle(title('マジックマスター'));
                 });
 
                 it('LB S改造', function(){
-                    equipmentSet_.setRightHand(equipment('ライトニングワンド(S3)'));
+                    set({rightHand: equipment('ライトニングワンド(S3)')});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(317.8); // サイトには 317.8 とあるが、あわない
 	        });
                 it('LB R改造', function(){
-                    equipmentSet_.setRightHand(equipment('ライトニングワンド(R3)'));
+                    set({rightHand: equipment('ライトニングワンド(R3)')});
 		    expression_ = mabi.damages.skill(dam.skills.LIGHTNING_BOLT, {generator: 'criticalExpectation'});
 		    expect(damage()).toEqual(316.6); // サイトには 317.6 とあるが、あわない                   
 	        });
@@ -139,11 +143,11 @@ with(new mabi.DamageSpecHelper){
                     // 39.8 = 18 * (1 + 0.35 + 0.15 + 0.15) * (1 + 0.22) * 1.1
                     // 39.8 * 1.15
                     mob_ = mob({protection: 1, defense: 0});
-                    equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式)'));
+                    set({rightHand: equipment('クラウンアイスワンド(150式)')});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		    expect(damage()).toEqual(1);
 
-                    equipmentSet_.setRightHand(equipment('クラウンアイスワンド(150式 S3)'));
+                    set({rightHand: equipment('クラウンアイスワンド(150式 S3)')});
 		    expression_ = mabi.damages.fusedBolt(dam.skills.ICEBOLT, dam.skills.FIREBOLT, {generator: 'max'});
 		    expect(damage()).toEqual(45);
 	        });

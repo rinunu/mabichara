@@ -15,6 +15,10 @@ util.extend(mabi.DamageSpecHelper, mabi.Builder);
 
 // ダメージを計算する
 mabi.DamageSpecHelper.prototype.damage = function(){
+    this.character_ = new mabi.Character();
+    this.character_.setBody(this.body_);
+    this.character_.setEquipmentSet(this.equipmentSet_);
+
     var context = {
 	character: this.character_,
         mob: this.mob_
