@@ -73,13 +73,7 @@ describe('Equipment', function() {
     var base;
 
     beforeEach(function(){
-        base = new mabi.EquipmentClass({ug: 5, flags: ['weapon']});
-    });
-    
-    it('装備種別を取得できる', function(){
-        var equipment = base.create();
-        expect(equipment.is('weapon')).toBeTruthy();
-        expect(equipment.is('foo')).toBeFalsy();
+        base = new mabi.EquipmentClass({ug: 5});
     });
     
     describe('clone 時', function(){

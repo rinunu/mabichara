@@ -6,7 +6,6 @@ mabi.EquipmentClass = function(options){
     mabi.Element.call(this, options);
     if(options){
         this.ug_ = options.ug || 5;
-        this.flags_ = options.flags || [];
     }
 };
 
@@ -38,7 +37,6 @@ mabi.EquipmentClass.prototype.loaded = function(){
  * Upgrade 情報を取得する
  */
 mabi.EquipmentClass.prototype.upgrades = function(options){
-    console.assert(this.upgrades_);
     return this.upgrades_;
 };
 
@@ -47,13 +45,6 @@ mabi.EquipmentClass.prototype.upgrades = function(options){
  */
 mabi.EquipmentClass.prototype.set = function(options){
     this.upgrades_ = options.upgrades;
-};
-
-/**
- * フラグを調査する
- */
-mabi.EquipmentClass.prototype.is = function(flag){
-    return $.inArray(flag, this.flags_) != -1;
 };
 
 // ----------------------------------------------------------------------
