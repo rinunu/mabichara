@@ -55,7 +55,7 @@ mabi.Collection.prototype.get = function(name){
 };
 
 /**
- * 存在しない場合はエラーとする
+ * deprecated 存在しない場合はエラーとする
  * 
  * アイテムは以下の条件を満たす必要がある
  * - id メソッドを持ち、ID を返す
