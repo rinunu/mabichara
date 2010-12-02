@@ -82,6 +82,9 @@ mabi.Element.prototype.englishName = function(){
     return this.englishName_;
 };
 
+// ----------------------------------------------------------------------
+// child
+
 mabi.Element.prototype.parent = function(){
     return this.parent_;
 };
