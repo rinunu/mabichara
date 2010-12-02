@@ -35,7 +35,16 @@ with(new mabi.Builder){
                 it('基本', function(){
                     subject = new mabi.Element({name: '名前'});
                     expect(serializer.serialize(subject)).toEqual({
+                        type: 'Element',
                         name: '名前'
+                    });
+                });
+
+                it('型情報', function(){
+                    subject = new mabi.Mob({name: 'name0'});
+                    expect(serializer.serialize(subject)).toEqual({
+                        type: 'Mob',
+                        name: 'name0'
                     });
                 });
                 
@@ -44,6 +53,7 @@ with(new mabi.Builder){
                     subject.addEffect({param: 'str', min: 1});
                     subject.addEffect({param: 'dex', min: 3});
                     expect(serializer.serialize(subject)).toEqual({
+                        type: 'Element',
                         name: '',
                         effects: [
                             {op: '+', param: 'str', min: 1},
@@ -57,12 +67,14 @@ with(new mabi.Builder){
                     var child0 = new mabi.Element({name: 'child0', effects: {dex: 3}});
                     subject.addChild(child0);
                     expect(serializer.serialize(subject)).toEqual({
+                        type: 'Element',
                         name: 'parent',
                         effects: [
                             {op: '+', param: 'str', min: 1}
                         ],
                         children: [
                             {
+                                type: 'Element',
                                 name: 'child0',
                                 effects: [
                                     {op: '+', param: 'dex', min: 3}

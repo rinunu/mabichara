@@ -24,11 +24,30 @@ mabi.Serializer.prototype.deserialize = function(dto){
 // private
 
 /**
+ * Element の型名を取得する
+ */
+mabi.Serializer.prototype.typeName = function(element){
+    if(element.constructor == mabi.Mob){
+        return 'Mob';
+    }else if(element.constructor == mabi.EquipmentSet){
+        return 'EquipmentSet';
+    }else if(element.constructor == mabi.Equipment){
+        return 'Equipment';
+    }else if(element.constructor == mabi.Element){
+        return 'Element';
+    }else{
+        throw '未対応の Element タイプです';
+    }
+};
+
+/**
  * 
  */
 mabi.Serializer.prototype.serializeElement = function(object){
     var this_  = this;
     var result = this.simple(object, ['name']);
+
+    result.type = this.typeName(object);
     
     var effects = [];
     object.effects().each(function(i, effect){
@@ -44,7 +63,6 @@ mabi.Serializer.prototype.serializeElement = function(object){
     
     return result;
 };
-
 
 /**
  * 指定されたプロパティのみからなるオブジェクトを返す
