@@ -35,8 +35,7 @@ with(new mabi.Builder){
                 it('基本', function(){
                     subject = new mabi.Element({name: '名前'});
                     expect(serializer.serialize(subject)).toEqual({
-                        name: '名前',
-                        effects: []
+                        name: '名前'
                     });
                 });
                 
@@ -53,10 +52,28 @@ with(new mabi.Builder){
                     });
                 });
                 
-                xit('children をもった Element のシリアライズは、現状サポートしていない');
+                it('children', function(){
+                    subject = new mabi.Element({name: 'parent', effects: {str: 1}});
+                    var child0 = new mabi.Element({name: 'child0', effects: {dex: 3}});
+                    subject.addChild(child0);
+                    expect(serializer.serialize(subject)).toEqual({
+                        name: 'parent',
+                        effects: [
+                            {op: '+', param: 'str', min: 1}
+                        ],
+                        children: [
+                            {
+                                name: 'child0',
+                                effects: [
+                                    {op: '+', param: 'dex', min: 3}
+                                ]
+                            }
+                        ]
+                    });
+                });
 
             });
-            });
+        });
 
         // 作成中
         xdescribe('OffenseDefenseDamageSource', function(){
