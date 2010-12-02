@@ -77,6 +77,7 @@ core_js = common_js + (
     'alchemy.js',
 
     'store.js',
+    'elementstore.js',
     'skillstore.js',
     'enchantstore.js',
     'titlestore.js',
@@ -181,6 +182,7 @@ MEDIA_BUNDLES = (
      'spec/UpgradeSpec.js',
 
      'spec/StoreSpec.js',
+     'spec/ElementStoreSpec.js',
 
      # damage
      'spec/SerializerSpec.js',
