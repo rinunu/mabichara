@@ -42,6 +42,26 @@ describe('Element', function() {
 
 
     describe('effects', function(){
+        it('effects で自身の持つ effect を取得できる', function(){
+            var source = [
+                new mabi.Effect({param: 'str', min: 1}),
+                new mabi.Effect({param: 'str', min: 3}),
+                new mabi.Effect({param: 'dex', min: 5})
+            ];
+            subject.addEffect(source[0]);
+            subject.addEffect(source[1]);
+            
+            var child = new mabi.Element();
+            child.addEffect(source[2]);
+            subject.addChild(child);
+            
+            var effects = subject.effects();
+            
+            expect(effects.length()).toEqual(2);
+            expect(effects).toContain(source[0]);
+            expect(effects).toContain(source[1]);
+        });
+        
         describe('addEffect で Effect を追加できる', function(){
             xit('Effect オブジェクトを指定して追加できる', function(){
             });

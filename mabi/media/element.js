@@ -181,6 +181,11 @@ mabi.Element.prototype.removeChild = function(child){
 // ----------------------------------------------------------------------
 // effects
 
+mabi.Element.prototype.effects = function(){
+    return new util.ReadOnlyList(new util.ArrayList(this.effects_));
+};
+
+
 mabi.Element.prototype.addEffect = function(effect){
     if(!(effect instanceof mabi.Effect)){
         effect = new mabi.Effect(effect);
