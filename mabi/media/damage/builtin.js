@@ -160,7 +160,7 @@ dam.setDefaultParts = function(context){
             var weapons = new mabi.EquipmentSet;
             weapons.setRightHand(weapon);
             weapons.setName(dam.name(base.name(), upgrade, special));
-            dam.parts.weapons.push(weapons);
+            dam.parts.weapons.add(weapons);
         });
     });
 
@@ -209,11 +209,11 @@ dam.setDefaultParts = function(context){
 	var equipmentSet = new mabi.EquipmentSet();
 	equipmentSet.setName(v.name);
         equipmentSet.setHead(new mabi.EquipmentClass({effects: v.effects}).create());
-	dam.parts.protectors.push(equipmentSet);
+	dam.parts.protectors.add(equipmentSet);
     });
 
     // titles
-    dam.parts.titles.push((new mabi.TitleClass({name: '一般タイトル'})).create());
+    dam.parts.titles.add((new mabi.TitleClass({name: '一般タイトル'})).create());
     var titles = [
         'マジックマスター',
         'アルケミマスター',
@@ -221,7 +221,7 @@ dam.setDefaultParts = function(context){
         'ファイアアルケミマスター'
     ];
     $.each(titles, function(i, v){
-	dam.parts.titles.push(dam.titles.find({name: v}).create());
+	dam.parts.titles.add(dam.titles.find({name: v}).create());
     });
 
     // bodies
@@ -239,7 +239,7 @@ dam.setDefaultParts = function(context){
             body.setSkill(v, 1);
         });
 
-        dam.parts.bodies.push(body);
+        dam.parts.bodies.add(body);
     });
 
     // mob
@@ -271,7 +271,7 @@ dam.setDefaultParts = function(context){
 		protection: v[3]
 	    }
         });
-        dam.parts.mobs.push(mob);
+        dam.parts.mobs.add(mob);
     });
 };
 

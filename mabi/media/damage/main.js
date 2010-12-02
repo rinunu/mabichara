@@ -25,12 +25,13 @@ dam.initializeModel = function(){
 dam.initializeView = function(){
     // ユーザの作成した(もしくはデフォルトの)パーツ
     dam.parts = {
-        weapons: new mabi.Collection(),
-        protectors: new mabi.Collection(),
-        expressions: new mabi.Collection(),
-        bodies: new mabi.Collection(),
-        titles: new mabi.Collection(),
-        mobs: new mabi.Collection()
+        weapons: new mabi.ElementStore({url: '/lists/weapons'}),
+        protectors: new mabi.ElementStore({url: '/lists/protectors'}),
+        bodies: new mabi.ElementStore({url: '/lists/bodies'}),
+        titles: new mabi.ElementStore({url: '/lists/titles'}),
+        mobs: new mabi.ElementStore({url: '/lists/mobs'}),
+
+        expressions: new mabi.Collection()
     };
     dam.setDefaultParts();
 
