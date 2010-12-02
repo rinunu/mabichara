@@ -61,9 +61,8 @@ describe('Element', function() {
             xit('複数回呼び出し時の挙動');
         });
 
-
-        describe('eachEffect で Effect を列挙できる', function(){
-            it('自分と子供の Effect を列挙する', function(){
+        describe('eachEffect で自分と子供の Effect を列挙できる', function(){
+            it('基本', function(){
                 var source = [
                     new mabi.Effect({param: 'str', min: 1}),
                     new mabi.Effect({param: 'str', min: 3}),
@@ -79,11 +78,17 @@ describe('Element', function() {
                 var effects = [];
                 subject.eachEffect(function(e){effects.push(e);});
 
-                // 現状、順番は 子供 => 親となる
-                expect(effects[0]).toEqual(source[2]);
-                expect(effects[1]).toEqual(source[0]);
-                expect(effects[2]).toEqual(source[1]);
+                expect(effects).toContain(source[0]);
+                expect(effects).toContain(source[1]);
+                expect(effects).toContain(source[2]);
             });
+        });
+
+        xdescribe('param', function(){
+        });
+        xdescribe('setParam', function(){
+        });
+        xdescribe('damage', function(){
         });
     });
 
@@ -151,7 +156,7 @@ describe('Element', function() {
         });
     });
 
-    describe('copyFrom', function(){
+    describe('copyFrom で child をコピーできる', function(){
         var element;
         var copy;
         var slot1;
@@ -167,7 +172,8 @@ describe('Element', function() {
             expect(copy.child('slot1').name()).toEqual('slot1!');
             expect(copy.child('slot1').name()).toEqual('slot1!');
         });
-        it('child は別のインスタンスになる', function(){
+        
+        it('child は clone され別のインスタンスになる', function(){
             expect(copy.child('slot1')).not.toBe(slot1);
         });
 

@@ -254,16 +254,37 @@ mabi.Element.prototype.addFlag = function(flag){
     this.setParam(flag, 1);
 };
 
-// ----------------------------------------------------------------------
+/**
+ * [damageMin, damageMax] を返す
+ */
+mabi.Element.prototype.damage = function(){
+    return [this.damageMin(), this.damageMax()];
+};
 
 /**
- * source から child をコピーする
- *
- * child は clone される
- *
- * 以下の制限がある
- * - 同じスロットをもつ child がある場合の挙動は未定義
+ * Effect への getter を作成する
  */
+mabi.Element.effectAccessors = function(class_, names){
+    $.each(names, function(i, name){
+	class_.prototype[name] = function(character){
+	    return this.param(name, character);
+	};
+    });
+};
+
+mabi.Element.effectAccessors(mabi.Element, [
+    'defense', 'protection', 'int', 'str', 'dex',
+    'damageMin', 'damageMax',
+    'sUpgradeMin', 'sUpgradeMax', 'rUpgrade',
+    'rank'
+]);
+
+// ----------------------------------------------------------------------
+
+
+
+// ----------------------------------------------------------------------
+
 mabi.Element.prototype.copyFrom = function(source){
     var this_ = this;
     source.eachChild(function(element, slot){
@@ -308,13 +329,6 @@ mabi.Element.prototype.addSharedProperties = function(properties){
 };
 
 /**
- * [damageMin, damageMax] を返す
- */
-mabi.Element.prototype.damage = function(){
-    return [this.damageMin(), this.damageMax()];
-};
-
-/**
  * Child への getter, setter を作成する
  */
 mabi.Element.accessors = function(class_, names){
@@ -329,24 +343,6 @@ mabi.Element.accessors = function(class_, names){
 	};
     });
 };
-
-/**
- * Effect への getter を作成する
- */
-mabi.Element.effectAccessors = function(class_, names){
-    $.each(names, function(i, name){
-	class_.prototype[name] = function(character){
-	    return this.param(name, character);
-	};
-    });
-};
-
-mabi.Element.effectAccessors(mabi.Element, [
-    'defense', 'protection', 'int', 'str', 'dex',
-    'damageMin', 'damageMax',
-    'sUpgradeMin', 'sUpgradeMax', 'rUpgrade',
-    'rank'
-]);
 
 // ----------------------------------------------------------------------
 // private
