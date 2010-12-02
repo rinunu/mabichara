@@ -11,17 +11,37 @@ with(AjaxSpecHelper){
         // - 詳細取得: /resourceName/id.json
 
         var store;
+        var items;
+        var request;
         beforeEach(function(){
             AjaxSpecHelper.initialize();
+            items = [item('item0'), item('item1')];
             store = new mabi.Store({resourceName: 'resources'});
         });
 
-        describe('サーバから一覧を読み込む', function(){
+        describe('load にてサーバから一覧を読み込む', function(){
+            beforeEach(function(){
+                setResponse({entry: items});
+                waitsForTask(store.load());
+            });
+
             it('初回読み込みはサーバから読み込む', function(){
+                runs(function(){
+                    expect(requests.length).toEqual(1);
+                    expect(requests[0].url).toMatch('resources.json$');
+                    expect(store.find('item0')).toBe(items[0]);
+                    expect(store.find('item1')).toBe(items[1]);
+                });
             });
 
             it('2回目以降はキャッシュを使用する', function(){
-                
+                waitsForTask(store.load());
+                runs(function(){
+                    expect(requests.length).toEqual(1);
+                });
+            });
+
+            xit('読み込まれるデータは詳細を含まない概要の一覧である', function(){
             });
         });
 
@@ -37,7 +57,7 @@ with(AjaxSpecHelper){
                 waitsForTask(store.loadDetail('item0'));
 
                 runs(function(){
-                    expect(requests[0].url).toMatch('/resources/item0.json$');
+                    expect(requests[0].url).toMatch(/\/resources\/item0.json$/);
                     expect(requests.length).toEqual(1);
                     expect(store.find('item0')).toBe(item0);
                 });
@@ -59,6 +79,34 @@ with(AjaxSpecHelper){
 
             xit('取得した DTO は適切なオブジェクトに加工される');
         });
+
+        describe('save にて1件追加する', function(){
+            beforeEach(function(){
+                waitsForTask(store.save(items[0]));
+                request = mostRecentAjaxRequest();
+                request.response({
+                    status: 200,
+                    responseText: ''
+                });
+            });
+
+            it('サーバにデータが POST される', function(){
+                runs(function(){
+                    expect(ajaxRequests.length).toEqual(1);
+                    expect(request.method).toEqual('POST');
+                    expect(request.url).toMatch(/\/resources.json$/);
+                    // expect(mabi.ajax.ajax.argsForCall[0][0].data).toEqual({
+                    //     mobs: []
+                    // });
+                    console.log('request', request);
+                });
+            });
+
+            it('id が正規のものに置き換わる', function(){
+                
+            });
+        });
+
 
         describe('ローカルにある前提で取得する(利用側の簡易化のため)', function(){
             

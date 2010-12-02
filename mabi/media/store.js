@@ -1,7 +1,11 @@
 mabi.Store = function(options){
     console.assert(options);
     this.elements_ = [];
-    this.resourceName_ = options.resourceName;
+    if(options.resourceName){
+        this.url_ = '/' + options.resourceName;
+    }else{
+        this.url_ = options.url;
+    }
 
     this.listLoaded_ = false;
 };
@@ -57,9 +61,6 @@ mabi.Store.prototype.find = function(options){
     return result;
 };
 
-/**
- * 
- */
 mabi.Store.prototype.add = function(element){
     this.elements_.push(element);
 };
@@ -76,7 +77,7 @@ mabi.Store.prototype.load = function(){
     var this_ =  this;
     var cmd = mabi.ajax.load(
 	{
-	    url: '/' + this.resourceName_ + '.json',
+	    url: this.url_ + '.json',
 	    data: {
 		'max-results': 10000
 	    },
@@ -91,9 +92,6 @@ mabi.Store.prototype.load = function(){
     return cmd;
 };
 
-/**
- * 1 要素の詳細を読み込む
- */
 mabi.Store.prototype.loadDetail = function(id){
     id = id.id ? id.id() : id;
 
@@ -106,11 +104,24 @@ mabi.Store.prototype.loadDetail = function(id){
     var this_ = this;
     var cmd = mabi.ajax.load(
 	{
-	    url: this.resourceName_ + '/' + id + '.json',
+	    url: this.url_ + '/' + id + '.json',
 	    success: function(json){
 		this_.create_or_update(json.entry[0]);
 	    }
 	});
+    return cmd;
+};
+
+mabi.Store.prototype.save = function(item){
+    var cmd = mabi.ajax.ajax({
+        type: 'POST',
+	url: this.url_ + '.json',
+        contentType: 'json',
+	data: this.serialize(item),
+	success: function(json){
+            console.log('save!');
+	}
+    });
     return cmd;
 };
 
@@ -131,6 +142,13 @@ mabi.Store.prototype.createElement = function(dto){
  * 更新は起こりえない場合はオーバーライドする必要はない
  */
 mabi.Store.prototype.updateElement = function(element, dto){
+};
+
+/**
+ * item 保存時、サーバに送信する形に加工を行う
+ */
+mabi.Store.prototype.serialize = function(item){
+    return item;
 };
 
 // ----------------------------------------------------------------------
