@@ -202,9 +202,6 @@ mabi.Element.prototype.setEffects = function(effects){
     return this;
 };
 
-/**
- * この Element のもつ Effect を列挙する
- */
 mabi.Element.prototype.eachEffect = function(fn){
     var i;
     for(i = 0; i < this.children_.length; i++){
