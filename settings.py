@@ -58,6 +58,7 @@ core_js = common_js + (
     'util.js',
     # 'routedevent.js',
     'collection.js',
+    'list.js',
 
     # Model
     'element.js',
