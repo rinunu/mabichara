@@ -4,14 +4,25 @@ class Effect:
     '''各種効果を表す
     '''
 
-    def __init__(self, op='+', min=None, max=None, param=None, condition=''):
-        if max == None: max = min
+    def __init__(self, text=None, op='+', min=None, max=None, param=None, condition=''):
+        if text:
+            a = text.split(',')
+            self.op = a[1]
+            self.param = a[0]
+            self.min = int(a[2])
+            self.max= int(a[3])
+            if len(a) >= 5: 
+                self.condition = a[4]
+            else:
+                self.condition = ''
+        else:
+            if max == None: max = min
 
-        self.op = op
-        self.min = int(min)
-        self.max = int(max)
-        self.param = param
-        self.condition = condition
+            self.op = op
+            self.param = param
+            self.min = int(min)
+            self.max = int(max)
+            self.condition = condition
 
     def __unicode__(self):
         ''''''
@@ -35,3 +46,4 @@ class Effect:
             
     def __ne__(self, other):
         return not self.__eq__(other)
+

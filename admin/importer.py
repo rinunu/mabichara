@@ -86,7 +86,7 @@ class Importer:
         for item in items:
             model = Title.create_or_update(
                 name=item['name'],
-                effects = [unicode(e) for e in item['effects']]
+                effects = item['effects']
                 )
             result.append(model)
         return result
@@ -133,7 +133,6 @@ class Importer:
         effects.append(Effect(param='wound_max', min=item['wound'][1]))
         effects.append(Effect(param='critical', min=item['critical']))
         effects.append(Effect(param='balance', min=item['balance']))
-        effects = [unicode(e) for e in effects]
 
         model = EquipmentClass.create_or_update(
             name = item['name'],
