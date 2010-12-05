@@ -16,7 +16,11 @@ mabi.Ajax = function(){
 mabi.Ajax.prototype.ajax = function(options){
     var this_ =  this;
     var url = options.url;
-    var data = options.contentType == 'json' ? $.toJSON(options.data) : options.data;
+    if(options.contentType == 'json'){
+        var data = {json: $.toJSON(options.data)};
+    }else{
+        var data = options.data;
+    }
     var cmd = new util.AsyncCommand(function(){
 	var ajaxOpt = {
             type: options.type,
