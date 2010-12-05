@@ -81,6 +81,13 @@ def delete_equipments(request):
 
     return HttpResponseRedirect(reverse('admin.views.index'))
 
+def delete_titles(request):
+    '''タイトルを全て削除する'''
+
+    db.delete(Title.all(keys_only=True))
+
+    return HttpResponseRedirect(reverse('admin.views.index'))
+
 def equipments(request):
     '''装備をすべて表示する'''
 

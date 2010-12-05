@@ -32,6 +32,11 @@ mabi.Track.setVar("no_report");
   <input type="submit" value="装備を全て削除"/>
 </form>
 
+<form action="{% url admin.views.delete_titles %}" method="post">
+  {% csrf_token %}
+  <input type="submit" value="タイトルを全て削除"/>
+</form>
+
 
 <h2>ソース</h2>
 <table>

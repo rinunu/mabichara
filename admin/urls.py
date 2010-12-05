@@ -11,6 +11,7 @@ urlpatterns = patterns(
 
     (r'^delete_all$', 'views.delete_all'),
     (r'^delete_equipments$', 'views.delete_equipments'),
+    (r'^delete_titles$', 'views.delete_titles'),
 
     (r'^equipments$', 'views.equipments'),
     (r'^enchants$', 'views.enchants'),
