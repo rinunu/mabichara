@@ -10,6 +10,8 @@ from mabi.effect import Effect
 logger = logging.getLogger("Element")
 
 class Element(polymodel.PolyModel):
+    '''保存は save を使用すること'''
+
     # 日本語名
     name = db.StringProperty(required = True)
 
@@ -19,8 +21,13 @@ class Element(polymodel.PolyModel):
     # 未実装なら False
     implemented = db.BooleanProperty(default = True)
 
+    # 
+    slot = db.StringProperty()
+
     # wiki URL
     source = db.StringProperty()
+
+    parent_ = db.SelfReferenceProperty(collection_name="children_set")
 
     updated_at = db.DateTimeProperty(auto_now = True)
 
@@ -35,9 +42,31 @@ class Element(polymodel.PolyModel):
             )
 
     @property
+    def children(self):
+        if not hasattr(self, 'children_'):
+            if self.is_saved():
+                self.children_ = [child for child in self.children_set]
+            else:
+                self.children_ = []
+        return self.children_
+
+    @property
     def effects(self):
         """"""
         return [Effect(s) for s in self.effects_]
+
+    def save(self):
+        '''保存を行う
+        上書き保存は未対応
+        
+        '''
+        if self.is_saved(): raise '保存できませんでした'
+        
+        self.put()
+
+        for child in self.children:
+            child.parent_ = self
+            child.save()
 
     @classmethod
     def create_or_update_impl(cls, name, parent, effects, **kwdargs):
