@@ -19,6 +19,9 @@ with(AjaxSpecHelper){
             store = new mabi.Store({resourceName: 'resources'});
         });
 
+        xdescribe('each にて、アイテムを走査できる', function(){
+        });
+
         describe('load にてサーバから一覧を読み込む', function(){
             beforeEach(function(){
                 setResponse({entry: items});
