@@ -40,6 +40,13 @@ describe('Element', function() {
         xit('複数の名前');
     });
 
+    xdescribe('children', function(){
+        xit('インデックスを指定した取得はできないようにする', function(){
+            
+        });
+
+    });
+
 
     describe('effects', function(){
         it('effects で自身の持つ effect を取得できる', function(){
