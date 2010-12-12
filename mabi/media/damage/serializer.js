@@ -17,27 +17,72 @@ mabi.Serializer.prototype.serialize = function(object){
     throw '未対応';
 };
 
-mabi.Serializer.prototype.deserialize = function(dto){
+mabi.Serializer.prototype.deserializeEffect = function(json){
+    var this_ = this;
+    return new mabi.Effect(json);
 };
+
+mabi.Serializer.prototype.deserializeElement = function(json){
+    var this_ = this;
+    var result = new (this.type(json.type))({
+        name: json.name
+    });
+
+    if(json.effects){
+        $.each(json.effects, function(i, effect){
+            result.addEffect(this_.deserializeEffect(effect));
+        });
+    }
+    
+    if(json.children){
+        $.each(json.children, function(i, child){
+            result.addChild(
+                this_.deserializeElement(child),
+                child.slot
+            );
+        });
+    }
+    return result;
+};
+
 
 // ----------------------------------------------------------------------
 // private
+
+(function(){
+    var map = {
+        Mob: mabi.Mob,
+        Element: mabi.Element,
+        EquipmentSet: mabi.EquipmentSet,
+        Equipment: mabi.Equipment
+    };
+
+    mabi.Serializer.NAME_TO_TYPE = map;
+})();
 
 /**
  * Element の型名を取得する
  */
 mabi.Serializer.prototype.typeName = function(element){
-    if(element.constructor == mabi.Mob){
-        return 'Mob';
-    }else if(element.constructor == mabi.EquipmentSet){
-        return 'EquipmentSet';
-    }else if(element.constructor == mabi.Equipment){
-        return 'Equipment';
-    }else if(element.constructor == mabi.Element){
-        return 'Element';
-    }else{
-        throw '未対応の Element タイプです';
-    }
+    var result;
+    $.each(mabi.Serializer.NAME_TO_TYPE, function(name, type){
+        if(element.constructor == type){
+            result = name;
+            return false;
+        }
+        return true;
+    });
+    if(!result) throw '未対応の Element タイプです';
+    return result;
+};
+
+/**
+ * Element の型を取得する
+ */
+mabi.Serializer.prototype.type = function(name){
+    var type = mabi.Serializer.NAME_TO_TYPE[name];
+    if(!type) throw '未対応の型です:' + name;
+    return type;
 };
 
 /**
@@ -56,8 +101,10 @@ mabi.Serializer.prototype.serializeElement = function(object){
     if(effects.length > 0)result.effects = effects;
 
     var children = [];
-    object.eachChild(function(child){
-        children.push(this_.serialize(child));
+    object.eachChild(function(child, slot){
+        child = this_.serialize(child);
+        child.slot = slot;
+        children.push(child);
     });
     if(children.length > 0)result.children = children;
     

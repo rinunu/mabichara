@@ -6,6 +6,7 @@ with(new mabi.Builder){
 
         var serializer;
         var subject;
+        var json;
         beforeEach(function(){
             serializer = new mabi.Serializer;
         });
@@ -26,6 +27,20 @@ with(new mabi.Builder){
                     expect(serializer.serialize(subject)).toEqual({
                         op: '+', param: 'str', min: 1
                     });
+                });
+            });
+            describe('デシリアライズ', function(){
+                it('基本', function(){
+                    json = {
+                        op: '+', param: 'str', min: 1
+                    };
+
+                    subject = serializer.deserializeEffect(json);
+                    with(subject){
+                        expect(op()).toEqual('+');
+                        expect(param()).toEqual('str');
+                        expect(min()).toEqual(1);
+                    };
                 });
             });
         });
@@ -63,25 +78,82 @@ with(new mabi.Builder){
                 });
                 
                 it('children', function(){
-                    subject = new mabi.Element({name: 'parent', effects: {str: 1}});
-                    var child0 = new mabi.Element({name: 'child0', effects: {dex: 3}});
-                    subject.addChild(child0);
+                    subject = new mabi.Element({name: 'parent'});
+                    var children = [
+                        new mabi.Element({name: 'child0'}),
+                        new mabi.Element({name: 'child1'})
+                    ];
+                        
+                    subject.addChild(children[0], 'slot0');
+                    subject.addChild(children[1], 'slot1');
                     expect(serializer.serialize(subject)).toEqual({
                         type: 'Element',
                         name: 'parent',
-                        effects: [
-                            {op: '+', param: 'str', min: 1}
-                        ],
                         children: [
-                            {
-                                type: 'Element',
-                                name: 'child0',
-                                effects: [
-                                    {op: '+', param: 'dex', min: 3}
-                                ]
-                            }
+                            {type: 'Element', name: 'child0', slot: 'slot0'},
+                            {type: 'Element', name: 'child1', slot: 'slot1'}
                         ]
                     });
+                });
+
+            });
+
+            describe('デシリアライズ', function(){
+                it('基本', function(){
+                    json = {
+                        type: 'Element',
+                        name: 'name0'
+                    };
+                    subject = serializer.deserializeElement(json);
+                    with(subject){
+                        expect(subject instanceof mabi.Element).toBeTruthy();
+                        expect(name()).toEqual('name0');
+                    }
+                });
+
+                it('型情報', function(){
+                    json = {
+                        type: 'Mob',
+                        name: 'name0'
+                    };
+                    subject = serializer.deserializeElement(json);
+                    with(subject){
+                        expect(subject instanceof mabi.Mob).toBeTruthy();
+                    }
+                });
+                
+                it('effects', function(){
+                    json = {
+                        type: 'Element',
+                        name: '',
+                        effects: [
+                            {op: '+', param: 'str', min: 1},
+                            {op: '+', param: 'dex', min: 3}
+                        ]
+                    };
+                    subject = serializer.deserializeElement(json);
+                    with(subject.effects()){
+                        expect(length()).toEqual(2);
+                        expect(get(0).param()).toEqual('str');
+                        expect(get(1).param()).toEqual('dex');
+                    }
+                });
+                
+                it('children', function(){
+                    json = {
+                        type: 'Element',
+                        name: 'parent',
+                        children: [
+                            {type: 'Element', name: 'child0', slot: 'slot0'},
+                            {type: 'Element', name: 'child1', slot: 'slot1'}
+                        ]
+                    };
+                    subject = serializer.deserializeElement(json);
+                    with(subject){
+                        expect(childrenLength()).toEqual(2);
+                        expect(child('slot0').name()).toEqual('child0');
+                        expect(child('slot1').name()).toEqual('child1');
+                    }
                 });
 
             });
