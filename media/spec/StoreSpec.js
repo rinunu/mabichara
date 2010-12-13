@@ -22,6 +22,12 @@ with(AjaxSpecHelper){
         xdescribe('each にて、アイテムを走査できる', function(){
         });
 
+        xdescribe('get にてアイテムを1件取得できる', function(){
+        });
+        
+        xdescribe('length にてアイテムの件数を取得できる', function(){
+        });
+
         describe('load にてサーバから一覧を読み込む', function(){
             beforeEach(function(){
                 setResponse({entry: items});
