@@ -9,6 +9,7 @@ from mabi.equipment_class import EquipmentClass
 from mabi.element import Element
 from mabi.effect import Effect
 from mabi.equipment_set import EquipmentSet
+from mabi.mob import Mob
 
 logger = logging.getLogger('Serializer')
 
@@ -21,6 +22,44 @@ def deserialize(json):
 
     json = simplejson.loads(json);
     return deserialize_element(json)
+
+def serialize(model):
+    '''オブジェクトを dict と list のみからなる形式へ変換する'''
+    return serialize_element(model)
+
+
+# ----------------------------------------------------------------------
+
+def serialize_element(element):
+    '''Effect を dict に変換する'''
+    obj = {}
+    obj['id'] = unicode(element.key())
+    obj['name'] = element.name
+    obj['type'] = type(element).__name__
+
+    effects = element.effects
+    if effects:
+        obj['effects'] = [serialize_effect(e) for e in effects]
+    # obj['source'] = element.source
+
+    children = element.children
+    if children:
+        obj['children'] = [{'slot': e.slot, 'child': serialize_element(e)} for e in children]
+    return obj
+
+def serialize_effect(e):
+    '''Effect を dict に変換する'''
+
+    b = {
+        'op': e.op,
+        'param': e.param,
+        'min': e.min,
+        'max': e.max
+        }
+
+    if e.condition:
+        b['condition'] = e.condition
+    return b
 
 def deserialize_element(json):
     '''JSON(のPython オブジェクトへ変換した物)を Element として Deserialize する'''
@@ -63,5 +102,7 @@ def deserialize_effects(json):
 def type_to_class(name):
     '''type 名から class を取得する'''
     map = {'Element': Element,
-           'EquipmentSet': EquipmentSet}
+           'EquipmentSet': EquipmentSet,
+           'Mob': Mob,
+           }
     return map[name]

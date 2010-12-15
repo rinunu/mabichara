@@ -10,7 +10,11 @@ from mabi.effect import Effect
 logger = logging.getLogger("Element")
 
 class Element(polymodel.PolyModel):
-    '''保存は save を使用すること'''
+    '''保存は save を使用すること
+
+    実装上の制限
+    - effects は読み取り専用。 初期化時にのみ指定できる。
+    '''
 
     # 日本語名
     name = db.StringProperty(required = True)
