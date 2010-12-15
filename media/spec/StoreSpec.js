@@ -17,6 +17,13 @@ with(AjaxSpecHelper){
             AjaxSpecHelper.initialize();
             items = [item('item0'), item('item1')];
             store = new mabi.Store({resourceName: 'resources'});
+            store.createElement = function(dto){
+                return {
+                    id: function(){
+                        return dto.id;
+                    }
+                };
+            };
         });
 
         xdescribe('each にて、アイテムを走査できる', function(){
@@ -30,23 +37,29 @@ with(AjaxSpecHelper){
 
         describe('load にてサーバから一覧を読み込む', function(){
             beforeEach(function(){
-                setResponse({entry: items});
                 waitsForTask(store.load());
+                request = mostRecentAjaxRequest();
+                request.response({
+                    status: 200,
+                    responseText: $.toJSON({
+                        entry: [{id: 'item0'}, {id: 'item1'}]
+                    })
+                });
             });
 
             it('初回読み込みはサーバから読み込む', function(){
                 runs(function(){
-                    expect(requests.length).toEqual(1);
-                    expect(requests[0].url).toMatch('resources.json$');
-                    expect(store.find('item0')).toBe(items[0]);
-                    expect(store.find('item1')).toBe(items[1]);
+                    expect(ajaxRequests.length).toEqual(1);
+                    expect(request.url).toMatch('resources.json');
+                    expect(store.find('item0')).toBeTruthy();
+                    expect(store.find('item1')).toBeTruthy();
                 });
             });
 
             it('2回目以降はキャッシュを使用する', function(){
                 waitsForTask(store.load());
                 runs(function(){
-                    expect(requests.length).toEqual(1);
+                    expect(ajaxRequests.length).toEqual(1);
                 });
             });
 
@@ -61,14 +74,19 @@ with(AjaxSpecHelper){
             });
 
             it('ローカルに存在しない場合、サーバから取得する', function(){
-                setResponse({entry: [item0]});
-                
                 waitsForTask(store.loadDetail('item0'));
+                request = mostRecentAjaxRequest();
+                request.response({
+                    status: 200,
+                    responseText: $.toJSON({
+                        entry: [{id: 'item0'}]
+                    })
+                });
 
                 runs(function(){
-                    expect(requests[0].url).toMatch(/\/resources\/item0.json$/);
-                    expect(requests.length).toEqual(1);
-                    expect(store.find('item0')).toBe(item0);
+                    expect(request.url).toMatch(/\/resources\/item0.json$/);
+                    expect(ajaxRequests.length).toEqual(1);
+                    expect(store.find('item0')).toBeTruthy();
                 });
             });
 

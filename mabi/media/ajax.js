@@ -26,6 +26,7 @@ mabi.Ajax.prototype.ajax = function(options){
             type: options.type,
 	    url: url,
 	    data: data,
+            dataType: 'json',
 	    success: function(json){
 		var result = options.success(json);
 		cmd.onSuccess(result);
@@ -54,31 +55,17 @@ mabi.Ajax.prototype.ajax = function(options){
  * }
  */
 mabi.Ajax.prototype.load = function(options){
-    var this_ =  this;
-    var url = 'http://4.latest.mabichara.appspot.com/' + options.url;
+    var url = options.url;
     var cmd = util.Command.find(url);
     if(cmd){
 	return cmd;
     }
-    cmd = new util.AsyncCommand(
-	function(){
-	    var ajaxOpt = {
-		url: url,
-		callbackParameter: 'callback',
-		data: options.data,
-		success: function(json){
-		    var result = options.success(json);
-		    cmd.onSuccess(result);
-		},
-		error: function(){alert('データの読み込みに失敗しました');}
-	    };
-	    $.jsonp(ajaxOpt);
-	},
-    {
-	id: url
+    return this.ajax({
+        id: url,
+        type: 'get',
+	url: url,
+	data: options.data,
+        success: options.success
     });
-
-    cmd.execute();
-    return cmd;
 };
 
